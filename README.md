@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AP Physics 1 — Complete Study Guide
+
+Interactive study app covering all **8 official AP Physics 1 units** from the College Board CED.
+
+## Units
+
+| # | Unit | Exam Weight |
+|---|------|------------|
+| 1 | Kinematics | 10-15% |
+| 2 | Force and Translational Dynamics | 18-23% |
+| 3 | Work, Energy, and Power | 18-23% |
+| 4 | Linear Momentum | 10-15% |
+| 5 | Torque and Rotational Dynamics | 10-15% |
+| 6 | Energy and Momentum of Rotating Systems | 5-8% |
+| 7 | Oscillations | 5-8% |
+| 8 | Fluids | 10-15% |
+
+## Features (per unit)
+
+- **5 Interactive Topics** with SVG simulations and adjustable parameters
+- **Practice Quiz** (20 MC), **Problem Generator**, **FRQ Practice** with rubrics, **Timed Test**
+- **25+ Flashcards**, **Worked Examples**, **Formula Sheet**
+- **Concept Map**, **Real-World Examples**, **What-If Scenarios**
+- **Shared Tools**: equation solver, unit converter, free-body diagram builder
+- **Mistake Tracker** and **Progress Tracking** (localStorage-persisted)
+
+## Tech Stack
+
+- Next.js 16 (App Router + Turbopack)
+- React 19, TypeScript 5, Tailwind CSS 4
+- KaTeX, shadcn/ui, base-ui, Lucide icons
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Click any unit card to start studying.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## License
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

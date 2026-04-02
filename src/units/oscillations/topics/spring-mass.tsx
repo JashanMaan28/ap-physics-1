@@ -1,0 +1,255 @@
+"use client";
+
+import { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+export function SpringMass({
+  onComplete,
+  isComplete,
+}: {
+  onComplete: () => void;
+  isComplete: boolean;
+}) {
+  const [mass, setMass] = useState(2);
+  const [springK, setSpringK] = useState(50);
+  const [displacement, setDisplacement] = useState(0.5);
+
+  const period = 2 * Math.PI * Math.sqrt(mass / springK);
+  const frequency = 1 / period;
+  const omega = 2 * Math.PI * frequency;
+
+  const svgWidth = 400;
+  const svgHeight = 250;
+  const wallX = 30;
+  const eqX = 200;
+  const blockW = 50;
+  const blockH = 40;
+  const groundY = 170;
+  const blockCenterX = eqX + displacement * 150;
+
+  // Draw spring as zigzag
+  const springCoils = 10;
+  const springStartX = wallX;
+  const springEndX = blockCenterX - blockW / 2;
+  const springY = groundY - blockH / 2;
+  const coilWidth = (springEndX - springStartX) / springCoils;
+  let springPath = `M ${springStartX} ${springY}`;
+  for (let i = 0; i < springCoils; i++) {
+    const x1 = springStartX + coilWidth * (i + 0.25);
+    const x2 = springStartX + coilWidth * (i + 0.75);
+    const x3 = springStartX + coilWidth * (i + 1);
+    springPath += ` L ${x1} ${springY - 12} L ${x2} ${springY + 12} L ${x3} ${springY}`;
+  }
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl">Spring-Mass System</CardTitle>
+            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          </div>
+          <CardDescription>
+            A mass attached to a spring oscillates with a period that depends on
+            mass and spring constant, but not amplitude.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Key Formula */}
+          <Card className="bg-cyan-50 border-cyan-200">
+            <CardContent className="pt-4">
+              <p className="text-lg font-semibold text-cyan-900">Key Formula</p>
+              <p className="text-2xl font-mono text-cyan-800 mt-1">
+                T = 2&pi;&radic;(m/k)
+              </p>
+              <p className="text-sm text-cyan-700 mt-1">
+                T = period (s), m = mass (kg), k = spring constant (N/m)
+              </p>
+              <p className="text-sm text-cyan-700 mt-1">
+                Restoring force: F = &minus;kx (Hooke&rsquo;s Law)
+              </p>
+            </CardContent>
+          </Card>
+
+          <Separator />
+
+          {/* Interactive SVG */}
+          <div>
+            <h3 className="font-semibold mb-3">Spring-Mass Diagram</h3>
+            <svg
+              width={svgWidth}
+              height={svgHeight}
+              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+              className="border rounded bg-white w-full"
+            >
+              {/* Wall */}
+              <rect x={wallX - 8} y={groundY - 80} width={8} height={100} fill="#888" />
+              <line x1={wallX - 8} y1={groundY - 80} x2={wallX - 8} y2={groundY + 20} stroke="#666" strokeWidth={2} />
+
+              {/* Ground */}
+              <line x1={wallX - 10} y1={groundY} x2={svgWidth - 20} y2={groundY} stroke="#888" strokeWidth={2} />
+
+              {/* Spring */}
+              <path d={springPath} fill="none" stroke="#06b6d4" strokeWidth={2.5} />
+
+              {/* Block */}
+              <rect
+                x={blockCenterX - blockW / 2}
+                y={groundY - blockH}
+                width={blockW}
+                height={blockH}
+                fill="#06b6d4"
+                stroke="#0e7490"
+                strokeWidth={2}
+                rx={4}
+              />
+              <text
+                x={blockCenterX}
+                y={groundY - blockH / 2 + 5}
+                textAnchor="middle"
+                fontSize={14}
+                fontWeight="bold"
+                fill="#fff"
+              >
+                m
+              </text>
+
+              {/* Equilibrium marker */}
+              <line x1={eqX} y1={groundY} x2={eqX} y2={groundY + 20} stroke="#aaa" strokeWidth={1} strokeDasharray="3,3" />
+              <text x={eqX} y={groundY + 35} textAnchor="middle" fontSize={11} fill="#888">x=0</text>
+
+              {/* Displacement arrow */}
+              {Math.abs(displacement) > 0.05 && (
+                <>
+                  <line
+                    x1={eqX}
+                    y1={groundY + 15}
+                    x2={blockCenterX}
+                    y2={groundY + 15}
+                    stroke="#dc2626"
+                    strokeWidth={2}
+                    markerEnd="url(#redArrow)"
+                  />
+                  <defs>
+                    <marker id="redArrow" markerWidth={8} markerHeight={6} refX={8} refY={3} orient="auto">
+                      <polygon points="0 0, 8 3, 0 6" fill="#dc2626" />
+                    </marker>
+                  </defs>
+                </>
+              )}
+
+              {/* Info */}
+              <text x={svgWidth - 10} y={25} textAnchor="end" fontSize={14} fontWeight="bold" fill="#0e7490">
+                T = {period.toFixed(3)} s
+              </text>
+              <text x={svgWidth - 10} y={45} textAnchor="end" fontSize={13} fill="#0e7490">
+                f = {frequency.toFixed(2)} Hz
+              </text>
+              <text x={svgWidth - 10} y={65} textAnchor="end" fontSize={13} fill="#0e7490">
+                &omega; = {omega.toFixed(2)} rad/s
+              </text>
+            </svg>
+          </div>
+
+          {/* Sliders */}
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">
+                Mass: {mass.toFixed(1)} kg
+              </label>
+              <Slider
+                value={[mass]}
+                onValueChange={(v) => setMass(v[0])}
+                min={0.5}
+                max={10}
+                step={0.5}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">
+                Spring Constant (k): {springK} N/m
+              </label>
+              <Slider
+                value={[springK]}
+                onValueChange={(v) => setSpringK(v[0])}
+                min={10}
+                max={200}
+                step={5}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">
+                Displacement: {displacement.toFixed(2)} m
+              </label>
+              <Slider
+                value={[displacement]}
+                onValueChange={(v) => setDisplacement(v[0])}
+                min={-1}
+                max={1}
+                step={0.05}
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* FAQ */}
+          <Accordion>
+            <AccordionItem value="q1">
+              <AccordionTrigger>
+                Why doesn&rsquo;t amplitude affect the period?
+              </AccordionTrigger>
+              <AccordionContent>
+                For an ideal spring, the restoring force is proportional to
+                displacement (F = &minus;kx). Larger displacement means greater force,
+                which provides exactly the right acceleration to cover the larger
+                distance in the same time.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="q2">
+              <AccordionTrigger>
+                What happens if you double the mass?
+              </AccordionTrigger>
+              <AccordionContent>
+                Since T = 2&pi;&radic;(m/k), doubling the mass increases the period by
+                a factor of &radic;2 &asymp; 1.41. The system oscillates more slowly.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="q3">
+              <AccordionTrigger>
+                What is Hooke&rsquo;s Law?
+              </AccordionTrigger>
+              <AccordionContent>
+                Hooke&rsquo;s Law states F = &minus;kx, where k is the spring constant and
+                x is displacement from equilibrium. The negative sign indicates
+                the force always points back toward equilibrium.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          <Separator />
+
+          <Button onClick={onComplete} disabled={isComplete} className="w-full">
+            {isComplete ? "Completed" : "Mark Complete"}
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

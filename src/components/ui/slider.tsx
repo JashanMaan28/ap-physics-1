@@ -5,8 +5,10 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/utils"
 
-type SliderProps = Omit<SliderPrimitive.Root.Props, "onValueChange"> & {
-  onValueChange?: (value: number[]) => void;
+type SliderProps = Omit<SliderPrimitive.Root.Props, "onValueChange" | "value"> & {
+  value?: number | number[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChange?: (value: any) => void;
 }
 
 function Slider({
@@ -18,29 +20,47 @@ function Slider({
   onValueChange,
   ...props
 }: SliderProps) {
+  const normalizedValue = React.useMemo(
+    () =>
+      value !== undefined
+        ? Array.isArray(value) ? value : [value]
+        : undefined,
+    [value]
+  )
+
   const _values = React.useMemo(
     () =>
-      Array.isArray(value)
-        ? value
+      normalizedValue
+        ? normalizedValue
         : Array.isArray(defaultValue)
           ? defaultValue
           : [min, max],
-    [value, defaultValue, min, max]
+    [normalizedValue, defaultValue, min, max]
   )
+
+  // Detect if caller passed array-style value (e.g. value={[x]}) or scalar (value={x})
+  const isArrayMode = Array.isArray(value)
 
   return (
     <SliderPrimitive.Root
       className={cn("data-horizontal:w-full data-vertical:h-full", className)}
       data-slot="slider"
       defaultValue={defaultValue}
-      value={value}
+      value={normalizedValue}
       min={min}
       max={max}
       thumbAlignment="edge"
       onValueChange={
         onValueChange
-          ? (v: number | readonly number[]) =>
-              onValueChange(Array.isArray(v) ? [...v] : [v])
+          ? (v: number | readonly number[]) => {
+              if (isArrayMode) {
+                // Pass as array for callers expecting ([v]) => ...
+                onValueChange(Array.isArray(v) ? [...v] : [v])
+              } else {
+                // Pass as scalar for callers expecting (v) => ...
+                onValueChange(Array.isArray(v) ? v[0] : v)
+              }
+            }
           : undefined
       }
       {...props}
