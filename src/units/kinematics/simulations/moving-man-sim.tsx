@@ -6,7 +6,7 @@ export function MovingManSim() {
   return (
     <PhETEmbed
       title="The Moving Man"
-      simUrl="https://phet.colorado.edu/sims/html/the-moving-man/latest/the-moving-man_en.html"
+      simUrl="https://phet.colorado.edu/sims/cheerpj/moving-man/latest/moving-man.html?simulation=moving-man"
       description="Drag the man back and forth and watch position, velocity, and acceleration graphs update in real time."
       tips={[
         "Try constant velocity — observe the flat v-t line and linear x-t graph",

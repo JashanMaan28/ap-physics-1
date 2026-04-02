@@ -6,7 +6,7 @@ export function FluidFlowSim() {
   return (
     <PhETEmbed
       title="Fluid Pressure and Flow"
-      simUrl="https://phet.colorado.edu/sims/html/fluid-pressure-and-flow/latest/fluid-pressure-and-flow_en.html"
+      simUrl="https://phet.colorado.edu/sims/cheerpj/fluid-pressure-and-flow/latest/fluid-pressure-and-flow.html?simulation=fluid-pressure-and-flow"
       description="Visualize fluid flow through pipes of varying width. See continuity (A₁v₁ = A₂v₂) and Bernoulli's principle in action."
       tips={[
         "Narrow the pipe and watch the flow speed increase (continuity equation)",

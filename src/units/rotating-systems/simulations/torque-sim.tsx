@@ -6,7 +6,7 @@ export function TorquePhETSim() {
   return (
     <PhETEmbed
       title="Torque"
-      simUrl="https://phet.colorado.edu/sims/html/torque/latest/torque_en.html"
+      simUrl="https://phet.colorado.edu/sims/cheerpj/rotation/latest/rotation.html?simulation=torque"
       description="Apply forces to a rotating platform and observe angular acceleration. Explore the relationship between torque, moment of inertia, and angular motion."
       tips={[
         "Change the moment arm to see how distance from the axis affects torque",
