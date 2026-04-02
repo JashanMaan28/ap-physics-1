@@ -50,7 +50,7 @@ function OrbitalRings() {
           style={{
             width: size,
             height: size,
-            borderColor: `oklch(0.7 0.15 ${220 + i * 40} / ${0.08 + i * 0.03})`,
+            borderColor: `oklch(0.7 0.15 ${220 + i * 40} / ${0.15 + i * 0.05})`,
             animationName: "spin",
             animationDuration: `${25 + i * 12}s`,
             animationTimingFunction: "linear",
@@ -61,10 +61,10 @@ function OrbitalRings() {
         >
           {/* Orbiting dot */}
           <div
-            className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full"
+            className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full"
             style={{
               backgroundColor: `oklch(0.75 0.2 ${220 + i * 40})`,
-              boxShadow: `0 0 8px oklch(0.75 0.2 ${220 + i * 40} / 0.6)`,
+              boxShadow: `0 0 12px oklch(0.75 0.2 ${220 + i * 40} / 0.8)`,
             }}
           />
         </div>
@@ -131,7 +131,7 @@ function UnitIcon({ slug, className = "" }: { slug: string; className?: string }
 /* ─── Stat card for exam info ─── */
 function StatCard({ value, label, sublabel }: { value: string; label: string; sublabel: string }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-6 backdrop-blur-sm transition-all hover:border-foreground/[0.12] hover:bg-foreground/[0.04]">
+    <div className="group relative overflow-hidden rounded-2xl border bg-card p-6 backdrop-blur-sm transition-all hover:shadow-md">
       <div className="text-3xl font-bold font-mono text-foreground/90 tracking-tight">{value}</div>
       <div className="mt-1 text-sm font-medium text-foreground/60">{label}</div>
       <div className="mt-0.5 text-xs text-foreground/30">{sublabel}</div>
@@ -177,7 +177,7 @@ export default function HomePage() {
               className={`mb-6 inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.04] px-4 py-1.5 text-xs font-medium text-foreground/60 backdrop-blur-md transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              College Board 2024–25 CED
+              College Board 2025–26 CED
             </div>
 
             {/* Title */}
@@ -238,13 +238,10 @@ export default function HomePage() {
 
             const card = (
               <div
-                className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`group relative overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
                 style={{
                   transitionDelay: `${400 + i * 80}ms`,
-                  borderColor: isAvailable ? `color-mix(in oklch, ${unit.color} 20%, transparent)` : "oklch(1 0 0 / 0.04)",
-                  background: isAvailable
-                    ? `linear-gradient(135deg, color-mix(in oklch, ${unit.color} 6%, oklch(0.13 0.02 260)) 0%, oklch(0.12 0.015 260) 100%)`
-                    : "oklch(1 0 0 / 0.02)",
+                  borderColor: isAvailable ? `color-mix(in oklch, ${unit.color} 20%, transparent)` : undefined,
                 }}
               >
                 {/* Glow effect on hover */}
@@ -348,7 +345,7 @@ export default function HomePage() {
 
       {/* ═══════════ EXAM WEIGHTAGE ═══════════ */}
       <section className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-6 sm:p-8 backdrop-blur-sm">
+        <div className="rounded-2xl border bg-card p-6 sm:p-8 backdrop-blur-sm">
           <div className="mb-6 flex items-end justify-between">
             <div>
               <h2 className="text-lg font-semibold text-foreground/80">Exam Weightage</h2>
@@ -435,7 +432,7 @@ export default function HomePage() {
               { icon: "📊", title: "Equation Sheet", desc: "A reference table of equations and constants is provided during the exam." },
               { icon: "🧪", title: "Lab Skills", desc: "Experimental design and data analysis questions appear on the exam." },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 rounded-xl border border-foreground/[0.04] bg-foreground/[0.02] p-4">
+              <div key={item.title} className="flex gap-3 rounded-xl border bg-card p-4">
                 <span className="text-lg">{item.icon}</span>
                 <div>
                   <h4 className="text-sm font-medium text-foreground/70">{item.title}</h4>
@@ -452,7 +449,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
             <p className="text-xs text-foreground/20">
-              AP Physics 1 Study Guide · Built for the 2024–25 College Board CED
+              AP Physics 1 Study Guide · Built for the 2025–26 College Board CED
             </p>
             <p className="text-xs text-foreground/10">
               Not affiliated with College Board
