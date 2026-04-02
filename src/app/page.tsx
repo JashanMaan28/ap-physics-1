@@ -20,7 +20,7 @@ function FloatingEquations() {
       {EQUATIONS.map((eq, i) => (
         <span
           key={i}
-          className="absolute font-mono text-foreground/[0.04] text-sm whitespace-nowrap"
+          className="absolute font-mono text-muted-foreground/20 text-sm whitespace-nowrap"
           style={{
             left: `${(i * 17 + 5) % 90}%`,
             top: `${(i * 23 + 10) % 85}%`,
