@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMistakes } from "@/app/fluids-study";
+import { useMistakes } from "@/contexts/mistake-context";
 import {
   Card,
   CardHeader,
@@ -14,13 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 
-type MistakeEntry = {
-  topic: string;
-  question: string;
-  yourAnswer: string;
-  correctAnswer: string;
-  timestamp: number;
-};
+import type { MistakeEntry } from "@/types/unit";
 
 const TOPIC_COLORS: Record<string, string> = {
   Buoyancy: "bg-blue-500",
@@ -131,7 +125,7 @@ export function MistakeTracker() {
             <div>
               <CardTitle className="text-xl">Mistake Tracker</CardTitle>
               <CardDescription>
-                AP Physics 1 — Fluids Unit
+                Review your mistakes across all topics
               </CardDescription>
             </div>
             <div className="text-right">
