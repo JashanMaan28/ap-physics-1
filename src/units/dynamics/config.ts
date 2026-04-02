@@ -18,6 +18,8 @@ import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { ForcesSim } from "./simulations/forces-sim";
+import { FrictionSim } from "./simulations/friction-sim";
 
 export const dynamicsConfig: UnitConfig = {
   slug: "dynamics",
@@ -60,6 +62,13 @@ export const dynamicsConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations", icon: "simulations",
+      items: [
+        { id: "sim-forces", name: "Forces & Motion (PhET)", short: "Forces" },
+        { id: "sim-friction", name: "Friction (PhET)", short: "Friction" },
+      ],
+    },
+    {
       label: "Review", icon: "review",
       items: [
         { id: "flashcards", name: "Flashcards", short: "Flash" },
@@ -89,5 +98,7 @@ export const dynamicsConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-forces": ForcesSim,
+    "sim-friction": FrictionSim,
   },
 };

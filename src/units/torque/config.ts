@@ -16,6 +16,7 @@ import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { BalancingActSim } from "./simulations/balancing-act-sim";
 import { ConceptMap } from "./explore/concept-map";
 import { RealWorld } from "./explore/real-world";
 import { WhatIf } from "./explore/what-if";
@@ -70,6 +71,13 @@ export const torqueConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations",
+      icon: "simulations",
+      items: [
+        { id: "sim-balancing", name: "Balancing Act (PhET)", short: "Balance" },
+      ],
+    },
+    {
       label: "Review",
       icon: "review",
       items: [
@@ -100,5 +108,6 @@ export const torqueConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-balancing": BalancingActSim,
   },
 };

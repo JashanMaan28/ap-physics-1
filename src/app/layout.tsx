@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lexend, JetBrains_Mono } from "next/font/google";
 import { MistakeProvider } from "@/contexts/mistake-context";
 import { ProgressProvider } from "@/contexts/progress-context";
+import { ThemeProvider } from "@/contexts/theme-context";
 import "./globals.css";
 
 const lexend = Lexend({
@@ -28,14 +29,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${lexend.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
+      className={`${lexend.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ProgressProvider>
-          <MistakeProvider>
-            {children}
-          </MistakeProvider>
-        </ProgressProvider>
+        <ThemeProvider>
+          <ProgressProvider>
+            <MistakeProvider>
+              {children}
+            </MistakeProvider>
+          </ProgressProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -18,6 +18,7 @@ import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { TorquePhETSim } from "./simulations/torque-sim";
 
 export const rotatingSystemsConfig: UnitConfig = {
   slug: "rotating-systems",
@@ -60,6 +61,12 @@ export const rotatingSystemsConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations", icon: "simulations",
+      items: [
+        { id: "sim-torque", name: "Torque (PhET)", short: "Torque" },
+      ],
+    },
+    {
       label: "Review", icon: "review",
       items: [
         { id: "flashcards", name: "Flashcards", short: "Flash" },
@@ -89,5 +96,6 @@ export const rotatingSystemsConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-torque": TorquePhETSim,
   },
 };

@@ -13,6 +13,8 @@ import { Flashcards } from "@/components/review/flashcards";
 import { WorkedExamples } from "@/components/review/worked-examples";
 import { FormulaSheet } from "@/components/review/formula-sheet";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { UnderPressureSim } from "./simulations/under-pressure-sim";
+import { FluidFlowSim } from "./simulations/fluid-flow-sim";
 import { ProblemGenerator } from "@/components/practice/problem-generator";
 import { FRQPractice } from "@/components/practice/frq-practice";
 import { TimedTest } from "@/components/practice/timed-test";
@@ -64,6 +66,14 @@ export const fluidsConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations",
+      icon: "simulations",
+      items: [
+        { id: "sim-pressure", name: "Under Pressure (PhET)", short: "Pressure" },
+        { id: "sim-flow", name: "Fluid Flow (PhET)", short: "Flow" },
+      ],
+    },
+    {
       label: "Review",
       icon: "review",
       items: [
@@ -94,5 +104,7 @@ export const fluidsConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-pressure": UnderPressureSim,
+    "sim-flow": FluidFlowSim,
   },
 };

@@ -18,6 +18,9 @@ import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { ProjectileSim } from "./simulations/projectile-sim";
+import { MovingManSim } from "./simulations/moving-man-sim";
+import { ProjectileLauncher } from "./simulations/projectile-launcher";
 
 export const kinematicsConfig: UnitConfig = {
   slug: "kinematics",
@@ -60,6 +63,14 @@ export const kinematicsConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations", icon: "simulations",
+      items: [
+        { id: "sim-projectile", name: "Projectile Motion (PhET)", short: "Projectile" },
+        { id: "sim-moving-man", name: "The Moving Man (PhET)", short: "Moving Man" },
+        { id: "sim-launcher", name: "Projectile Launcher", short: "Launcher" },
+      ],
+    },
+    {
       label: "Review", icon: "review",
       items: [
         { id: "flashcards", name: "Flashcards", short: "Flash" },
@@ -89,5 +100,8 @@ export const kinematicsConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-projectile": ProjectileSim,
+    "sim-moving-man": MovingManSim,
+    "sim-launcher": ProjectileLauncher,
   },
 };

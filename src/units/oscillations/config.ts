@@ -18,6 +18,9 @@ import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { PendulumLabSim } from "./simulations/pendulum-lab-sim";
+import { SpringsSim } from "./simulations/springs-sim";
+import { PendulumSim } from "./simulations/pendulum-sim";
 
 export const oscillationsConfig: UnitConfig = {
   slug: "oscillations",
@@ -60,6 +63,14 @@ export const oscillationsConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations", icon: "simulations",
+      items: [
+        { id: "sim-pendulum-lab", name: "Pendulum Lab (PhET)", short: "Pendulum" },
+        { id: "sim-springs", name: "Masses & Springs (PhET)", short: "Springs" },
+        { id: "sim-pendulum", name: "Pendulum Simulator", short: "Custom Sim" },
+      ],
+    },
+    {
       label: "Review", icon: "review",
       items: [
         { id: "flashcards", name: "Flashcards", short: "Flash" },
@@ -89,5 +100,8 @@ export const oscillationsConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-pendulum-lab": PendulumLabSim,
+    "sim-springs": SpringsSim,
+    "sim-pendulum": PendulumSim,
   },
 };

@@ -9,6 +9,7 @@ import { useProgress } from "@/contexts/progress-context";
 import { useMistakes } from "@/contexts/mistake-context";
 import type { UnitConfig, TopicProps } from "@/types/unit";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function SectionIcon({ type, size = 16 }: { type: string; size?: number }) {
   const props = {
@@ -47,6 +48,13 @@ function SectionIcon({ type, size = 16 }: { type: string; size?: number }) {
         <svg {...props}>
           <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+        </svg>
+      );
+    case "simulations":
+      return (
+        <svg {...props}>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
         </svg>
       );
     default:
@@ -332,10 +340,11 @@ export function UnitShell({ config }: { config: UnitConfig }) {
           </div>
 
           {/* Right side: progress on mobile */}
-          <div className="ml-auto flex items-center gap-2 lg:hidden">
-            <Badge variant="secondary" className="font-mono text-[10px]">
+          <div className="ml-auto flex items-center gap-2">
+            <Badge variant="secondary" className="font-mono text-[10px] lg:hidden">
               {completedTopics.size}/{config.learnTopicIds.length}
             </Badge>
+            <ThemeToggle />
           </div>
         </header>
 

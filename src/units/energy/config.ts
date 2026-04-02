@@ -18,6 +18,8 @@ import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { SkateParkSim } from "./simulations/skate-park-sim";
+import { SpringsEnergySim } from "./simulations/springs-energy-sim";
 
 export const energyConfig: UnitConfig = {
   slug: "energy",
@@ -60,6 +62,13 @@ export const energyConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations", icon: "simulations",
+      items: [
+        { id: "sim-skatepark", name: "Energy Skate Park (PhET)", short: "Skate Park" },
+        { id: "sim-springs-e", name: "Masses & Springs (PhET)", short: "Springs" },
+      ],
+    },
+    {
       label: "Review", icon: "review",
       items: [
         { id: "flashcards", name: "Flashcards", short: "Flash" },
@@ -89,5 +98,7 @@ export const energyConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-skatepark": SkateParkSim,
+    "sim-springs-e": SpringsEnergySim,
   },
 };

@@ -18,6 +18,8 @@ import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
+import { CollisionLabSim } from "./simulations/collision-lab-sim";
+import { CollisionSim } from "./simulations/collision-sim";
 
 export const momentumConfig: UnitConfig = {
   slug: "momentum",
@@ -60,6 +62,13 @@ export const momentumConfig: UnitConfig = {
       ],
     },
     {
+      label: "Simulations", icon: "simulations",
+      items: [
+        { id: "sim-collision-lab", name: "Collision Lab (PhET)", short: "Collisions" },
+        { id: "sim-collision", name: "Collision Simulator", short: "Custom Sim" },
+      ],
+    },
+    {
       label: "Review", icon: "review",
       items: [
         { id: "flashcards", name: "Flashcards", short: "Flash" },
@@ -89,5 +98,7 @@ export const momentumConfig: UnitConfig = {
     "worked-examples": WorkedExamples,
     "formula-sheet": FormulaSheet,
     "mistakes": MistakeTracker,
+    "sim-collision-lab": CollisionLabSim,
+    "sim-collision": CollisionSim,
   },
 };
