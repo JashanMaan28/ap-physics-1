@@ -222,7 +222,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 1,
     topic: "Pressure & Manometry",
-    badgeColor: "bg-purple-100 text-purple-800",
+    badgeColor: "bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-500/20 dark:text-purple-100 dark:border-purple-400/40",
     title: "U-Tube Manometer",
     question: (
       <>
@@ -284,7 +284,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 2,
     topic: "Pascal's Law",
-    badgeColor: "bg-blue-100 text-blue-800",
+    badgeColor: "bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-500/20 dark:text-blue-100 dark:border-blue-400/40",
     title: "Hydraulic Car Lift",
     question: (
       <>
@@ -328,7 +328,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 3,
     topic: "Buoyancy",
-    badgeColor: "bg-amber-100 text-amber-800",
+    badgeColor: "bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-500/20 dark:text-amber-100 dark:border-amber-400/40",
     title: "Floating Wood Cube — Find Density",
     question: (
       <>
@@ -372,7 +372,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 4,
     topic: "Continuity + Bernoulli",
-    badgeColor: "bg-cyan-100 text-cyan-800",
+    badgeColor: "bg-cyan-100 text-cyan-800 border border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-100 dark:border-cyan-400/40",
     title: "Water Flowing Through a Narrowing Pipe",
     question: (
       <>
@@ -420,7 +420,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 5,
     topic: "Torricelli's Theorem",
-    badgeColor: "bg-green-100 text-green-800",
+    badgeColor: "bg-green-100 text-green-800 border border-green-200 dark:bg-green-500/20 dark:text-green-100 dark:border-green-400/40",
     title: "Hole in a Water Tank",
     question: (
       <>
@@ -465,7 +465,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 6,
     topic: "Apparent Weight",
-    badgeColor: "bg-rose-100 text-rose-800",
+    badgeColor: "bg-rose-100 text-rose-800 border border-rose-200 dark:bg-rose-500/20 dark:text-rose-100 dark:border-rose-400/40",
     title: "Object Weighed in Air and Water",
     question: (
       <>
@@ -519,7 +519,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 7,
     topic: "Pressure at Depth",
-    badgeColor: "bg-indigo-100 text-indigo-800",
+    badgeColor: "bg-indigo-100 text-indigo-800 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-100 dark:border-indigo-400/40",
     title: "Pressure on a Submarine Hatch",
     question: (
       <>
@@ -594,7 +594,7 @@ const PROBLEMS: Problem[] = [
   {
     id: 8,
     topic: "Bernoulli — Lift",
-    badgeColor: "bg-teal-100 text-teal-800",
+    badgeColor: "bg-teal-100 text-teal-800 border border-teal-200 dark:bg-teal-500/20 dark:text-teal-100 dark:border-teal-400/40",
     title: "Lift on an Airplane Wing (Simplified)",
     question: (
       <>
@@ -683,32 +683,32 @@ function ProblemCard({ problem }: ProblemCardProps) {
   const reset = () => setRevealedSteps(0);
 
   return (
-    <Card className="w-full shadow-sm border border-slate-200">
+    <Card className="w-full border border-border/60 shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-semibold text-slate-500">Problem {problem.id}</span>
+            <span className="text-xs font-semibold text-muted-foreground">Problem {problem.id}</span>
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${problem.badgeColor}`}
             >
               {problem.topic}
             </span>
           </div>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-muted-foreground">
             {revealedSteps}/{totalSteps} steps
           </span>
         </div>
         <CardTitle className="text-base leading-snug mt-1">{problem.title}</CardTitle>
-        <CardDescription className="text-sm leading-relaxed text-slate-600 mt-1">
+        <CardDescription className="mt-1 text-sm leading-relaxed text-muted-foreground">
           {problem.question}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {/* Diagram */}
-        <div className="rounded-lg bg-slate-50 border border-slate-100 p-3">
+        <div className="rounded-lg border border-border bg-slate-50 p-3 dark:bg-slate-900/40">
           <button
-            className="text-xs text-slate-500 hover:text-slate-700 mb-2 underline underline-offset-2"
+            className="mb-2 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
             onClick={() => setShowDiagram((v) => !v)}
           >
             {showDiagram ? "Hide diagram" : "Show diagram"}
@@ -720,29 +720,29 @@ function ProblemCard({ problem }: ProblemCardProps) {
         {revealedSteps > 0 && (
           <div className="space-y-3">
             {problem.steps.slice(0, revealedSteps).map((step, idx) => (
-              <div key={idx} className="rounded-lg border border-slate-200 bg-white overflow-hidden">
-                <div className="bg-slate-100 px-3 py-2 flex items-center gap-2">
+              <div key={idx} className="overflow-hidden rounded-lg border border-border bg-card">
+                <div className="flex items-center gap-2 bg-slate-100 px-3 py-2 dark:bg-slate-800">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-700 text-white text-xs font-bold shrink-0">
                     {idx + 1}
                   </span>
-                  <span className="text-sm font-semibold text-slate-700">{step.title}</span>
+                  <span className="text-sm font-semibold text-foreground">{step.title}</span>
                 </div>
                 <div className="p-3 space-y-2.5">
                   {/* Equation */}
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Equation</p>
-                    <div className="bg-slate-50 rounded px-2 py-1.5 text-slate-800 border border-slate-100">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Equation</p>
+                    <div className="rounded border border-border bg-slate-50 px-2 py-1.5 text-foreground dark:bg-slate-900/60">
                       <Tex display>{step.equation}</Tex>
                     </div>
                   </div>
                   <Separator className="my-1" />
                   {/* Knowns */}
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Knowns / Given</p>
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Knowns / Given</p>
                     <ul className="space-y-0.5">
                       {step.knowns.map((k, ki) => (
-                        <li key={ki} className="text-xs text-slate-700 flex items-start gap-1.5">
-                          <span className="text-slate-400 mt-0.5 shrink-0">→</span>
+                        <li key={ki} className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                          <span className="mt-0.5 shrink-0 text-muted-foreground">→</span>
                           <Tex>{k}</Tex>
                         </li>
                       ))}
@@ -751,22 +751,22 @@ function ProblemCard({ problem }: ProblemCardProps) {
                   <Separator className="my-1" />
                   {/* Substitution */}
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Substitution</p>
-                    <div className="bg-blue-50 rounded px-2 py-1.5 text-blue-900 border border-blue-100">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Substitution</p>
+                    <div className="rounded border border-blue-200 bg-blue-50 px-2 py-1.5 text-blue-900 dark:border-blue-400/40 dark:bg-blue-500/10 dark:text-blue-100">
                       <Tex display>{step.substitution}</Tex>
                     </div>
                   </div>
                   {/* Result */}
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Result</p>
-                    <div className="font-bold bg-emerald-50 rounded px-2 py-1.5 text-emerald-800 border border-emerald-200">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Result</p>
+                    <div className="rounded border border-emerald-200 bg-emerald-50 px-2 py-1.5 font-bold text-emerald-800 dark:border-emerald-400/40 dark:bg-emerald-500/10 dark:text-emerald-100">
                       <Tex display>{step.result}</Tex>
                     </div>
                   </div>
                   {/* Explanation */}
-                  <div className="rounded bg-amber-50 border border-amber-100 px-3 py-2">
-                    <p className="text-xs font-semibold text-amber-700 mb-1">Why / Check</p>
-                    <p className="text-xs text-amber-900 leading-relaxed">{step.explanation}</p>
+                  <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 dark:border-amber-400/40 dark:bg-amber-500/10">
+                    <p className="mb-1 text-xs font-semibold text-amber-700 dark:text-amber-300">Why / Check</p>
+                    <p className="text-xs leading-relaxed text-amber-900 dark:text-amber-100">{step.explanation}</p>
                   </div>
                 </div>
               </div>
@@ -787,12 +787,12 @@ function ProblemCard({ problem }: ProblemCardProps) {
             </Button>
           )}
           {revealedSteps > 0 && (
-            <Button size="sm" variant="ghost" onClick={reset} className="text-slate-500 hover:text-slate-700">
+            <Button size="sm" variant="ghost" onClick={reset} className="text-muted-foreground hover:text-foreground">
               Reset / Hide All
             </Button>
           )}
           {allRevealed && (
-            <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-700">
+            <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-100">
               Complete
             </span>
           )}
@@ -815,10 +815,10 @@ export function WorkedExamples() {
     <div className="w-full max-w-3xl mx-auto px-4 py-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Worked Examples — AP Physics 1 Fluids
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           FRQ-style problems with step-by-step solutions. Reveal one step at a time to practice,
           or show all at once to review.
         </p>
@@ -835,7 +835,7 @@ export function WorkedExamples() {
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               filter === t
                 ? "bg-slate-800 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
             }`}
           >
             {t}
@@ -850,7 +850,7 @@ export function WorkedExamples() {
         ))}
       </div>
 
-      <p className="text-xs text-center text-slate-400 pt-2">
+      <p className="pt-2 text-center text-xs text-muted-foreground">
         {visible.length} problem{visible.length !== 1 ? "s" : ""} shown
         {filter !== "All" && ` · filtered by "${filter}"`}
       </p>
