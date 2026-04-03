@@ -65,24 +65,24 @@ export function Flashcards() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-teal-400">Flashcards</h2>
-        <Badge className="bg-gray-700">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">Flashcards</h2>
+        <Badge variant="secondary">
           {currentIdx + 1} / {cards.length} &middot; {known.size} known
         </Badge>
       </div>
 
       {/* Progress */}
-      <div className="w-full bg-gray-800 rounded-full h-2">
+      <div className="h-2 w-full rounded-full bg-muted">
         <div
-          className="bg-teal-500 h-2 rounded-full transition-all"
+          className="h-2 rounded-full bg-teal-500 transition-all"
           style={{ width: `${(known.size / cards.length) * 100}%` }}
         />
       </div>
 
       <Card
-        className={`bg-gray-900 border-gray-700 cursor-pointer min-h-[200px] flex items-center justify-center transition-all ${
+        className={`flex min-h-[220px] cursor-pointer items-center justify-center border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md ${
           known.has(currentIdx) ? "opacity-50" : ""
         }`}
         onClick={() => setFlipped(!flipped)}
@@ -90,16 +90,16 @@ export function Flashcards() {
         <CardContent className="text-center py-12 px-8">
           {!flipped ? (
             <div>
-              <p className="text-xs text-gray-500 mb-4">QUESTION (click to flip)</p>
-              <p className="text-xl text-white font-bold">{card.front}</p>
+              <p className="mb-4 text-xs text-muted-foreground">QUESTION (click to flip)</p>
+              <p className="text-xl font-bold text-foreground">{card.front}</p>
             </div>
           ) : (
             <div>
-              <p className="text-xs text-gray-500 mb-4">ANSWER</p>
-              <p className="text-xl text-teal-300 font-mono">{card.back}</p>
+              <p className="mb-4 text-xs text-muted-foreground">ANSWER</p>
+              <p className="text-xl font-mono text-foreground">{card.back}</p>
             </div>
           )}
-          <Badge className="bg-teal-900 text-teal-300 mt-4">{card.topic}</Badge>
+          <Badge variant="outline" className="mt-4 border-teal-500/40 bg-teal-500/10 text-teal-300">{card.topic}</Badge>
         </CardContent>
       </Card>
 
@@ -107,7 +107,7 @@ export function Flashcards() {
         <Button
           onClick={prev}
           variant="outline"
-          className="border-gray-700 text-gray-300"
+          className="cursor-pointer"
         >
           Previous
         </Button>
@@ -115,11 +115,11 @@ export function Flashcards() {
           <Button
             onClick={markKnown}
             variant="outline"
-            className="border-green-700 text-green-300 hover:bg-green-900/20"
+            className="cursor-pointer border-green-700 text-green-300 hover:bg-green-900/20"
           >
             Got It
           </Button>
-          <Button onClick={next} className="bg-teal-600 hover:bg-teal-700">
+          <Button onClick={next} className="cursor-pointer bg-teal-600 hover:bg-teal-700">
             Next
           </Button>
         </div>

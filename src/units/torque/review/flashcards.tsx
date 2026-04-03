@@ -67,7 +67,7 @@ export function Flashcards() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Flashcards</CardTitle>
@@ -93,15 +93,15 @@ export function Flashcards() {
       </Card>
 
       <Card
-        className="min-h-[200px] cursor-pointer transition-all hover:shadow-lg"
+        className="min-h-[220px] cursor-pointer border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md"
         onClick={() => setFlipped(!flipped)}
       >
         <CardContent className="flex flex-col items-center justify-center min-h-[200px] p-8 text-center">
           <Badge variant="outline" className="mb-4">{card.category}</Badge>
           {flipped ? (
-            <p className="text-lg">{card.back}</p>
+            <p className="text-lg text-foreground">{card.back}</p>
           ) : (
-            <p className="text-xl font-semibold">{card.front}</p>
+            <p className="text-xl font-semibold text-foreground">{card.front}</p>
           )}
           <p className="text-xs text-muted-foreground mt-4">
             {flipped ? "Answer" : "Question"} &mdash; click to flip
@@ -110,11 +110,11 @@ export function Flashcards() {
       </Card>
 
       <div className="flex items-center justify-between">
-        <Button variant="outline" onClick={prev}>Previous</Button>
+        <Button variant="outline" onClick={prev} className="cursor-pointer">Previous</Button>
         <span className="text-sm text-muted-foreground">
           {(currentIdx % filtered.length) + 1} / {filtered.length}
         </span>
-        <Button variant="outline" onClick={next}>Next</Button>
+        <Button variant="outline" onClick={next} className="cursor-pointer">Next</Button>
       </div>
     </div>
   );

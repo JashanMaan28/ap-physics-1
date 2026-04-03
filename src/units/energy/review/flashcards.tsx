@@ -71,7 +71,7 @@ export function Flashcards() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -87,37 +87,37 @@ export function Flashcards() {
       </Card>
 
       <Card
-        className="min-h-[200px] cursor-pointer transition-all hover:shadow-md flex items-center justify-center"
+        className="flex min-h-[220px] cursor-pointer items-center justify-center border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md"
         onClick={() => setFlipped(!flipped)}
       >
         <CardContent className="pt-6 text-center">
           {!flipped ? (
             <div>
               <Badge variant="outline" className="mb-3">Question</Badge>
-              <p className="text-xl font-medium">{cards[index].front}</p>
+              <p className="text-xl font-medium text-foreground">{cards[index].front}</p>
               <p className="text-sm text-muted-foreground mt-4">Click to flip</p>
             </div>
           ) : (
             <div>
               <Badge className="mb-3">Answer</Badge>
-              <p className="text-lg">{cards[index].back}</p>
+              <p className="text-lg text-foreground">{cards[index].back}</p>
             </div>
           )}
         </CardContent>
       </Card>
 
       <div className="flex gap-2">
-        <Button variant="outline" onClick={handlePrev} className="flex-1">
+        <Button variant="outline" onClick={handlePrev} className="flex-1 cursor-pointer">
           Previous
         </Button>
         <Button
           variant={known.has(index) ? "default" : "outline"}
           onClick={toggleKnown}
-          className="flex-1"
+          className="flex-1 cursor-pointer"
         >
           {known.has(index) ? "Mastered" : "Mark as Known"}
         </Button>
-        <Button onClick={handleNext} className="flex-1">
+        <Button onClick={handleNext} className="flex-1 cursor-pointer">
           Next
         </Button>
       </div>

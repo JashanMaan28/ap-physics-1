@@ -65,7 +65,7 @@ export function Flashcards() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -80,12 +80,12 @@ export function Flashcards() {
       </Card>
 
       <Card
-        className="min-h-[250px] cursor-pointer transition-all hover:shadow-lg flex items-center justify-center"
+        className="flex min-h-[250px] cursor-pointer items-center justify-center border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md"
         onClick={() => setFlipped(!flipped)}
       >
         <CardContent className="text-center p-8">
           <Badge variant="secondary" className="mb-4">{card.topic}</Badge>
-          <div className="text-xl font-medium leading-relaxed">
+          <div className="text-xl font-medium leading-relaxed text-foreground">
             {flipped ? card.back : card.front}
           </div>
           <p className="text-sm text-muted-foreground mt-4">
@@ -95,10 +95,10 @@ export function Flashcards() {
       </Card>
 
       <div className="flex justify-center gap-3">
-        <Button variant="outline" onClick={prev}>Previous</Button>
-        <Button variant="outline" onClick={() => setFlipped(!flipped)}>Flip</Button>
-        <Button variant="outline" onClick={next}>Next</Button>
-        <Button onClick={markKnown} className="bg-green-600 hover:bg-green-700">
+        <Button variant="outline" onClick={prev} className="cursor-pointer">Previous</Button>
+        <Button variant="outline" onClick={() => setFlipped(!flipped)} className="cursor-pointer">Flip</Button>
+        <Button variant="outline" onClick={next} className="cursor-pointer">Next</Button>
+        <Button onClick={markKnown} className="cursor-pointer bg-green-600 hover:bg-green-700">
           Got It
         </Button>
       </div>

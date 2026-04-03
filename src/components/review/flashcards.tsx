@@ -144,11 +144,11 @@ export function Flashcards() {
   const cardConfidence = currentCard ? confidence[currentCard.id] ?? null : null;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
+    <div className="mx-auto max-w-3xl space-y-5 px-4 py-6">
       {/* Header */}
       <div className="text-center space-y-1">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">Fluids Flashcards</h2>
-        <p className="text-sm text-slate-500">AP Physics 1 — click a card to reveal the answer</p>
+        <h2 className="text-3xl font-extrabold tracking-tight text-foreground">Fluids Flashcards</h2>
+        <p className="text-sm text-muted-foreground">AP Physics 1 - click a card to reveal the answer</p>
       </div>
 
       {/* Topic Filters */}
@@ -157,10 +157,10 @@ export function Flashcards() {
           <button
             key={topic}
             onClick={() => toggleTopic(topic)}
-            className={`px-3 py-1 rounded-full text-xs font-medium border transition-all duration-150 ${
+            className={`rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 ${
               selectedTopics.has(topic)
                 ? TOPIC_COLORS[topic]
-                : "bg-white text-slate-400 border-slate-200 opacity-50"
+                : "border-border/70 bg-muted/40 text-muted-foreground opacity-70"
             }`}
           >
             {topic}
@@ -172,7 +172,7 @@ export function Flashcards() {
 
       {/* Progress */}
       <div className="space-y-1.5">
-        <div className="flex justify-between text-xs text-slate-500 font-medium">
+        <div className="flex justify-between text-xs font-medium text-muted-foreground">
           <span>Card {filteredDeck.length > 0 ? currentIndex + 1 : 0} of {filteredDeck.length}</span>
           <span className="flex gap-3">
             <span className="text-emerald-600">✓ Know it: {knowCount}</span>
@@ -201,21 +201,21 @@ export function Flashcards() {
           >
             {/* Front */}
             <Card
-              className="absolute inset-0 border-2 border-slate-200 shadow-md select-none"
+              className="absolute inset-0 select-none border-2 border-border/80 bg-card/95 shadow-md"
               style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
             >
               <CardContent className="flex flex-col items-center justify-center h-full min-h-[220px] p-6 text-center gap-3">
                 <Badge variant="outline" className={`text-xs ${TOPIC_COLORS[currentCard.topic]}`}>
                   {currentCard.topic}
                 </Badge>
-                <p className="text-lg font-semibold text-slate-800 leading-snug">{currentCard.front}</p>
-                <p className="text-xs text-slate-400 mt-2">Tap to flip</p>
+                <p className="text-lg font-semibold leading-snug text-foreground">{currentCard.front}</p>
+                <p className="mt-2 text-xs text-muted-foreground">Tap to flip</p>
               </CardContent>
             </Card>
 
             {/* Back */}
             <Card
-              className="absolute inset-0 border-2 border-indigo-200 bg-indigo-50 shadow-md select-none"
+              className="absolute inset-0 select-none border-2 border-primary/25 bg-primary/[0.07] shadow-md"
               style={{
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
@@ -223,17 +223,17 @@ export function Flashcards() {
               }}
             >
               <CardContent className="flex flex-col items-center justify-center h-full min-h-[220px] p-6 text-center gap-3">
-                <Badge variant="outline" className="text-xs bg-indigo-100 text-indigo-700 border-indigo-200">
+                <Badge variant="outline" className="border-primary/25 bg-primary/10 text-xs text-primary">
                   Answer
                 </Badge>
-                <p className="text-base text-slate-800 leading-relaxed whitespace-pre-line">{currentCard.back}</p>
+                <p className="whitespace-pre-line text-base leading-relaxed text-foreground">{currentCard.back}</p>
               </CardContent>
             </Card>
           </div>
         </div>
       ) : (
-        <Card className="border-2 border-dashed border-slate-200">
-          <CardContent className="flex items-center justify-center min-h-[220px] text-slate-400 text-sm">
+        <Card className="border-2 border-dashed border-border/70">
+          <CardContent className="flex min-h-[220px] items-center justify-center text-sm text-muted-foreground">
             No cards match the selected topics.
           </CardContent>
         </Card>
@@ -269,7 +269,7 @@ export function Flashcards() {
           variant="outline"
           onClick={handlePrev}
           disabled={currentIndex === 0 || filteredDeck.length === 0}
-          className="w-24"
+            className="w-24 cursor-pointer"
         >
           ← Prev
         </Button>
@@ -277,7 +277,7 @@ export function Flashcards() {
         <Button
           variant="secondary"
           onClick={handleShuffle}
-          className="px-5"
+          className="cursor-pointer px-5"
         >
           Shuffle
         </Button>
@@ -286,7 +286,7 @@ export function Flashcards() {
           variant="outline"
           onClick={handleNext}
           disabled={currentIndex >= filteredDeck.length - 1 || filteredDeck.length === 0}
-          className="w-24"
+          className="w-24 cursor-pointer"
         >
           Next →
         </Button>

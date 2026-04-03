@@ -77,7 +77,7 @@ export function Flashcards({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -95,8 +95,8 @@ export function Flashcards({
           </p>
 
           <Card
-            className={`min-h-[180px] flex items-center justify-center cursor-pointer transition-colors ${
-              flipped ? "bg-cyan-50 border-cyan-200" : "bg-white"
+            className={`flex min-h-[200px] cursor-pointer items-center justify-center border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md ${
+              flipped ? "border-cyan-500/40 bg-cyan-500/10" : ""
             } ${known.has(index) ? "opacity-50" : ""}`}
             onClick={() => setFlipped(!flipped)}
           >
@@ -104,29 +104,29 @@ export function Flashcards({
               <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                 {flipped ? "Answer" : "Question"}
               </p>
-              <p className="text-lg font-medium">
+              <p className="text-lg font-medium text-foreground">
                 {flipped ? card.back : card.front}
               </p>
             </CardContent>
           </Card>
 
           <div className="flex gap-2">
-            <Button onClick={prev} variant="outline" className="flex-1">
+            <Button onClick={prev} variant="outline" className="flex-1 cursor-pointer">
               Previous
             </Button>
-            <Button onClick={() => setFlipped(!flipped)} variant="outline" className="flex-1">
+            <Button onClick={() => setFlipped(!flipped)} variant="outline" className="flex-1 cursor-pointer">
               Flip
             </Button>
-            <Button onClick={next} variant="outline" className="flex-1">
+            <Button onClick={next} variant="outline" className="flex-1 cursor-pointer">
               Next
             </Button>
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={markKnown} variant="outline" className="flex-1" disabled={known.has(index)}>
+            <Button onClick={markKnown} variant="outline" className="flex-1 cursor-pointer" disabled={known.has(index)}>
               Mark as Known
             </Button>
-            <Button onClick={onComplete} disabled={isComplete} className="flex-1">
+            <Button onClick={onComplete} disabled={isComplete} className="flex-1 cursor-pointer">
               {isComplete ? "Completed" : "Mark Complete"}
             </Button>
           </div>

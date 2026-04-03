@@ -51,20 +51,20 @@ export function Flashcards() {
   }, [card.id, index]);
 
   return (
-    <div className="space-y-4 max-w-2xl mx-auto">
+    <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">Card {index + 1} of {ALL_CARDS.length}</p>
         <Badge variant="secondary" className="font-mono text-xs">{knowCount}/{ALL_CARDS.length} mastered</Badge>
       </div>
       <Progress value={(index / ALL_CARDS.length) * 100} className="h-1.5" />
 
-      <Card className="cursor-pointer min-h-[200px] flex items-center justify-center" onClick={() => setFlipped(!flipped)}>
+      <Card className="flex min-h-[220px] cursor-pointer items-center justify-center border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md" onClick={() => setFlipped(!flipped)}>
         <CardContent className="p-6 text-center">
           <Badge variant="outline" className="mb-3 text-[10px]">{card.topic}</Badge>
           {flipped ? (
-            <p className="text-sm text-muted-foreground whitespace-pre-line">{card.back}</p>
+            <p className="whitespace-pre-line text-sm text-foreground">{card.back}</p>
           ) : (
-            <p className="text-base font-medium">{card.front}</p>
+            <p className="text-base font-medium text-foreground">{card.front}</p>
           )}
           <p className="text-xs text-muted-foreground/50 mt-4">{flipped ? "Click to see question" : "Click to flip"}</p>
         </CardContent>

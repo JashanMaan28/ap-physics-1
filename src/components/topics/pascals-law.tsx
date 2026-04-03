@@ -232,8 +232,8 @@ export function PascalsLaw({ onComplete, isComplete }: TopicProps) {
                 width={Math.max(30, inputArea * 4) + 8}
                 height="20"
                 rx="4"
-                fill="oklch(0.45 0.02 260)"
-                stroke="oklch(0.35 0.02 260)"
+                fill="#6b7280"
+                stroke="#9ca3af"
                 strokeWidth="1.5"
               />
               {/* Input force arrow */}
@@ -259,8 +259,7 @@ export function PascalsLaw({ onComplete, isComplete }: TopicProps) {
                 x={70 + Math.max(15, inputArea * 2)}
                 y="115"
                 textAnchor="middle"
-                fontSize="10"
-                fill="oklch(0.3 0.02 260)"
+                className="text-[10px] font-medium fill-foreground/80"
               >
                 A&#8321; = {inputArea}cm&#178;
               </text>
@@ -283,8 +282,8 @@ export function PascalsLaw({ onComplete, isComplete }: TopicProps) {
                 width={Math.max(40, outputArea * 2.5) + 8}
                 height="20"
                 rx="4"
-                fill="oklch(0.45 0.02 260)"
-                stroke="oklch(0.35 0.02 260)"
+                fill="#6b7280"
+                stroke="#9ca3af"
                 strokeWidth="1.5"
               />
               {/* Output force arrow */}
@@ -311,8 +310,7 @@ export function PascalsLaw({ onComplete, isComplete }: TopicProps) {
                 x={450 - Math.max(20, outputArea * 1.25)}
                 y="115"
                 textAnchor="middle"
-                fontSize="10"
-                fill="oklch(0.3 0.02 260)"
+                className="text-[10px] font-medium fill-foreground/80"
               >
                 A&#8322; = {outputArea}cm&#178;
               </text>
@@ -340,8 +338,7 @@ export function PascalsLaw({ onComplete, isComplete }: TopicProps) {
                 x="250"
                 y="265"
                 textAnchor="middle"
-                className="text-xs font-medium"
-                fill="oklch(0.4 0.12 230)"
+                className="text-xs font-medium fill-foreground/75"
               >
                 Pressure = {pressure.toFixed(1)} N/cm&#178; (uniform throughout)
               </text>

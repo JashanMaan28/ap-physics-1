@@ -59,38 +59,39 @@ export function Flashcards() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex items-center justify-between">
         <Badge variant="outline">{index + 1} / {cards.length}</Badge>
         <Badge variant="secondary">{remaining} remaining</Badge>
       </div>
 
       <Card
-        className="min-h-[200px] cursor-pointer flex items-center justify-center"
+        className="flex min-h-[220px] cursor-pointer items-center justify-center border-border/70 bg-card/90 shadow-sm transition-all hover:shadow-md"
         onClick={() => setFlipped(!flipped)}
       >
         <CardContent className="pt-6 text-center px-8">
           {!flipped ? (
             <div>
               <p className="text-xs text-muted-foreground mb-2">QUESTION (click to flip)</p>
-              <p className="text-xl font-semibold">{card.front}</p>
+              <p className="text-xl font-semibold text-foreground">{card.front}</p>
             </div>
           ) : (
             <div>
               <p className="text-xs text-muted-foreground mb-2">ANSWER (click to flip)</p>
-              <p className="text-lg">{card.back}</p>
+              <p className="text-lg text-foreground">{card.back}</p>
             </div>
           )}
         </CardContent>
       </Card>
 
       <div className="flex gap-2">
-        <Button variant="outline" onClick={prev}>Previous</Button>
-        <Button variant="outline" onClick={next} className="flex-1">Next</Button>
+        <Button variant="outline" onClick={prev} className="cursor-pointer">Previous</Button>
+        <Button variant="outline" onClick={next} className="flex-1 cursor-pointer">Next</Button>
         <Button
           onClick={markKnown}
           disabled={known.has(index)}
           variant={known.has(index) ? "secondary" : "default"}
+          className="cursor-pointer"
         >
           {known.has(index) ? "Known" : "Mark Known"}
         </Button>
