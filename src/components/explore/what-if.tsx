@@ -165,23 +165,23 @@ const scenarios: Scenario[] = [
 ];
 
 const conceptColors: Record<string, string> = {
-  "Torricelli's Theorem": "bg-blue-100 text-blue-800 border-blue-200",
-  "Archimedes' Principle — gravity cancels": "bg-emerald-100 text-emerald-800 border-emerald-200",
-  "Buoyancy and Displaced Volume": "bg-teal-100 text-teal-800 border-teal-200",
-  "Fluid Compressibility & Continuity": "bg-violet-100 text-violet-800 border-violet-200",
-  "Atmospheric Pressure & Suction": "bg-orange-100 text-orange-800 border-orange-200",
-  "Superfluids & Ideal Fluid Bernoulli": "bg-pink-100 text-pink-800 border-pink-200",
-  "Pascal's Law & Pressure Differentials": "bg-amber-100 text-amber-800 border-amber-200",
-  "Pascal's Law — Enclosed Fluids Only": "bg-red-100 text-red-800 border-red-200",
-  "Neutral Buoyancy & Swim Bladders": "bg-cyan-100 text-cyan-800 border-cyan-200",
-  "Layered Fluids & Density Interfaces": "bg-lime-100 text-lime-800 border-lime-200",
+  "Torricelli's Theorem": "bg-blue-100/90 text-blue-900 border-blue-300 dark:bg-blue-500/20 dark:text-blue-100 dark:border-blue-400/40",
+  "Archimedes' Principle — gravity cancels": "bg-emerald-100/90 text-emerald-900 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-100 dark:border-emerald-400/40",
+  "Buoyancy and Displaced Volume": "bg-teal-100/90 text-teal-900 border-teal-300 dark:bg-teal-500/20 dark:text-teal-100 dark:border-teal-400/40",
+  "Fluid Compressibility & Continuity": "bg-violet-100/90 text-violet-900 border-violet-300 dark:bg-violet-500/20 dark:text-violet-100 dark:border-violet-400/40",
+  "Atmospheric Pressure & Suction": "bg-orange-100/90 text-orange-900 border-orange-300 dark:bg-orange-500/20 dark:text-orange-100 dark:border-orange-400/40",
+  "Superfluids & Ideal Fluid Bernoulli": "bg-pink-100/90 text-pink-900 border-pink-300 dark:bg-pink-500/20 dark:text-pink-100 dark:border-pink-400/40",
+  "Pascal's Law & Pressure Differentials": "bg-amber-100/90 text-amber-900 border-amber-300 dark:bg-amber-500/20 dark:text-amber-100 dark:border-amber-400/40",
+  "Pascal's Law — Enclosed Fluids Only": "bg-red-100/90 text-red-900 border-red-300 dark:bg-red-500/20 dark:text-red-100 dark:border-red-400/40",
+  "Neutral Buoyancy & Swim Bladders": "bg-cyan-100/90 text-cyan-900 border-cyan-300 dark:bg-cyan-500/20 dark:text-cyan-100 dark:border-cyan-400/40",
+  "Layered Fluids & Density Interfaces": "bg-lime-100/90 text-lime-900 border-lime-300 dark:bg-lime-500/20 dark:text-lime-100 dark:border-lime-400/40",
 };
 
 function ScenarioCard({ scenario }: { scenario: Scenario }) {
   const [stage, setStage] = useState<RevealStage>("closed");
 
   const badgeClass =
-    conceptColors[scenario.concept] ?? "bg-gray-100 text-gray-800 border-gray-200";
+    conceptColors[scenario.concept] ?? "bg-slate-100 text-slate-900 border-slate-300 dark:bg-slate-500/20 dark:text-slate-100 dark:border-slate-400/40";
 
   const isOpen = stage !== "closed";
 
@@ -189,8 +189,8 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
     <Card
       className={`transition-all duration-300 border-2 ${
         isOpen
-          ? "border-indigo-300 shadow-lg shadow-indigo-100"
-          : "border-slate-200 hover:border-indigo-200 hover:shadow-md cursor-pointer"
+          ? "border-indigo-300 shadow-lg shadow-indigo-100 dark:border-indigo-400/60 dark:shadow-indigo-950/60"
+          : "border-border hover:border-indigo-200 hover:shadow-md dark:hover:border-indigo-400/50 cursor-pointer"
       }`}
       onClick={() => {
         if (stage === "closed") setStage("thinking");
@@ -199,15 +199,15 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">
               {scenario.id}
             </span>
-            <CardTitle className="text-base font-semibold leading-snug text-slate-800">
+            <CardTitle className="text-base font-semibold leading-snug text-foreground">
               {scenario.question}
             </CardTitle>
           </div>
           {!isOpen && (
-            <span className="shrink-0 text-xs text-slate-400 pt-1">tap to explore →</span>
+            <span className="shrink-0 pt-1 text-xs text-muted-foreground">tap to explore →</span>
           )}
         </div>
         <div className="pl-10">
@@ -223,11 +223,11 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
       {isOpen && (
         <CardContent className="pl-10 pr-4 pb-4 space-y-4">
           {/* Think about it */}
-          <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-400/40 dark:bg-amber-500/10">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
               Think about it...
             </p>
-            <p className="text-sm text-amber-900 leading-relaxed">{scenario.thinkPrompt}</p>
+            <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">{scenario.thinkPrompt}</p>
           </div>
 
           {stage === "thinking" && (
@@ -249,10 +249,10 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
 
               {/* Physics explanation */}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500 mb-2">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-300">
                   The Physics
                 </p>
-                <p className="text-sm text-slate-700 leading-relaxed">{scenario.answer}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{scenario.answer}</p>
                 {scenario.formula && (
                   <div className="mt-3 inline-block rounded-md bg-slate-900 px-3 py-1.5">
                     <code className="text-sm font-mono text-emerald-400">{scenario.formula}</code>
@@ -264,7 +264,7 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+                  className="border-indigo-300 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-400/60 dark:text-indigo-200 dark:hover:bg-indigo-500/15"
                   onClick={(e) => {
                     e.stopPropagation();
                     setStage("followup");
@@ -278,13 +278,13 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
                 <>
                   <Separator />
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       Keep digging...
                     </p>
                     <ul className="space-y-2">
                       {scenario.followUps.map((q, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                          <span className="mt-0.5 text-indigo-400 font-bold">?</span>
+                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <span className="mt-0.5 font-bold text-indigo-400 dark:text-indigo-300">?</span>
                           <span>{q}</span>
                         </li>
                       ))}
@@ -293,7 +293,7 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 -ml-2"
+                    className="-ml-2 text-muted-foreground hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800"
                     onClick={(e) => {
                       e.stopPropagation();
                       setStage("closed");
@@ -318,19 +318,19 @@ export function WhatIfScenarios() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🌊</span>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             What If? Scenarios
           </h1>
         </div>
-        <p className="text-sm text-slate-500 leading-relaxed">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Ten thought experiments that expose the real logic behind fluid mechanics.
           Tap a scenario, think it through, then reveal the physics.
         </p>
         <div className="flex flex-wrap gap-2 pt-1">
-          <Badge variant="outline" className="text-xs bg-white border-slate-200 text-slate-500">
+          <Badge variant="outline" className="bg-background text-xs text-muted-foreground border-border">
             tap → think → reveal → follow-up
           </Badge>
-          <Badge variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-600">
+          <Badge variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-500/10 dark:border-indigo-400/50 dark:text-indigo-200">
             10 scenarios
           </Badge>
         </div>
@@ -346,7 +346,7 @@ export function WhatIfScenarios() {
       </div>
 
       {/* Footer hint */}
-      <p className="text-center text-xs text-slate-400 pt-2">
+      <p className="pt-2 text-center text-xs text-muted-foreground">
         Each "What If?" is a real AP Physics 1 concept in disguise.
       </p>
     </div>

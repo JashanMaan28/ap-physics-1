@@ -39,11 +39,11 @@ const TOPICS: Topic[] = [
 ];
 
 const TOPIC_COLORS: Record<Exclude<Topic, "All">, string> = {
-  "Pascal's Law": "bg-purple-100 text-purple-800 border-purple-300",
-  Bernoulli: "bg-blue-100 text-blue-800 border-blue-300",
-  Buoyancy: "bg-teal-100 text-teal-800 border-teal-300",
-  Continuity: "bg-orange-100 text-orange-800 border-orange-300",
-  Pressure: "bg-green-100 text-green-800 border-green-300",
+  "Pascal's Law": "bg-purple-100/90 text-purple-900 border-purple-300 dark:bg-purple-500/20 dark:text-purple-100 dark:border-purple-400/40",
+  Bernoulli: "bg-blue-100/90 text-blue-900 border-blue-300 dark:bg-blue-500/20 dark:text-blue-100 dark:border-blue-400/40",
+  Buoyancy: "bg-teal-100/90 text-teal-900 border-teal-300 dark:bg-teal-500/20 dark:text-teal-100 dark:border-teal-400/40",
+  Continuity: "bg-orange-100/90 text-orange-900 border-orange-300 dark:bg-orange-500/20 dark:text-orange-100 dark:border-orange-400/40",
+  Pressure: "bg-green-100/90 text-green-900 border-green-300 dark:bg-green-500/20 dark:text-green-100 dark:border-green-400/40",
 };
 
 // ── SVG Illustrations ────────────────────────────────────────────────────────
@@ -507,10 +507,10 @@ export function RealWorldExamples() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">
           Real-World Fluid Mechanics
         </h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           12 everyday applications — hover over a card to see the physics in action.
         </p>
       </div>
@@ -537,11 +537,11 @@ export function RealWorldExamples() {
         {filtered.map((ex) => (
           <Card
             key={ex.title}
-            className="flex flex-col overflow-hidden border border-slate-200 shadow-sm transition-shadow hover:shadow-md"
+            className="flex flex-col overflow-hidden border border-border/60 shadow-sm transition-shadow hover:shadow-md"
           >
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between gap-2">
-                <CardTitle className="text-base font-semibold leading-tight text-slate-900">
+                <CardTitle className="text-base font-semibold leading-tight text-foreground">
                   {ex.title}
                 </CardTitle>
                 <Badge
@@ -555,21 +555,21 @@ export function RealWorldExamples() {
 
             <CardContent className="flex flex-1 flex-col gap-3 pt-0">
               {/* Illustration */}
-              <div className="rounded-md bg-slate-50 p-2 ring-1 ring-slate-100">
+              <div className="rounded-md bg-slate-50 p-2 ring-1 ring-slate-200 dark:bg-slate-900/60 dark:ring-slate-700/60">
                 {ex.illustration}
               </div>
 
               {/* Description */}
-              <CardDescription className="text-xs leading-relaxed text-slate-600">
+              <CardDescription className="text-xs leading-relaxed text-muted-foreground">
                 {ex.description}
               </CardDescription>
 
               <Separator className="my-1" />
 
               {/* Physics box */}
-              <div className="rounded-md bg-indigo-50 p-2.5 ring-1 ring-indigo-100">
-                <p className="text-xs font-medium text-indigo-800">{ex.principle}</p>
-                <p className="mt-1 font-mono text-xs text-indigo-700">{ex.formula}</p>
+              <div className="rounded-md bg-indigo-50 p-2.5 ring-1 ring-indigo-200 dark:bg-indigo-500/10 dark:ring-indigo-400/30">
+                <p className="text-xs font-medium text-indigo-900 dark:text-indigo-100">{ex.principle}</p>
+                <p className="mt-1 font-mono text-xs text-indigo-800 dark:text-indigo-200">{ex.formula}</p>
               </div>
             </CardContent>
           </Card>
@@ -577,7 +577,7 @@ export function RealWorldExamples() {
       </div>
 
       {filtered.length === 0 && (
-        <p className="py-12 text-center text-sm text-slate-400">
+        <p className="py-12 text-center text-sm text-muted-foreground">
           No examples match the selected filter.
         </p>
       )}

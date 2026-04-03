@@ -388,13 +388,13 @@ function FRQPartCard({
           {part.label.toUpperCase()}
         </span>
         <div className="flex-1 space-y-1">
-          <p className="text-sm leading-relaxed text-slate-800">{part.question}</p>
+          <p className="text-sm leading-relaxed text-foreground">{part.question}</p>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs font-medium text-slate-600">
+            <Badge variant="outline" className="text-xs font-medium text-muted-foreground border-border">
               {part.points} {part.points === 1 ? "point" : "points"}
             </Badge>
             {state.attempted && (
-              <Badge className="bg-emerald-100 text-xs text-emerald-800 hover:bg-emerald-100">
+              <Badge className="bg-emerald-100 text-xs text-emerald-800 hover:bg-emerald-100 dark:bg-emerald-500/20 dark:text-emerald-100 dark:hover:bg-emerald-500/20">
                 Attempted
               </Badge>
             )}
@@ -404,7 +404,7 @@ function FRQPartCard({
 
       {/* Answer textarea */}
       <textarea
-        className="w-full rounded-md border border-slate-300 bg-white p-3 text-sm text-slate-800 placeholder-slate-400 shadow-sm transition focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 resize-y"
+        className="w-full resize-y rounded-md border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground shadow-sm transition focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:focus:border-slate-400 dark:focus:ring-slate-700"
         rows={4}
         placeholder={`Write your answer for part (${part.label}) here…`}
         value={state.answer}
@@ -438,15 +438,15 @@ function FRQPartCard({
 
       {/* Rubric reveal */}
       {state.showRubric && (
-        <div className="rounded-md border border-amber-200 bg-amber-50 p-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-800">
+        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/40 dark:bg-amber-500/10">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200">
             AP Scoring Rubric — Part ({part.label.toUpperCase()}) — {part.points}{" "}
             {part.points === 1 ? "point" : "points"}
           </p>
           <ul className="space-y-1.5">
             {part.rubric.map((criterion, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs text-amber-900">
-                <span className="mt-0.5 text-amber-600">•</span>
+              <li key={i} className="flex items-start gap-2 text-xs text-amber-900 dark:text-amber-100">
+                <span className="mt-0.5 text-amber-600 dark:text-amber-300">•</span>
                 <span>{criterion}</span>
               </li>
             ))}
@@ -456,11 +456,11 @@ function FRQPartCard({
 
       {/* Sample response reveal */}
       {state.showSample && (
-        <div className="rounded-md border border-blue-200 bg-blue-50 p-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800">
+        <div className="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-400/40 dark:bg-blue-500/10">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800 dark:text-blue-200">
             Model Answer — Part ({part.label.toUpperCase()})
           </p>
-          <pre className="whitespace-pre-wrap text-xs leading-relaxed text-blue-900 font-sans">
+          <pre className="whitespace-pre-wrap font-sans text-xs leading-relaxed text-blue-900 dark:text-blue-100">
             {part.sampleResponse}
           </pre>
         </div>
@@ -510,14 +510,14 @@ export function FRQPractice() {
           <Badge className="bg-slate-800 text-white hover:bg-slate-800 text-xs uppercase tracking-wide">
             AP Physics 1
           </Badge>
-          <Badge variant="outline" className="text-xs text-slate-600">
+          <Badge variant="outline" className="text-xs text-muted-foreground border-border">
             Fluids — Free Response Practice
           </Badge>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Free Response Questions
         </h1>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           Practice AP-style FRQs. Write your answers, then reveal the rubric or a model response.
         </p>
       </div>
@@ -535,13 +535,13 @@ export function FRQPractice() {
               className={`group flex flex-col items-start gap-0.5 rounded-lg border px-3 py-2 text-left text-xs transition-all ${
                 isActive
                   ? "border-slate-800 bg-slate-800 text-white shadow-sm"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                  : "border-border bg-card text-foreground hover:border-slate-400 hover:bg-slate-50 dark:hover:border-slate-500 dark:hover:bg-slate-800"
               }`}
             >
               <span className="font-semibold">FRQ {p.id}</span>
               <span
                 className={`text-[10px] ${
-                  isActive ? "text-slate-300" : "text-slate-400"
+                  isActive ? "text-slate-300" : "text-muted-foreground"
                 }`}
               >
                 {attempted}/{total} parts attempted
@@ -552,35 +552,35 @@ export function FRQPractice() {
       </div>
 
       {/* Active problem card */}
-      <Card className="border-slate-200 shadow-sm">
-        <CardHeader className="border-b border-slate-100 bg-slate-50 pb-4">
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="border-b border-border/60 bg-slate-50 pb-4 dark:bg-slate-900/40">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   Question {activeProblem.id}
                 </span>
-                <Badge variant="outline" className="text-xs text-slate-600">
+                <Badge variant="outline" className="text-xs text-muted-foreground border-border">
                   {totalPoints} points
                 </Badge>
               </div>
-              <CardTitle className="text-lg font-bold text-slate-900">
+              <CardTitle className="text-lg font-bold text-foreground">
                 {activeProblem.title}
               </CardTitle>
             </div>
           </div>
-          <CardDescription className="mt-2 text-sm leading-relaxed text-slate-700">
+          <CardDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
             {activeProblem.scenario}
           </CardDescription>
 
           {/* Given information */}
-          <div className="mt-3 rounded-md border border-slate-200 bg-white px-4 py-3">
-            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="mt-3 rounded-md border border-border bg-background px-4 py-3">
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Given
             </p>
             <ul className="flex flex-wrap gap-x-6 gap-y-1">
               {activeProblem.given.map((g, i) => (
-                <li key={i} className="font-mono text-xs text-slate-700">
+                <li key={i} className="font-mono text-xs text-foreground/90">
                   {g}
                 </li>
               ))}
@@ -605,8 +605,8 @@ export function FRQPractice() {
       </Card>
 
       {/* Progress summary */}
-      <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+      <div className="rounded-lg border border-border bg-slate-50 px-4 py-3 dark:bg-slate-900/40">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Overall Progress
         </p>
         <div className="flex flex-wrap gap-3">
@@ -616,14 +616,14 @@ export function FRQPractice() {
             const pct = Math.round((attempted / total) * 100);
             return (
               <div key={p.id} className="flex items-center gap-2">
-                <span className="text-xs text-slate-600">FRQ {p.id}</span>
-                <div className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-200">
+                <span className="text-xs text-muted-foreground">FRQ {p.id}</span>
+                <div className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
                   <div
-                    className="h-full rounded-full bg-slate-700 transition-all"
+                    className="h-full rounded-full bg-slate-700 transition-all dark:bg-slate-200"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-muted-foreground">
                   {attempted}/{total}
                 </span>
               </div>

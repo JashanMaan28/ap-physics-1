@@ -13,15 +13,20 @@ interface FormulaRowProps {
 function FormulaRow({ equation, variables, whenToUse }: FormulaRowProps) {
   return (
     <div className="border border-border rounded-md p-3 bg-background">
-      <div className="font-mono text-base font-semibold text-foreground mb-2 tracking-wide overflow-x-auto break-words" style={{overflowWrap: "anywhere"}}>
+      <div className="mb-2 overflow-x-auto font-mono text-base font-semibold tracking-wide text-foreground whitespace-nowrap">
         {equation}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-0.5 mb-2">
+      <div className="mb-2 grid grid-cols-1 gap-y-1.5">
         {variables.map((v) => (
-          <div key={v.symbol} className="flex items-baseline gap-1.5 text-[11px] min-w-0">
-            <span className="font-mono font-semibold text-primary min-w-[2.5rem] shrink-0">{v.symbol}</span>
-            <span className="text-muted-foreground break-words min-w-0" style={{overflowWrap: "anywhere"}}>{v.meaning}</span>
-            <span className="font-mono text-[11px] text-muted-foreground ml-auto shrink-0">[{v.unit}]</span>
+          <div
+            key={v.symbol}
+            className="grid min-w-0 grid-cols-[auto_1fr_auto] items-start gap-x-1.5 text-[11px]"
+          >
+            <span className="min-w-[2.5rem] shrink-0 font-mono font-semibold text-primary">
+              {v.symbol}
+            </span>
+            <span className="min-w-0 text-muted-foreground">{v.meaning}</span>
+            <span className="shrink-0 font-mono text-[11px] text-muted-foreground">[{v.unit}]</span>
           </div>
         ))}
       </div>
