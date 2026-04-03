@@ -1,6 +1,8 @@
 "use client";
 
-import { createContext, useContext, useCallback, useState, useEffect } from "react";
+import { createContext, useContext, useCallback } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 interface ProgressContextType {
   /** Get completed topic ids for a unit */
@@ -22,48 +24,35 @@ const ProgressContext = createContext<ProgressContextType>({
 
 export const useProgress = () => useContext(ProgressContext);
 
-const STORAGE_KEY = "ap-physics-progress";
-
-type ProgressData = Record<string, string[]>;
-
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData] = useState<ProgressData>({});
+  const progressData = useQuery(api.progress.getAll);
+  const toggleMutation = useMutation(api.progress.toggleComplete);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setData(JSON.parse(stored));
-    } catch {}
-  }, []);
-
-  // Persist on change
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch {}
-  }, [data]);
+  const dataMap: Record<string, string[]> = {};
+  if (progressData) {
+    for (const row of progressData) {
+      dataMap[row.unitSlug] = row.completedTopics;
+    }
+  }
 
   const getCompleted = useCallback(
-    (unitSlug: string) => new Set(data[unitSlug] ?? []),
-    [data]
+    (unitSlug: string) => new Set(dataMap[unitSlug] ?? []),
+    [progressData]
   );
 
-  const toggleComplete = useCallback((unitSlug: string, topicId: string) => {
-    setData((prev) => {
-      const current = new Set(prev[unitSlug] ?? []);
-      if (current.has(topicId)) current.delete(topicId);
-      else current.add(topicId);
-      return { ...prev, [unitSlug]: Array.from(current) };
-    });
-  }, []);
+  const toggleComplete = useCallback(
+    (unitSlug: string, topicId: string) => {
+      toggleMutation({ unitSlug, topicId });
+    },
+    [toggleMutation]
+  );
 
   const getProgress = useCallback(
     (unitSlug: string, totalTopics: number) => {
       if (totalTopics === 0) return 0;
-      return ((data[unitSlug]?.length ?? 0) / totalTopics) * 100;
+      return ((dataMap[unitSlug]?.length ?? 0) / totalTopics) * 100;
     },
-    [data]
+    [progressData]
   );
 
   const getOverallProgress = useCallback(
@@ -72,15 +61,17 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       let total = 0;
       for (const [slug, count] of Object.entries(unitTotals)) {
         total += count;
-        completed += data[slug]?.length ?? 0;
+        completed += dataMap[slug]?.length ?? 0;
       }
       return total === 0 ? 0 : (completed / total) * 100;
     },
-    [data]
+    [progressData]
   );
 
   return (
-    <ProgressContext.Provider value={{ getCompleted, toggleComplete, getProgress, getOverallProgress }}>
+    <ProgressContext.Provider
+      value={{ getCompleted, toggleComplete, getProgress, getOverallProgress }}
+    >
       {children}
     </ProgressContext.Provider>
   );

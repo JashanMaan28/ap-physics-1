@@ -1,6 +1,8 @@
 "use client";
 
-import { createContext, useContext, useCallback, useState, useEffect } from "react";
+import { createContext, useContext, useCallback } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import type { MistakeEntry } from "@/types/unit";
 
 interface MistakeContextType {
@@ -19,33 +21,37 @@ const MistakeContext = createContext<MistakeContextType>({
 
 export const useMistakes = () => useContext(MistakeContext);
 
-const STORAGE_KEY = "ap-physics-mistakes";
-
 export function MistakeProvider({ children }: { children: React.ReactNode }) {
-  const [mistakes, setMistakes] = useState<MistakeEntry[]>([]);
+  const mistakesData = useQuery(api.mistakes.getAll);
+  const addMutation = useMutation(api.mistakes.add);
+  const clearMutation = useMutation(api.mistakes.clear);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setMistakes(JSON.parse(stored));
-    } catch {}
-  }, []);
+  const mistakes: MistakeEntry[] = (mistakesData ?? []).map((m) => ({
+    unit: m.unit,
+    topic: m.topic,
+    question: m.question,
+    yourAnswer: m.yourAnswer,
+    correctAnswer: m.correctAnswer,
+    timestamp: m.timestamp,
+  }));
 
-  // Persist to localStorage on change
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mistakes));
-    } catch {}
-  }, [mistakes]);
-
-  const addMistake = useCallback((m: MistakeEntry) => {
-    setMistakes((prev) => [...prev, m]);
-  }, []);
+  const addMistake = useCallback(
+    (m: MistakeEntry) => {
+      addMutation({
+        unit: m.unit,
+        topic: m.topic,
+        question: m.question,
+        yourAnswer: m.yourAnswer,
+        correctAnswer: m.correctAnswer,
+        timestamp: m.timestamp,
+      });
+    },
+    [addMutation]
+  );
 
   const clearMistakes = useCallback(() => {
-    setMistakes([]);
-  }, []);
+    clearMutation();
+  }, [clearMutation]);
 
   const getMistakesForUnit = useCallback(
     (unit: string) => mistakes.filter((m) => m.unit === unit),
@@ -53,7 +59,9 @@ export function MistakeProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <MistakeContext.Provider value={{ mistakes, addMistake, clearMistakes, getMistakesForUnit }}>
+    <MistakeContext.Provider
+      value={{ mistakes, addMistake, clearMistakes, getMistakesForUnit }}
+    >
       {children}
     </MistakeContext.Provider>
   );

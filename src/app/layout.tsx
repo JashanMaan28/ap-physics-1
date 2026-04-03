@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend, JetBrains_Mono } from "next/font/google";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import { MistakeProvider } from "@/contexts/mistake-context";
 import { ProgressProvider } from "@/contexts/progress-context";
 import { ThemeProvider } from "@/contexts/theme-context";
@@ -33,13 +34,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
-          <ProgressProvider>
-            <MistakeProvider>
-              {children}
-            </MistakeProvider>
-          </ProgressProvider>
-        </ThemeProvider>
+        <ConvexClientProvider>
+          <ThemeProvider>
+            <ProgressProvider>
+              <MistakeProvider>
+                {children}
+              </MistakeProvider>
+            </ProgressProvider>
+          </ThemeProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );
