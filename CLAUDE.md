@@ -1,5 +1,9 @@
 @AGENTS.md
 
+## Rules
+
+- Always run `bun run build` and `bun run lint` before committing and pushing changes to GitHub. Fix any errors before pushing.
+
 <!-- convex-ai-start -->
 This project uses [Convex](https://convex.dev) as its backend.
 

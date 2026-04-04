@@ -25,7 +25,8 @@ const ProgressContext = createContext<ProgressContextType>({
 export const useProgress = () => useContext(ProgressContext);
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useConvexAuth();
+  const auth = useConvexAuth();
+  const isAuthenticated = auth?.isAuthenticated ?? false;
   const progressData = useQuery(api.progress.getAll, isAuthenticated ? {} : "skip");
   const toggleMutation = useMutation(api.progress.toggleComplete);
 

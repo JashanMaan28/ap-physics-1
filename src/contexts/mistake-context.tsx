@@ -22,7 +22,8 @@ const MistakeContext = createContext<MistakeContextType>({
 export const useMistakes = () => useContext(MistakeContext);
 
 export function MistakeProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useConvexAuth();
+  const auth = useConvexAuth();
+  const isAuthenticated = auth?.isAuthenticated ?? false;
   const mistakesData = useQuery(api.mistakes.getAll, isAuthenticated ? {} : "skip");
   const addMutation = useMutation(api.mistakes.add);
   const clearMutation = useMutation(api.mistakes.clear);

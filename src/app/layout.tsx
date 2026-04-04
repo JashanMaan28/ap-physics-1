@@ -6,6 +6,8 @@ import { ProgressProvider } from "@/contexts/progress-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 const lexend = Lexend({
   variable: "--font-sans",
   subsets: ["latin"],
