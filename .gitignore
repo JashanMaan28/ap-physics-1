@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI tool configs
+.agents/
+.augment/
+.claude/
+.continue/
+.crush/
+.factory/
+.goose/
+.junie/
+.windsurf/
+skills-lock.json
