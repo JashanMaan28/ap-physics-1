@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useCallback } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useConvexAuth, useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { MistakeEntry } from "@/types/unit";
 
@@ -22,7 +22,8 @@ const MistakeContext = createContext<MistakeContextType>({
 export const useMistakes = () => useContext(MistakeContext);
 
 export function MistakeProvider({ children }: { children: React.ReactNode }) {
-  const mistakesData = useQuery(api.mistakes.getAll);
+  const { isAuthenticated } = useConvexAuth();
+  const mistakesData = useQuery(api.mistakes.getAll, isAuthenticated ? {} : "skip");
   const addMutation = useMutation(api.mistakes.add);
   const clearMutation = useMutation(api.mistakes.clear);
 

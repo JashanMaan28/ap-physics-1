@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useCallback } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useConvexAuth, useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 interface ProgressContextType {
@@ -25,7 +25,8 @@ const ProgressContext = createContext<ProgressContextType>({
 export const useProgress = () => useContext(ProgressContext);
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
-  const progressData = useQuery(api.progress.getAll);
+  const { isAuthenticated } = useConvexAuth();
+  const progressData = useQuery(api.progress.getAll, isAuthenticated ? {} : "skip");
   const toggleMutation = useMutation(api.progress.toggleComplete);
 
   const dataMap: Record<string, string[]> = {};
