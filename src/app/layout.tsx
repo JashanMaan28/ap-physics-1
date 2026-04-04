@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { Lexend, JetBrains_Mono } from "next/font/google";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
+import { AuthGate } from "@/components/AuthGate";
 import { MistakeProvider } from "@/contexts/mistake-context";
 import { ProgressProvider } from "@/contexts/progress-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 import "./globals.css";
-
-export const dynamic = "force-dynamic";
 
 const lexend = Lexend({
   variable: "--font-sans",
@@ -37,13 +36,15 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ConvexClientProvider>
-          <ThemeProvider>
-            <ProgressProvider>
-              <MistakeProvider>
-                {children}
-              </MistakeProvider>
-            </ProgressProvider>
-          </ThemeProvider>
+          <AuthGate>
+            <ThemeProvider>
+              <ProgressProvider>
+                <MistakeProvider>
+                  {children}
+                </MistakeProvider>
+              </ProgressProvider>
+            </ThemeProvider>
+          </AuthGate>
         </ConvexClientProvider>
       </body>
     </html>
