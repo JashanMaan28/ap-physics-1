@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useMistakes } from "@/app/fluids-study";
+import { useToast } from "@/components/effects/toast";
 import {
   Card,
   CardContent,
@@ -148,23 +149,54 @@ const questions: Question[] = [
 
 export function PracticeQuiz() {
   const { addMistake } = useMistakes();
+  const { toast } = useToast();
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [momentumShift, setMomentumShift] = useState<string | null>(null);
+  const questionStartTime = useRef(0);
+
+  // Initialize timer on mount
+  useEffect(() => {
+    questionStartTime.current = performance.now();
+  }, []);
 
   const q = questions[currentQ];
 
   const handleSelect = (optionIndex: number) => {
     if (showExplanation) return;
+    const now = performance.now();
+    const elapsed = questionStartTime.current > 0 ? now - questionStartTime.current : Infinity;
     setSelected(optionIndex);
     setShowExplanation(true);
     setAnswered((a) => a + 1);
     if (optionIndex === q.correct) {
       setScore((s) => s + 1);
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+      // Speed of Light: answered in under 1 second
+      if (elapsed < 1000) {
+        toast("Speed of Light! Answered in under 1 second", "⚡", 3000);
+      }
+      // 5-streak fire
+      if (newStreak === 5) {
+        toast("5 in a row! You're on fire!", "🔥", 3000);
+      }
     } else {
+      setStreak(0);
+      // Motivational toast at 10 wrong answers
+      const wrongCount = answered + 1 - score;
+      if (wrongCount === 10) {
+        toast("Even Einstein failed exams. Keep going!", "🧠", 4000);
+      }
+      // Momentum conservation shift
+      const dir = Math.random() > 0.5 ? "momentum-shift-left" : "momentum-shift-right";
+      setMomentumShift(dir);
+      setTimeout(() => setMomentumShift(null), 700);
       addMistake({
         topic: q.topic,
         question: q.question,
@@ -180,6 +212,7 @@ export function PracticeQuiz() {
       setCurrentQ((c) => c + 1);
       setSelected(null);
       setShowExplanation(false);
+      questionStartTime.current = performance.now();
     } else {
       setQuizComplete(true);
     }
@@ -192,6 +225,8 @@ export function PracticeQuiz() {
     setScore(0);
     setAnswered(0);
     setQuizComplete(false);
+    setStreak(0);
+    questionStartTime.current = performance.now();
   };
 
   if (quizComplete) {
@@ -265,6 +300,11 @@ export function PracticeQuiz() {
               Question {currentQ + 1} of {questions.length}
             </span>
             <div className="flex items-center gap-2">
+              {streak >= 3 && (
+                <span className="streak-fire text-xs font-mono font-bold text-orange-500">
+                  🔥 {streak}
+                </span>
+              )}
               <span className="font-mono text-xs text-muted-foreground">
                 Score: {score}/{answered}
               </span>
@@ -278,7 +318,7 @@ export function PracticeQuiz() {
       </Card>
 
       {/* Question */}
-      <Card className="mx-auto max-w-3xl">
+      <Card className={`mx-auto max-w-3xl ${momentumShift ?? ""}`}>
         <CardHeader>
           <div className="flex items-center gap-2">
             <Badge variant="secondary">{q.topic}</Badge>

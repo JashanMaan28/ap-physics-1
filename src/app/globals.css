@@ -183,3 +183,141 @@
 .dark * {
   scrollbar-color: oklch(0.4 0 0 / 0.5) transparent;
 }
+
+/* ═══════════ EASTER EGG EFFECTS ═══════════ */
+
+/* Konami code — gravity flip */
+.gravity-flip {
+  animation: flip-gravity 3s ease-in-out;
+}
+@keyframes flip-gravity {
+  0% { transform: scaleY(1); }
+  15% { transform: scaleY(-1) translateY(-20px); }
+  85% { transform: scaleY(-1) translateY(-20px); }
+  100% { transform: scaleY(1); }
+}
+
+/* Typing "9.8" — everything falls */
+html.gravity-drop * {
+  animation: gravity-fall 2s ease-in forwards !important;
+}
+html.gravity-drop body {
+  overflow: hidden;
+}
+@keyframes gravity-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translateY(120vh) rotate(15deg); opacity: 0; }
+}
+
+/* Chalkboard theme */
+html.chalkboard {
+  --chalkboard-bg: #2a4734;
+  --chalkboard-fg: #e8dcc8;
+}
+html.chalkboard body {
+  background: var(--chalkboard-bg) !important;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.02) 0%, transparent 50%) !important;
+  color: var(--chalkboard-fg) !important;
+  font-family: 'Courier New', monospace !important;
+}
+html.chalkboard .bg-card,
+html.chalkboard .bg-background {
+  background: color-mix(in srgb, var(--chalkboard-bg) 90%, white) !important;
+}
+html.chalkboard .border,
+html.chalkboard [class*="border-"] {
+  border-color: rgba(255,255,255,0.15) !important;
+}
+html.chalkboard .text-foreground,
+html.chalkboard .text-foreground\/90,
+html.chalkboard .text-foreground\/80,
+html.chalkboard .text-foreground\/70 {
+  color: var(--chalkboard-fg) !important;
+}
+html.chalkboard .text-muted-foreground,
+html.chalkboard .text-foreground\/40,
+html.chalkboard .text-foreground\/30,
+html.chalkboard .text-foreground\/20 {
+  color: rgba(232, 220, 200, 0.5) !important;
+}
+
+/* Dark Matter theme — pitch black + neon */
+html.dark-matter {
+  --dm-bg: #050508;
+  --dm-neon: #00ffcc;
+  --dm-neon2: #bf5fff;
+}
+html.dark-matter body {
+  background: var(--dm-bg) !important;
+  color: #e0e0e0 !important;
+}
+html.dark-matter .bg-card,
+html.dark-matter .bg-background {
+  background: #0a0a10 !important;
+}
+html.dark-matter .border,
+html.dark-matter [class*="border-"] {
+  border-color: var(--dm-neon) !important;
+  border-opacity: 0.2;
+}
+html.dark-matter .text-primary,
+html.dark-matter .bg-primary {
+  color: var(--dm-neon) !important;
+}
+html.dark-matter a:hover,
+html.dark-matter button:hover {
+  text-shadow: 0 0 8px var(--dm-neon), 0 0 16px var(--dm-neon2);
+}
+html.dark-matter .rounded-2xl {
+  box-shadow: 0 0 12px rgba(0, 255, 204, 0.08), inset 0 0 12px rgba(191, 95, 255, 0.04);
+}
+
+/* Card weight easter egg tooltip */
+.weight-tooltip {
+  animation: weight-bounce 0.5s ease-out;
+}
+@keyframes weight-bounce {
+  0% { transform: scale(0.5) translateY(10px); opacity: 0; }
+  60% { transform: scale(1.1) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Quiz streak fire */
+.streak-fire {
+  animation: fire-pulse 0.6s ease-in-out infinite alternate;
+}
+@keyframes fire-pulse {
+  0% { text-shadow: 0 0 4px #ff6b00, 0 0 8px #ff4500; transform: scale(1); }
+  100% { text-shadow: 0 0 8px #ff6b00, 0 0 20px #ff4500, 0 0 30px #ff0000; transform: scale(1.05); }
+}
+
+/* Momentum shift on wrong answer */
+.momentum-shift-left {
+  animation: shift-left 0.6s ease-out;
+}
+.momentum-shift-right {
+  animation: shift-right 0.6s ease-out;
+}
+@keyframes shift-left {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(-30px); }
+  100% { transform: translateX(0); }
+}
+@keyframes shift-right {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(30px); }
+  100% { transform: translateX(0); }
+}
+
+/* Speed of light badge flash */
+.speed-flash {
+  animation: speed-glow 1s ease-out;
+}
+@keyframes speed-glow {
+  0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.8); }
+  50% { box-shadow: 0 0 20px 10px rgba(250, 204, 21, 0.4); }
+  100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+}

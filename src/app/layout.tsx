@@ -5,6 +5,8 @@ import { AuthGate } from "@/components/AuthGate";
 import { MistakeProvider } from "@/contexts/mistake-context";
 import { ProgressProvider } from "@/contexts/progress-context";
 import { ThemeProvider } from "@/contexts/theme-context";
+import { ToastProvider } from "@/components/effects/toast";
+import { EasterEggProvider } from "@/components/effects/easter-egg-provider";
 import "./globals.css";
 
 const lexend = Lexend({
@@ -38,11 +40,15 @@ export default function RootLayout({
         <ConvexClientProvider>
           <AuthGate>
             <ThemeProvider>
-              <ProgressProvider>
-                <MistakeProvider>
-                  {children}
-                </MistakeProvider>
-              </ProgressProvider>
+              <ToastProvider>
+                <EasterEggProvider>
+                  <ProgressProvider>
+                    <MistakeProvider>
+                      {children}
+                    </MistakeProvider>
+                  </ProgressProvider>
+                </EasterEggProvider>
+              </ToastProvider>
             </ThemeProvider>
           </AuthGate>
         </ConvexClientProvider>

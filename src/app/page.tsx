@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { units } from "@/data/units";
 import { useProgress } from "@/contexts/progress-context";
 import { unitConfigs } from "@/units/registry";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useToast } from "@/components/effects/toast";
+import { Confetti } from "@/components/effects/confetti";
 
 /* ─── Floating equations that drift across the hero ─── */
 const EQUATIONS = [
@@ -15,8 +17,24 @@ const EQUATIONS = [
 ];
 
 function FloatingEquations() {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handler = (e: DeviceOrientationEvent) => {
+      const x = Math.max(-20, Math.min(20, (e.gamma ?? 0) * 0.5));
+      const y = Math.max(-20, Math.min(20, (e.beta ?? 0) * 0.3));
+      setTilt({ x, y });
+    };
+    window.addEventListener("deviceorientation", handler);
+    return () => window.removeEventListener("deviceorientation", handler);
+  }, []);
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden>
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none select-none"
+      aria-hidden
+      style={{ transform: `translate(${tilt.x}px, ${tilt.y}px)` }}
+    >
       {EQUATIONS.map((eq, i) => (
         <span
           key={i}
@@ -39,24 +57,46 @@ function FloatingEquations() {
   );
 }
 
-/* ─── Animated orbital rings in hero ─── */
+/* ─── Animated orbital rings in hero (draggable) ─── */
 function OrbitalRings() {
+  const [flung, setFlung] = useState<{ idx: number; dx: number; dy: number } | null>(null);
+  const dragRef = useRef<{ startX: number; startY: number; idx: number } | null>(null);
+
+  const handlePointerDown = (e: React.PointerEvent, idx: number) => {
+    dragRef.current = { startX: e.clientX, startY: e.clientY, idx };
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    if (Math.abs(dx) + Math.abs(dy) > 30) {
+      setFlung({ idx: dragRef.current.idx, dx: dx * 3, dy: dy * 3 });
+      setTimeout(() => setFlung(null), 1000);
+    }
+    dragRef.current = null;
+  };
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
+    <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
       {[180, 260, 350].map((size, i) => (
         <div
           key={i}
-          className="absolute rounded-full border"
+          className="absolute rounded-full border cursor-grab active:cursor-grabbing pointer-events-auto"
+          onPointerDown={(e) => handlePointerDown(e, i)}
+          onPointerUp={handlePointerUp}
           style={{
             width: size,
             height: size,
             borderColor: `oklch(0.7 0.15 ${220 + i * 40} / ${0.15 + i * 0.05})`,
-            animationName: "spin",
+            animationName: flung?.idx === i ? undefined : "spin",
             animationDuration: `${25 + i * 12}s`,
             animationTimingFunction: "linear",
             animationIterationCount: "infinite",
             animationDirection: i % 2 === 0 ? "normal" : "reverse",
-            transform: `rotate(${i * 30}deg)`,
+            transform: flung?.idx === i ? `translate(${flung.dx}px, ${flung.dy}px)` : `rotate(${i * 30}deg)`,
+            transition: flung?.idx === i ? "transform 1s ease-out" : undefined,
           }}
         >
           {/* Orbiting dot */}
@@ -142,9 +182,15 @@ function StatCard({ value, label, sublabel }: { value: string; label: string; su
 /* ─── Main Page ─── */
 export default function HomePage() {
   const { getProgress, getOverallProgress } = useProgress();
+  const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
-
   const [enterDone, setEnterDone] = useState(false);
+  const [confettiColor, setConfettiColor] = useState<string | null>(null);
+  const [showNewtonApple, setShowNewtonApple] = useState(false);
+  const [weightCard, setWeightCard] = useState<{ slug: string; mass: number } | null>(null);
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const footerClicks = useRef<number[]>([]);
+  const confettiShownRef = useRef<Set<string>>(new Set());
 
   useEffect(() => { setMounted(true); }, []);
   // Clear entrance animation delays after cards have animated in
@@ -155,6 +201,33 @@ export default function HomePage() {
     }
   }, [mounted]);
 
+  // Footer triple-click handler
+  const handleFooterClick = useCallback(() => {
+    const now = Date.now();
+    footerClicks.current.push(now);
+    footerClicks.current = footerClicks.current.filter((t) => now - t < 1500);
+    if (footerClicks.current.length >= 3) {
+      footerClicks.current = [];
+      toast("Sir Isaac Newton is, however, affiliated with this app", "🍏", 4000);
+    }
+  }, [toast]);
+
+  // Card hold-for-weight handler
+  const handleCardHold = useCallback((slug: string) => {
+    holdTimer.current = setTimeout(() => {
+      const mass = (Math.random() * 50 + 1).toFixed(1);
+      setWeightCard({ slug, mass: parseFloat(mass) });
+      setTimeout(() => setWeightCard(null), 3000);
+    }, 2000);
+  }, []);
+
+  const cancelCardHold = useCallback(() => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+  }, []);
+
   const unitTotals: Record<string, number> = {};
   for (const unit of units) {
     const config = unitConfigs[unit.slug];
@@ -162,6 +235,31 @@ export default function HomePage() {
   }
   const overall = getOverallProgress(unitTotals);
   const totalTopics = Object.values(unitTotals).reduce((a, b) => a + b, 0);
+
+  // Newton's Apple badge — show if 100% overall
+  useEffect(() => {
+    if (mounted && overall === 100) {
+      setShowNewtonApple(true);
+    }
+  }, [mounted, overall]);
+
+  // Confetti when a unit reaches 100%
+  useEffect(() => {
+    if (!mounted) return;
+    for (const unit of units) {
+      const config = unitConfigs[unit.slug];
+      if (!config) continue;
+      const topicCount = config.learnTopicIds.length;
+      const progress = getProgress(unit.slug, topicCount);
+      if (progress === 100 && !confettiShownRef.current.has(unit.slug)) {
+        confettiShownRef.current.add(unit.slug);
+        const color = unit.color;
+        // Defer to avoid setState-in-effect lint
+        requestAnimationFrame(() => setConfettiColor(color));
+        break;
+      }
+    }
+  }, [mounted, getProgress]);
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
@@ -193,7 +291,7 @@ export default function HomePage() {
             <h1
               className={`text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
             >
-              <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent" data-title-egg>
                 AP Physics 1
               </span>
             </h1>
@@ -252,6 +350,9 @@ export default function HomePage() {
                   transitionDelay: enterDone ? undefined : `${400 + i * 80}ms`,
                   borderColor: isAvailable ? `color-mix(in oklch, ${unit.color} 20%, transparent)` : undefined,
                 }}
+                onPointerDown={() => handleCardHold(unit.slug)}
+                onPointerUp={cancelCardHold}
+                onPointerLeave={cancelCardHold}
               >
                 {/* Glow effect on hover */}
                 {isAvailable && (
@@ -292,6 +393,13 @@ export default function HomePage() {
                       {unit.examWeight}
                     </span>
                   </div>
+
+                  {/* Weight easter egg tooltip */}
+                  {weightCard?.slug === unit.slug && (
+                    <div className="weight-tooltip absolute top-2 right-2 z-10 rounded-lg bg-foreground/90 text-background px-3 py-1.5 text-[11px] font-mono shadow-lg">
+                      m = {weightCard.mass} kg &rarr; F = {(weightCard.mass * 9.8).toFixed(1)} N
+                    </div>
+                  )}
 
                   {/* Title + description */}
                   <h3 className="text-sm font-semibold text-foreground/90 leading-tight mb-1.5 transition-colors group-hover:text-foreground">
@@ -459,13 +567,28 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
             <p className="text-xs text-foreground/20">
               AP Physics 1 Study Guide · Built for the 2025–26 College Board CED
+              {showNewtonApple && (
+                <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-emerald-500 text-[10px] font-medium" title="You completed everything!">
+                  🍎 Newton&apos;s Apple
+                </span>
+              )}
             </p>
-            <p className="text-xs text-foreground/10">
+            <p
+              className="text-xs text-foreground/10 cursor-default select-none"
+              onClick={handleFooterClick}
+            >
               Not affiliated with College Board
             </p>
           </div>
         </div>
       </footer>
+
+      {/* Confetti effect */}
+      <Confetti
+        active={confettiColor !== null}
+        color={confettiColor ?? undefined}
+        onComplete={() => setConfettiColor(null)}
+      />
 
       {/* ═══════════ CSS ANIMATIONS ═══════════ */}
       <style>{`
