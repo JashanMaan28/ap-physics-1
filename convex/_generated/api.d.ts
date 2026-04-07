@@ -13,6 +13,7 @@ import type * as http from "../http.js";
 import type * as mistakes from "../mistakes.js";
 import type * as progress from "../progress.js";
 import type * as rls from "../rls.js";
+import type * as user from "../user.js";
 
 import type {
   ApiFromModules,
@@ -26,6 +27,7 @@ declare const fullApi: ApiFromModules<{
   mistakes: typeof mistakes;
   progress: typeof progress;
   rls: typeof rls;
+  user: typeof user;
 }>;
 
 /**

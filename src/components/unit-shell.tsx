@@ -10,6 +10,7 @@ import { useMistakes } from "@/contexts/mistake-context";
 import type { UnitConfig, TopicProps } from "@/types/unit";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ProfileMenu } from "@/components/profile-menu";
 
 function SectionIcon({ type, size = 16 }: { type: string; size?: number }) {
   const props = {
@@ -345,6 +346,7 @@ export function UnitShell({ config }: { config: UnitConfig }) {
               {completedTopics.size}/{config.learnTopicIds.length}
             </Badge>
             <ThemeToggle />
+            <ProfileMenu />
           </div>
         </header>
 

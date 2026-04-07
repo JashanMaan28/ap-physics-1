@@ -6,6 +6,7 @@ import { units } from "@/data/units";
 import { useProgress } from "@/contexts/progress-context";
 import { unitConfigs } from "@/units/registry";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ProfileMenu } from "@/components/profile-menu";
 import { useToast } from "@/components/effects/toast";
 import { Confetti } from "@/components/effects/confetti";
 
@@ -269,9 +270,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
-      {/* Theme toggle — fixed top right */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Top right controls */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
         <ThemeToggle className="bg-card/80 backdrop-blur-sm border border-border shadow-sm" />
+        <ProfileMenu className="bg-card/80 backdrop-blur-sm rounded-full" />
       </div>
 
       {/* ═══════════ HERO ═══════════ */}
