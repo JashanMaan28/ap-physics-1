@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import { AuthGate } from "@/components/AuthGate";
 import { MistakeProvider } from "@/contexts/mistake-context";
@@ -52,6 +53,7 @@ export default function RootLayout({
             </ThemeProvider>
           </AuthGate>
         </ConvexClientProvider>
+        <Analytics />
       </body>
     </html>
   );
