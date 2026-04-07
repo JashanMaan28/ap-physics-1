@@ -2,6 +2,12 @@
 
 import * as React from "react"
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
+// Suppress base-ui script tag warning by rendering thumbs only on client
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
+  return mounted ? <>{children}</> : null
+}
 
 import { cn } from "@/lib/utils"
 
@@ -75,14 +81,16 @@ function Slider({
             className="bg-primary select-none data-horizontal:h-full data-vertical:w-full"
           />
         </SliderPrimitive.Track>
-        {_values.map((_, index) => (
-          <SliderPrimitive.Thumb
-            data-slot="slider-thumb"
-            key={index}
-            index={index}
-            className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
-          />
-        ))}
+        <ClientOnly>
+          {_values.map((_, index) => (
+            <SliderPrimitive.Thumb
+              data-slot="slider-thumb"
+              key={index}
+              index={index}
+              className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+            />
+          ))}
+        </ClientOnly>
       </SliderPrimitive.Control>
     </SliderPrimitive.Root>
   )

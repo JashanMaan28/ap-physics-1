@@ -190,7 +190,12 @@ export default function HomePage() {
   const [weightCard, setWeightCard] = useState<{ slug: string; mass: number } | null>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const footerClicks = useRef<number[]>([]);
-  const confettiShownRef = useRef<Set<string>>(new Set());
+  const [confettiShown] = useState<Set<string>>(() => {
+    try {
+      const saved = typeof window !== "undefined" ? localStorage.getItem("ap-physics-confetti-shown") : null;
+      return saved ? new Set(JSON.parse(saved) as string[]) : new Set();
+    } catch { return new Set(); }
+  });
 
   useEffect(() => { setMounted(true); }, []);
   // Clear entrance animation delays after cards have animated in
@@ -251,8 +256,9 @@ export default function HomePage() {
       if (!config) continue;
       const topicCount = config.learnTopicIds.length;
       const progress = getProgress(unit.slug, topicCount);
-      if (progress === 100 && !confettiShownRef.current.has(unit.slug)) {
-        confettiShownRef.current.add(unit.slug);
+      if (progress === 100 && !confettiShown.has(unit.slug)) {
+        confettiShown.add(unit.slug);
+        try { localStorage.setItem("ap-physics-confetti-shown", JSON.stringify([...confettiShown])); } catch {}
         const color = unit.color;
         // Defer to avoid setState-in-effect lint
         requestAnimationFrame(() => setConfettiColor(color));

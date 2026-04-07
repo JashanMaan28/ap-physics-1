@@ -306,7 +306,7 @@ export function PracticeQuiz() {
                 </span>
               )}
               <span className="font-mono text-xs text-muted-foreground">
-                Score: {score}/{answered}
+                Score: {score}/{questions.length}
               </span>
               <Progress
                 value={((currentQ + 1) / questions.length) * 100}
