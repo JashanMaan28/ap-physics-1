@@ -151,17 +151,10 @@ export function ProfileMenu({ className = "" }: { className?: string }) {
                 <p className="truncate text-xs text-muted-foreground">
                   {user?.email ?? (guest ? "No account — local storage only" : "")}
                 </p>
-                {user?.providers && user.providers.length > 0 && (
-                  <div className="mt-1 flex gap-1">
-                    {user.providers.map((p: string) => (
-                      <span
-                        key={p}
-                        className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground capitalize"
-                      >
-                        {p}
-                      </span>
-                    ))}
-                  </div>
+                {user?.provider && (
+                  <span className="mt-1 inline-block rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground capitalize">
+                    {user.provider}
+                  </span>
                 )}
               </div>
             </div>
