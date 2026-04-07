@@ -131,7 +131,7 @@ function UnitIcon({ slug, className = "" }: { slug: string; className?: string }
 /* ─── Stat card for exam info ─── */
 function StatCard({ value, label, sublabel }: { value: string; label: string; sublabel: string }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border bg-card p-6 backdrop-blur-sm transition-all hover:shadow-md">
+    <div className="group relative overflow-hidden rounded-2xl border bg-card p-6 backdrop-blur-sm transition-[box-shadow] hover:shadow-md">
       <div className="text-3xl font-bold font-mono text-foreground/90 tracking-tight">{value}</div>
       <div className="mt-1 text-sm font-medium text-foreground/60">{label}</div>
       <div className="mt-0.5 text-xs text-foreground/30">{sublabel}</div>
@@ -144,7 +144,16 @@ export default function HomePage() {
   const { getProgress, getOverallProgress } = useProgress();
   const [mounted, setMounted] = useState(false);
 
+  const [enterDone, setEnterDone] = useState(false);
+
   useEffect(() => { setMounted(true); }, []);
+  // Clear entrance animation delays after cards have animated in
+  useEffect(() => {
+    if (mounted) {
+      const timer = setTimeout(() => setEnterDone(true), 400 + units.length * 80 + 300);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted]);
 
   const unitTotals: Record<string, number> = {};
   for (const unit of units) {
@@ -238,9 +247,9 @@ export default function HomePage() {
 
             const card = (
               <div
-                className={`group relative overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`group relative overflow-hidden rounded-2xl border bg-card hover:shadow-lg hover:-translate-y-0.5 ${enterDone ? "transition-[box-shadow,transform] duration-300" : mounted ? "opacity-100 translate-y-0 transition-all duration-300" : "opacity-0 translate-y-8 transition-all duration-300"}`}
                 style={{
-                  transitionDelay: `${400 + i * 80}ms`,
+                  transitionDelay: enterDone ? undefined : `${400 + i * 80}ms`,
                   borderColor: isAvailable ? `color-mix(in oklch, ${unit.color} 20%, transparent)` : undefined,
                 }}
               >

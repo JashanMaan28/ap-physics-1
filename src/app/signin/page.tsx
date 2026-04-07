@@ -1,10 +1,13 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { setGuestMode } from "@/lib/guest";
 
 export default function SignInPage() {
   const { signIn } = useAuthActions();
+  const router = useRouter();
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -176,6 +179,32 @@ export default function SignInPage() {
               </button>
             </>
           )}
+        </p>
+
+        {/* Guest mode */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-background px-2 text-muted-foreground">
+              or
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setGuestMode(true);
+            router.replace("/");
+          }}
+          className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+        >
+          Continue without an account
+        </button>
+        <p className="text-center text-xs text-muted-foreground">
+          Your progress will be saved locally and lost if you clear browser data.
         </p>
       </div>
     </div>
