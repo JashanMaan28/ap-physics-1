@@ -141,7 +141,7 @@ export function ProblemGenerator({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Card className="bg-slate-50">
+          <Card className="bg-slate-50 dark:bg-slate-900/40">
             <CardContent className="pt-4">
               <Badge variant="outline" className="mb-2">{problem.topic}</Badge>
               <p className="text-lg">{problem.question}</p>

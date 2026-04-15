@@ -146,7 +146,7 @@ export function FRQPractice({
 
           <Separator />
 
-          <Card className="bg-slate-50">
+          <Card className="bg-slate-50 dark:bg-slate-900/40">
             <CardContent className="pt-4">
               <h3 className="font-bold text-lg">{frqs[activeFRQ].title}</h3>
               <p className="mt-2">{frqs[activeFRQ].scenario}</p>

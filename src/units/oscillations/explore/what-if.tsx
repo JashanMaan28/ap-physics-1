@@ -146,13 +146,13 @@ function GiantSpringScenario() {
         />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-slate-50">
+        <Card className="bg-slate-50 dark:bg-slate-900/40">
           <CardContent className="pt-3 pb-3 text-center">
             <p className="text-sm text-muted-foreground">Period</p>
             <p className="text-xl font-mono font-bold">{T.toFixed(4)} s</p>
           </CardContent>
         </Card>
-        <Card className="bg-slate-50">
+        <Card className="bg-slate-50 dark:bg-slate-900/40">
           <CardContent className="pt-3 pb-3 text-center">
             <p className="text-sm text-muted-foreground">Frequency</p>
             <p className="text-xl font-mono font-bold">{f.toFixed(2)} Hz</p>
@@ -205,7 +205,7 @@ export function WhatIf({
             ))}
           </div>
 
-          <Card className="bg-slate-50">
+          <Card className="bg-slate-50 dark:bg-slate-900/40">
             <CardContent className="pt-4">
               <h3 className="font-bold">{scenarios[active].title}</h3>
               <p className="text-sm text-muted-foreground mt-1">

@@ -19,6 +19,8 @@ export function ConceptMap({
 }) {
   const svgWidth = 700;
   const svgHeight = 500;
+  const chartSurfaceClassName = "w-full rounded border border-border bg-background";
+  const edgeColor = "var(--border)";
 
   const nodes = [
     { id: "shm", label: "Simple\nHarmonic\nMotion", x: 350, y: 50, color: "#06b6d4" },
@@ -66,7 +68,7 @@ export function ConceptMap({
             width={svgWidth}
             height={svgHeight}
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            className="border rounded bg-white w-full"
+            className={chartSurfaceClassName}
           >
             {/* Edges */}
             {edges.map((e, i) => {
@@ -79,7 +81,7 @@ export function ConceptMap({
                   y1={from.y + 20}
                   x2={to.x}
                   y2={to.y - 20}
-                  stroke="#d1d5db"
+                  stroke={edgeColor}
                   strokeWidth={2}
                 />
               );

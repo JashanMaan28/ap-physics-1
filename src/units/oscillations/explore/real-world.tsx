@@ -96,9 +96,9 @@ export function RealWorld({
                 <AccordionContent>
                   <div className="space-y-2">
                     <p className="text-sm">{ex.description}</p>
-                    <Card className="bg-cyan-50 border-cyan-200">
+                    <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
                       <CardContent className="pt-3 pb-3">
-                        <p className="text-sm font-mono text-cyan-800">
+                        <p className="text-sm font-mono text-cyan-800 dark:text-cyan-100">
                           {ex.physics}
                         </p>
                       </CardContent>

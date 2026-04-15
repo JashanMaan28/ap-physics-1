@@ -30,9 +30,7 @@ export function EnergySHM({
   const [springK, setSpringK] = useState(50);
   const [phase, setPhase] = useState(0);
 
-  const omega = Math.sqrt(springK / 2);
   const x = amplitude * Math.cos(phase);
-  const v = -amplitude * omega * Math.sin(phase);
 
   const totalEnergy = 0.5 * springK * amplitude * amplitude;
   const pe = 0.5 * springK * x * x;
@@ -43,6 +41,9 @@ export function EnergySHM({
   const svgWidth = 400;
   const svgHeight = 220;
   const barBaseY = 190;
+  const chartSurfaceClassName = "w-full rounded border border-border bg-background";
+  const axisColor = "var(--muted-foreground)";
+  const labelColor = "var(--foreground)";
 
   const peBarH = totalEnergy > 0 ? (pe / totalEnergy) * maxBarH : 0;
   const keBarH = totalEnergy > 0 ? (ke / totalEnergy) * maxBarH : 0;
@@ -63,16 +64,16 @@ export function EnergySHM({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-cyan-50 border-cyan-200">
+          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-cyan-900">Key Formulas</p>
-              <p className="text-xl font-mono text-cyan-800 mt-1">
+              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50">Key Formulas</p>
+              <p className="mt-1 text-xl font-mono text-cyan-800 dark:text-cyan-100">
                 E = &frac12;kA&sup2; = &frac12;kx&sup2; + &frac12;mv&sup2;
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 PE = &frac12;kx&sup2;, KE = &frac12;mv&sup2;
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 Total energy E is constant (no friction).
               </p>
             </CardContent>
@@ -87,11 +88,11 @@ export function EnergySHM({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white w-full"
+              className={chartSurfaceClassName}
             >
               {/* Axis */}
-              <line x1={30} y1={barBaseY} x2={svgWidth - 20} y2={barBaseY} stroke="#888" strokeWidth={1} />
-              <text x={svgWidth / 2} y={15} textAnchor="middle" fontSize={13} fill="#444" fontWeight="bold">
+              <line x1={30} y1={barBaseY} x2={svgWidth - 20} y2={barBaseY} stroke={axisColor} strokeWidth={1} />
+              <text x={svgWidth / 2} y={15} textAnchor="middle" fontSize={13} fill={labelColor} fontWeight="bold">
                 Position: x = {x.toFixed(2)} m
               </text>
 
@@ -104,7 +105,7 @@ export function EnergySHM({
                 fill="#f59e0b"
                 rx={3}
               />
-              <text x={70 + barWidth / 2} y={barBaseY + 16} textAnchor="middle" fontSize={12} fill="#444" fontWeight="bold">
+              <text x={70 + barWidth / 2} y={barBaseY + 16} textAnchor="middle" fontSize={12} fill={labelColor} fontWeight="bold">
                 PE
               </text>
               <text x={70 + barWidth / 2} y={barBaseY - peBarH - 6} textAnchor="middle" fontSize={11} fill="#d97706">
@@ -120,7 +121,7 @@ export function EnergySHM({
                 fill="#06b6d4"
                 rx={3}
               />
-              <text x={170 + barWidth / 2} y={barBaseY + 16} textAnchor="middle" fontSize={12} fill="#444" fontWeight="bold">
+              <text x={170 + barWidth / 2} y={barBaseY + 16} textAnchor="middle" fontSize={12} fill={labelColor} fontWeight="bold">
                 KE
               </text>
               <text x={170 + barWidth / 2} y={barBaseY - keBarH - 6} textAnchor="middle" fontSize={11} fill="#0e7490">
@@ -136,7 +137,7 @@ export function EnergySHM({
                 fill="#16a34a"
                 rx={3}
               />
-              <text x={270 + barWidth / 2} y={barBaseY + 16} textAnchor="middle" fontSize={12} fill="#444" fontWeight="bold">
+              <text x={270 + barWidth / 2} y={barBaseY + 16} textAnchor="middle" fontSize={12} fill={labelColor} fontWeight="bold">
                 Total
               </text>
               <text x={270 + barWidth / 2} y={barBaseY - totalBarH - 6} textAnchor="middle" fontSize={11} fill="#16a34a">

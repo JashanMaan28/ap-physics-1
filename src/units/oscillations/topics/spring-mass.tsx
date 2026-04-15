@@ -36,6 +36,9 @@ export function SpringMass({
 
   const svgWidth = 400;
   const svgHeight = 250;
+  const chartSurfaceClassName = "w-full rounded border border-border bg-background";
+  const axisColor = "var(--muted-foreground)";
+  const labelColor = "var(--foreground)";
   const wallX = 30;
   const eqX = 200;
   const blockW = 50;
@@ -72,16 +75,16 @@ export function SpringMass({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-cyan-50 border-cyan-200">
+          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-cyan-900">Key Formula</p>
-              <p className="text-2xl font-mono text-cyan-800 mt-1">
+              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50">Key Formula</p>
+              <p className="mt-1 text-2xl font-mono text-cyan-800 dark:text-cyan-100">
                 T = 2&pi;&radic;(m/k)
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 T = period (s), m = mass (kg), k = spring constant (N/m)
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 Restoring force: F = &minus;kx (Hooke&rsquo;s Law)
               </p>
             </CardContent>
@@ -96,14 +99,14 @@ export function SpringMass({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white w-full"
+              className={chartSurfaceClassName}
             >
               {/* Wall */}
-              <rect x={wallX - 8} y={groundY - 80} width={8} height={100} fill="#888" />
-              <line x1={wallX - 8} y1={groundY - 80} x2={wallX - 8} y2={groundY + 20} stroke="#666" strokeWidth={2} />
+              <rect x={wallX - 8} y={groundY - 80} width={8} height={100} fill={axisColor} />
+              <line x1={wallX - 8} y1={groundY - 80} x2={wallX - 8} y2={groundY + 20} stroke={labelColor} strokeWidth={2} />
 
               {/* Ground */}
-              <line x1={wallX - 10} y1={groundY} x2={svgWidth - 20} y2={groundY} stroke="#888" strokeWidth={2} />
+              <line x1={wallX - 10} y1={groundY} x2={svgWidth - 20} y2={groundY} stroke={axisColor} strokeWidth={2} />
 
               {/* Spring */}
               <path d={springPath} fill="none" stroke="#06b6d4" strokeWidth={2.5} />
@@ -131,8 +134,8 @@ export function SpringMass({
               </text>
 
               {/* Equilibrium marker */}
-              <line x1={eqX} y1={groundY} x2={eqX} y2={groundY + 20} stroke="#aaa" strokeWidth={1} strokeDasharray="3,3" />
-              <text x={eqX} y={groundY + 35} textAnchor="middle" fontSize={11} fill="#888">x=0</text>
+              <line x1={eqX} y1={groundY} x2={eqX} y2={groundY + 20} stroke={axisColor} strokeWidth={1} strokeDasharray="3,3" />
+              <text x={eqX} y={groundY + 35} textAnchor="middle" fontSize={11} fill={axisColor}>x=0</text>
 
               {/* Displacement arrow */}
               {Math.abs(displacement) > 0.05 && (

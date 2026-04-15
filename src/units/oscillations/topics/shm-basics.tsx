@@ -37,6 +37,9 @@ export function SHMBasics({
   const svgWidth = 500;
   const svgHeight = 200;
   const centerY = svgHeight / 2;
+  const chartSurfaceClassName = "w-full rounded border border-border bg-background";
+  const axisColor = "var(--muted-foreground)";
+  const guideColor = "var(--border)";
   const points: string[] = [];
   for (let px = 0; px < svgWidth; px++) {
     const t = (px / svgWidth) * 4;
@@ -62,17 +65,17 @@ export function SHMBasics({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-cyan-50 border-cyan-200">
+          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-cyan-900">Key Formula</p>
-              <p className="text-2xl font-mono text-cyan-800 mt-1">
+              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50">Key Formula</p>
+              <p className="mt-1 text-2xl font-mono text-cyan-800 dark:text-cyan-100">
                 x(t) = A cos(&omega;t)
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 x = position (m), A = amplitude (m), &omega; = angular frequency
                 (rad/s), t = time (s)
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 &omega; = 2&pi;f = 2&pi;/T
               </p>
             </CardContent>
@@ -87,24 +90,24 @@ export function SHMBasics({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white w-full"
+              className={chartSurfaceClassName}
             >
               {/* Axes */}
-              <line x1={0} y1={centerY} x2={svgWidth} y2={centerY} stroke="#ccc" strokeWidth={1} />
-              <text x={svgWidth - 20} y={centerY - 8} fontSize={12} fill="#888">t</text>
-              <text x={8} y={20} fontSize={12} fill="#888">x</text>
+              <line x1={0} y1={centerY} x2={svgWidth} y2={centerY} stroke={guideColor} strokeWidth={1} />
+              <text x={svgWidth - 20} y={centerY - 8} fontSize={12} fill={axisColor}>t</text>
+              <text x={8} y={20} fontSize={12} fill={axisColor}>x</text>
 
               {/* Amplitude lines */}
               <line
                 x1={0} y1={centerY - 60} x2={svgWidth} y2={centerY - 60}
-                stroke="#e0e0e0" strokeDasharray="4,4" strokeWidth={1}
+                stroke={guideColor} strokeDasharray="4,4" strokeWidth={1}
               />
               <line
                 x1={0} y1={centerY + 60} x2={svgWidth} y2={centerY + 60}
-                stroke="#e0e0e0" strokeDasharray="4,4" strokeWidth={1}
+                stroke={guideColor} strokeDasharray="4,4" strokeWidth={1}
               />
-              <text x={4} y={centerY - 63} fontSize={10} fill="#888">+A</text>
-              <text x={4} y={centerY + 73} fontSize={10} fill="#888">-A</text>
+              <text x={4} y={centerY - 63} fontSize={10} fill={axisColor}>+A</text>
+              <text x={4} y={centerY + 73} fontSize={10} fill={axisColor}>-A</text>
 
               {/* Sine wave */}
               <polyline

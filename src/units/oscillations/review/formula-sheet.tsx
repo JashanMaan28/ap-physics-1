@@ -76,7 +76,7 @@ export function FormulaSheet({
               </h3>
               <div className="space-y-2">
                 {section.items.map((item) => (
-                  <Card key={item.name} className="bg-slate-50">
+                  <Card key={item.name} className="bg-slate-50 dark:bg-slate-900/40">
                     <CardContent className="pt-3 pb-3">
                       <div className="flex justify-between items-start">
                         <div>

@@ -110,21 +110,19 @@ export function EasterEggProvider({ children }: { children: React.ReactNode }) {
       titleClicks.current = titleClicks.current.filter((t) => now - t < 2000);
       if (titleClicks.current.length >= 5) {
         titleClicks.current = [];
-        setChalkboard((prev) => {
-          const next = !prev;
-          setEgg("chalkboardUnlocked", next);
-          toast(
-            next ? "Chalkboard mode activated!" : "Chalkboard mode deactivated",
-            next ? "🖊️" : "✨",
-            3000
-          );
-          return next;
-        });
+        const next = !chalkboard;
+        setChalkboard(next);
+        setEgg("chalkboardUnlocked", next);
+        toast(
+          next ? "Chalkboard mode activated!" : "Chalkboard mode deactivated",
+          next ? "🖊️" : "✨",
+          3000
+        );
       }
     };
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
-  }, [toast]);
+  }, [chalkboard, toast]);
 
   return (
     <div className={gravityFlip ? "gravity-flip" : ""}>

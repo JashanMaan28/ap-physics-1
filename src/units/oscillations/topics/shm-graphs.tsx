@@ -50,6 +50,9 @@ export function SHMGraphs({
   const graphH = 100;
   const ampPx = 35;
   const centerY = graphH / 2;
+  const chartSurfaceClassName = "w-full rounded border border-border bg-background";
+  const axisColor = "var(--muted-foreground)";
+  const guideColor = "var(--border)";
 
   const xPos = Math.cos(omega * time);
   const vel = -omega * Math.sin(omega * time);
@@ -82,21 +85,21 @@ export function SHMGraphs({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-cyan-50 border-cyan-200">
+          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-cyan-900">Key Relationships</p>
+              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50">Key Relationships</p>
               <div className="space-y-1 mt-1">
-                <p className="text-lg font-mono text-cyan-800">
+                <p className="text-lg font-mono text-cyan-800 dark:text-cyan-100">
                   x(t) = A cos(&omega;t)
                 </p>
-                <p className="text-lg font-mono text-amber-700">
+                <p className="text-lg font-mono text-amber-700 dark:text-amber-300">
                   v(t) = &minus;A&omega; sin(&omega;t)
                 </p>
-                <p className="text-lg font-mono text-red-700">
+                <p className="text-lg font-mono text-red-700 dark:text-red-300">
                   a(t) = &minus;A&omega;&sup2; cos(&omega;t)
                 </p>
               </div>
-              <p className="text-sm text-cyan-700 mt-2">
+              <p className="mt-2 text-sm text-cyan-700 dark:text-cyan-100/80">
                 v leads x by 90&deg; (quarter cycle). a leads v by 90&deg;.
                 a is 180&deg; out of phase with x.
               </p>
@@ -123,10 +126,10 @@ export function SHMGraphs({
                     width={svgWidth}
                     height={graphH}
                     viewBox={`0 0 ${svgWidth} ${graphH}`}
-                    className="border rounded bg-white w-full"
+                    className={chartSurfaceClassName}
                   >
                     {/* Center line */}
-                    <line x1={0} y1={centerY} x2={svgWidth} y2={centerY} stroke="#e5e7eb" strokeWidth={1} />
+                    <line x1={0} y1={centerY} x2={svgWidth} y2={centerY} stroke={guideColor} strokeWidth={1} />
                     {/* Wave */}
                     <polyline
                       points={g.points}
@@ -137,7 +140,7 @@ export function SHMGraphs({
                     {/* Time cursor */}
                     <line
                       x1={cursorX} y1={0} x2={cursorX} y2={graphH}
-                      stroke="#666" strokeWidth={1} strokeDasharray="3,3"
+                      stroke={axisColor} strokeWidth={1} strokeDasharray="3,3"
                     />
                     {/* Current value dot */}
                     <circle

@@ -35,6 +35,9 @@ export function Pendulum({
 
   const svgWidth = 300;
   const svgHeight = 300;
+  const chartSurfaceClassName = "mx-auto block rounded border border-border bg-background";
+  const axisColor = "var(--muted-foreground)";
+  const labelColor = "var(--foreground)";
   const pivotX = svgWidth / 2;
   const pivotY = 30;
   const ropeLen = 50 + length * 150;
@@ -61,16 +64,16 @@ export function Pendulum({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-cyan-50 border-cyan-200">
+          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-cyan-900">Key Formula</p>
-              <p className="text-2xl font-mono text-cyan-800 mt-1">
+              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50">Key Formula</p>
+              <p className="mt-1 text-2xl font-mono text-cyan-800 dark:text-cyan-100">
                 T = 2&pi;&radic;(L/g)
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 T = period (s), L = length (m), g = 9.81 m/s&sup2;
               </p>
-              <p className="text-sm text-cyan-700 mt-1">
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
                 Valid for small angles (&theta; &lt; ~15&deg;)
               </p>
             </CardContent>
@@ -85,24 +88,24 @@ export function Pendulum({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white mx-auto block"
+              className={chartSurfaceClassName}
             >
               {/* Ceiling */}
-              <line x1={pivotX - 40} y1={pivotY - 5} x2={pivotX + 40} y2={pivotY - 5} stroke="#888" strokeWidth={3} />
-              <line x1={pivotX - 40} y1={pivotY - 5} x2={pivotX - 30} y2={pivotY - 15} stroke="#888" strokeWidth={1} />
-              <line x1={pivotX - 20} y1={pivotY - 5} x2={pivotX - 10} y2={pivotY - 15} stroke="#888" strokeWidth={1} />
-              <line x1={pivotX} y1={pivotY - 5} x2={pivotX + 10} y2={pivotY - 15} stroke="#888" strokeWidth={1} />
-              <line x1={pivotX + 20} y1={pivotY - 5} x2={pivotX + 30} y2={pivotY - 15} stroke="#888" strokeWidth={1} />
+              <line x1={pivotX - 40} y1={pivotY - 5} x2={pivotX + 40} y2={pivotY - 5} stroke={axisColor} strokeWidth={3} />
+              <line x1={pivotX - 40} y1={pivotY - 5} x2={pivotX - 30} y2={pivotY - 15} stroke={axisColor} strokeWidth={1} />
+              <line x1={pivotX - 20} y1={pivotY - 5} x2={pivotX - 10} y2={pivotY - 15} stroke={axisColor} strokeWidth={1} />
+              <line x1={pivotX} y1={pivotY - 5} x2={pivotX + 10} y2={pivotY - 15} stroke={axisColor} strokeWidth={1} />
+              <line x1={pivotX + 20} y1={pivotY - 5} x2={pivotX + 30} y2={pivotY - 15} stroke={axisColor} strokeWidth={1} />
 
               {/* Equilibrium (dashed) */}
               <line
                 x1={pivotX} y1={pivotY}
                 x2={pivotX} y2={eqBobY}
-                stroke="#ccc" strokeWidth={1} strokeDasharray="4,4"
+                stroke={axisColor} strokeWidth={1} strokeDasharray="4,4"
               />
 
               {/* Rope */}
-              <line x1={pivotX} y1={pivotY} x2={bobX} y2={bobY} stroke="#444" strokeWidth={2} />
+              <line x1={pivotX} y1={pivotY} x2={bobX} y2={bobY} stroke={labelColor} strokeWidth={2} />
 
               {/* Angle arc */}
               {angle > 0 && (
@@ -141,7 +144,7 @@ export function Pendulum({
                 x={(pivotX + bobX) / 2 - 20}
                 y={(pivotY + bobY) / 2}
                 fontSize={12}
-                fill="#444"
+                fill={labelColor}
               >
                 L = {length.toFixed(1)} m
               </text>

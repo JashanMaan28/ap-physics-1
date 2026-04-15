@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -104,7 +102,7 @@ export function WorkedExamples({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-3">
-                    <Card className="bg-slate-50">
+                    <Card className="bg-slate-50 dark:bg-slate-900/40">
                       <CardContent className="pt-4">
                         <p className="font-medium">Problem</p>
                         <p className="text-sm mt-1">{ex.problem}</p>
