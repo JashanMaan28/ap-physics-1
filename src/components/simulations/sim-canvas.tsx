@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SimulationPredictionCard } from "@/components/arcade/simulation-prediction-card";
 
 interface SimCanvasProps {
   title: string;
@@ -22,29 +23,32 @@ export function SimCanvas({ title, description, width = 800, height = 500, onDra
   const elapsedRef = useRef<number>(0);
   const [playing, setPlaying] = useState(false);
 
-  const draw = useCallback((timestamp: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const dt = lastTimeRef.current ? Math.min((timestamp - lastTimeRef.current) / 1000, 0.05) : 0;
-    lastTimeRef.current = timestamp;
-    elapsedRef.current += dt;
-
-    onDraw(ctx, canvas, dt, elapsedRef.current);
-    animRef.current = requestAnimationFrame(draw);
-  }, [onDraw]);
-
   useEffect(() => {
-    if (playing) {
-      lastTimeRef.current = 0;
-      animRef.current = requestAnimationFrame(draw);
-    } else {
+    if (!playing) {
       cancelAnimationFrame(animRef.current);
+      return undefined;
     }
+
+    function draw(timestamp: number) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const dt = lastTimeRef.current
+        ? Math.min((timestamp - lastTimeRef.current) / 1000, 0.05)
+        : 0;
+      lastTimeRef.current = timestamp;
+      elapsedRef.current += dt;
+
+      onDraw(ctx, canvas, dt, elapsedRef.current);
+      animRef.current = requestAnimationFrame(draw);
+    }
+
+    lastTimeRef.current = 0;
+    animRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(animRef.current);
-  }, [playing, draw]);
+  }, [playing, onDraw]);
 
   // Draw initial frame
   useEffect(() => {
@@ -70,6 +74,8 @@ export function SimCanvas({ title, description, width = 800, height = 500, onDra
 
   return (
     <div className="space-y-4">
+      <SimulationPredictionCard title={title} />
+
       <Card className="overflow-hidden border-white/[0.08] bg-white/[0.02]">
         <CardHeader>
           <CardTitle className="text-lg">{title}</CardTitle>

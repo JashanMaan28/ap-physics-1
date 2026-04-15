@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ProfileMenu } from "@/components/profile-menu";
 import { useToast } from "@/components/effects/toast";
 import { Confetti } from "@/components/effects/confetti";
+import { ArcadePreview } from "@/components/arcade/arcade-preview";
 
 /* ─── Floating equations that drift across the hero ─── */
 const EQUATIONS = [
@@ -80,11 +81,11 @@ function OrbitalRings() {
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
       {[180, 260, 350].map((size, i) => (
         <div
           key={i}
-          className="absolute rounded-full border cursor-grab active:cursor-grabbing pointer-events-auto"
+          className="absolute rounded-full border"
           onPointerDown={(e) => handlePointerDown(e, i)}
           onPointerUp={handlePointerUp}
           style={{
@@ -285,7 +286,7 @@ export default function HomePage() {
         <FloatingEquations />
         <OrbitalRings />
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-20 sm:px-6 sm:pt-28 lg:px-8 lg:pt-36">
+        <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 pt-20 sm:px-6 sm:pt-28 lg:px-8 lg:pt-36">
           <div className="flex flex-col items-center text-center">
             {/* Badge */}
             <div
@@ -324,6 +325,18 @@ export default function HomePage() {
               <span><strong className="text-foreground/60 font-mono">160+</strong> questions</span>
               <span className="h-3 w-px bg-foreground/10" />
               <span><strong className="text-foreground/60 font-mono">200+</strong> flashcards</span>
+            </div>
+
+            <div className={`mt-8 flex flex-wrap items-center justify-center gap-3 transition-all duration-700 delay-800 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              <Link
+                href="/arcade"
+                className="rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-sm font-medium text-primary transition hover:bg-primary/15"
+              >
+                Enter Study Arcade
+              </Link>
+              <span className="text-xs text-foreground/30">
+                Daily challenge, boss battles, notebook, and more
+              </span>
             </div>
           </div>
         </div>
@@ -467,6 +480,8 @@ export default function HomePage() {
           })}
         </div>
       </section>
+
+      <ArcadePreview />
 
       {/* ═══════════ EXAM WEIGHTAGE ═══════════ */}
       <section className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">

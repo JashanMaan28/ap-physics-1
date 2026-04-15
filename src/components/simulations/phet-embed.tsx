@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SimulationPredictionCard } from "@/components/arcade/simulation-prediction-card";
 
 interface PhETEmbedProps {
   title: string;
@@ -30,6 +31,8 @@ export function PhETEmbed({ title, description, simUrl, tips }: PhETEmbedProps) 
 
   return (
     <div className="space-y-4">
+      <SimulationPredictionCard title={title} />
+
       <Card className="overflow-hidden border-white/[0.08] bg-white/[0.02]">
         <CardHeader>
           <div className="flex items-center justify-between">

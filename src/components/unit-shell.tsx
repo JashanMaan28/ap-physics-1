@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useProgress } from "@/contexts/progress-context";
 import { useMistakes } from "@/contexts/mistake-context";
+import { useArcade } from "@/contexts/arcade-context";
 import type { UnitConfig, TopicProps } from "@/types/unit";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -69,6 +70,7 @@ export function UnitShell({ config }: { config: UnitConfig }) {
   const [isMobile, setIsMobile] = useState(false);
   const { getCompleted, toggleComplete, getProgress } = useProgress();
   const { getMistakesForUnit } = useMistakes();
+  const { level, streak } = useArcade();
 
   const completedTopics = getCompleted(config.slug);
   const unitMistakes = getMistakesForUnit(config.slug);
@@ -258,6 +260,12 @@ export function UnitShell({ config }: { config: UnitConfig }) {
 
           {/* Sidebar Footer */}
           <div className="border-t px-5 py-3">
+            <Link
+              href="/arcade"
+              className="mb-2 block rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 text-center text-[11px] font-medium text-primary transition hover:bg-primary/15"
+            >
+              Study Arcade · {streak}-day streak
+            </Link>
             <Link href="/" className="block text-center text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">
               ← Back to All Units
             </Link>
@@ -345,6 +353,12 @@ export function UnitShell({ config }: { config: UnitConfig }) {
             <Badge variant="secondary" className="font-mono text-[10px] lg:hidden">
               {completedTopics.size}/{config.learnTopicIds.length}
             </Badge>
+            <Link
+              href="/arcade"
+              className="hidden rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-[11px] font-medium text-primary transition hover:bg-primary/15 sm:inline"
+            >
+              Arcade · Lv {level}
+            </Link>
             <ThemeToggle />
             <ProfileMenu />
           </div>
