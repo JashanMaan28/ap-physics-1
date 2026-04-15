@@ -9,6 +9,7 @@ import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
 import { FRQPractice } from "./practice/frq-practice";
 import { TimedTest } from "./practice/timed-test";
+import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
 import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
@@ -59,6 +60,7 @@ export const torqueConfig: UnitConfig = {
         { id: "problem-gen", name: "Problem Generator", short: "Problems" },
         { id: "frq", name: "FRQ Practice", short: "FRQ" },
         { id: "timed-test", name: "Timed Mini-Test", short: "Timed" },
+        { id: "formula-speed", name: "Formula Speed Round", short: "Speed" },
       ],
     },
     {
@@ -101,6 +103,7 @@ export const torqueConfig: UnitConfig = {
     "problem-gen": ProblemGenerator,
     "frq": FRQPractice,
     "timed-test": TimedTest,
+    "formula-speed": FormulaSpeedRound,
     "equation-solver": EquationSolver,
     "unit-converter": UnitConverter,
     "fbd-builder": FBDBuilder,

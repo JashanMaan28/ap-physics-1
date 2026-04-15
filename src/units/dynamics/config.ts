@@ -8,6 +8,7 @@ import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
 import { FRQPractice } from "./practice/frq-practice";
 import { TimedTest } from "./practice/timed-test";
+import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -51,6 +52,7 @@ export const dynamicsConfig: UnitConfig = {
         { id: "problem-gen", name: "Problem Generator", short: "Problems" },
         { id: "frq", name: "FRQ Practice", short: "FRQ" },
         { id: "timed-test", name: "Timed Mini-Test", short: "Timed" },
+        { id: "formula-speed", name: "Formula Speed Round", short: "Speed" },
       ],
     },
     {
@@ -91,6 +93,7 @@ export const dynamicsConfig: UnitConfig = {
     "problem-gen": ProblemGenerator,
     "frq": FRQPractice,
     "timed-test": TimedTest,
+    "formula-speed": FormulaSpeedRound,
     "equation-solver": EquationSolver,
     "unit-converter": UnitConverter,
     "fbd-builder": FBDBuilder,

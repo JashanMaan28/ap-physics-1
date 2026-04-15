@@ -18,6 +18,7 @@ import { FluidFlowSim } from "./simulations/fluid-flow-sim";
 import { ProblemGenerator } from "@/components/practice/problem-generator";
 import { FRQPractice } from "@/components/practice/frq-practice";
 import { TimedTest } from "@/components/practice/timed-test";
+import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
 import { ConceptMap } from "@/components/explore/concept-map";
 import { RealWorldExamples } from "@/components/explore/real-world";
 import { WhatIfScenarios } from "@/components/explore/what-if";
@@ -54,6 +55,7 @@ export const fluidsConfig: UnitConfig = {
         { id: "problem-gen", name: "Problem Generator", short: "Problems" },
         { id: "frq", name: "FRQ Practice", short: "FRQ" },
         { id: "timed-test", name: "Timed Mini-Test", short: "Timed" },
+        { id: "formula-speed", name: "Formula Speed Round", short: "Speed" },
       ],
     },
     {
@@ -97,6 +99,7 @@ export const fluidsConfig: UnitConfig = {
     "problem-gen": ProblemGenerator,
     "frq": FRQPractice,
     "timed-test": TimedTest,
+    "formula-speed": FormulaSpeedRound,
     "equation-solver": EquationSolver,
     "unit-converter": UnitConverter,
     "fbd-builder": FBDBuilder,
