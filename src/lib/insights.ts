@@ -215,13 +215,7 @@ export function deriveWeakSpotNodes(inputs: RadarInputs): {
         { key: "prediction-miss-rate", value: predictionMissRate, weight: 5 },
       ];
 
-      // Missing optional signals should not re-normalize remaining weights and inflate urgency.
-      const score = weightedScore(
-        signals.map(({ value, weight }) => ({
-          value: value ?? 0,
-          weight,
-        }))
-      );
+      const score = weightedScore(signals.map(({ value, weight }) => ({ value, weight })));
       const dominant = [...signals]
         .filter((signal): signal is typeof signal & { value: number } => signal.value !== null)
         .sort((a, b) => b.value - a.value)[0];
