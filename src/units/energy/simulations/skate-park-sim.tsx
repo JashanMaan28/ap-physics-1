@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function SkateParkSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("energy-skate-park-phet")}
       title="Energy Skate Park"
       simUrl="https://phet.colorado.edu/sims/html/energy-skate-park/latest/energy-skate-park_en.html"
       description="Watch kinetic and potential energy transform as a skater moves along a track. Build custom tracks and explore conservation of energy."

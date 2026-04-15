@@ -4,11 +4,13 @@ import { ImpulseForce } from "./topics/impulse-force";
 import { ConservationMomentum } from "./topics/conservation-momentum";
 import { ElasticCollisions } from "./topics/elastic-collisions";
 import { InelasticCollisions } from "./topics/inelastic-collisions";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -21,6 +23,10 @@ import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { CollisionLabSim } from "./simulations/collision-lab-sim";
 import { CollisionSim } from "./simulations/collision-sim";
+
+const PracticeQuiz = createUnitPracticeQuiz("momentum");
+const FRQPractice = createUnitFrqPractice("momentum");
+const TimedTest = createUnitTimedTest("momentum");
 
 export const momentumConfig: UnitConfig = {
   slug: "momentum",

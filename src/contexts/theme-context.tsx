@@ -21,18 +21,21 @@ export const useTheme = () => useContext(ThemeContext);
 const STORAGE_KEY = "ap-physics-theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("system");
-  const [resolved, setResolved] = useState<"light" | "dark">("dark");
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") {
+      return "system";
+    }
 
-  // Load saved preference
-  useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
       if (saved && ["light", "dark", "system"].includes(saved)) {
-        setThemeState(saved);
+        return saved;
       }
     } catch {}
-  }, []);
+
+    return "system";
+  });
+  const [resolved, setResolved] = useState<"light" | "dark">("dark");
 
   // Resolve theme and apply to document
   useEffect(() => {

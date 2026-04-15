@@ -24,6 +24,11 @@ interface Question {
   explanation: string;
 }
 
+const getTimestamp = () => Date.now();
+const getPerformanceTime = () => performance.now();
+const getMomentumShiftDirection = () =>
+  Math.random() > 0.5 ? "momentum-shift-left" : "momentum-shift-right";
+
 const questions: Question[] = [
   {
     id: 1,
@@ -162,14 +167,14 @@ export function PracticeQuiz() {
 
   // Initialize timer on mount
   useEffect(() => {
-    questionStartTime.current = performance.now();
+    questionStartTime.current = getPerformanceTime();
   }, []);
 
   const q = questions[currentQ];
 
   const handleSelect = (optionIndex: number) => {
     if (showExplanation) return;
-    const now = performance.now();
+    const now = getPerformanceTime();
     const elapsed = questionStartTime.current > 0 ? now - questionStartTime.current : Infinity;
     setSelected(optionIndex);
     setShowExplanation(true);
@@ -194,7 +199,7 @@ export function PracticeQuiz() {
         toast("Even Einstein failed exams. Keep going!", "🧠", 4000);
       }
       // Momentum conservation shift
-      const dir = Math.random() > 0.5 ? "momentum-shift-left" : "momentum-shift-right";
+      const dir = getMomentumShiftDirection();
       setMomentumShift(dir);
       setTimeout(() => setMomentumShift(null), 700);
       addMistake({
@@ -202,7 +207,7 @@ export function PracticeQuiz() {
         question: q.question,
         yourAnswer: q.options[optionIndex],
         correctAnswer: q.options[q.correct],
-        timestamp: Date.now(),
+        timestamp: getTimestamp(),
       });
     }
   };
@@ -212,7 +217,7 @@ export function PracticeQuiz() {
       setCurrentQ((c) => c + 1);
       setSelected(null);
       setShowExplanation(false);
-      questionStartTime.current = performance.now();
+      questionStartTime.current = getPerformanceTime();
     } else {
       setQuizComplete(true);
     }
@@ -226,7 +231,7 @@ export function PracticeQuiz() {
     setAnswered(0);
     setQuizComplete(false);
     setStreak(0);
-    questionStartTime.current = performance.now();
+    questionStartTime.current = getPerformanceTime();
   };
 
   if (quizComplete) {

@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function SpringsSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("masses-and-springs-phet")}
       title="Masses and Springs"
       simUrl="https://phet.colorado.edu/sims/html/masses-and-springs/latest/masses-and-springs_en.html"
       description="Hang masses on springs to explore Hooke's law, period of oscillation, and spring-mass SHM."

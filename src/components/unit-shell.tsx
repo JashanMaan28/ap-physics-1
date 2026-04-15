@@ -64,8 +64,23 @@ function SectionIcon({ type, size = 16 }: { type: string; size?: number }) {
   }
 }
 
-export function UnitShell({ config }: { config: UnitConfig }) {
-  const [activeView, setActiveView] = useState(config.sections[0]?.items[0]?.id ?? "");
+function resolveInitialView(config: UnitConfig, initialView?: string) {
+  const validIds = new Set(config.sections.flatMap((section) => section.items.map((item) => item.id)));
+  if (initialView && validIds.has(initialView)) {
+    return initialView;
+  }
+
+  return config.sections[0]?.items[0]?.id ?? "";
+}
+
+export function UnitShell({
+  config,
+  initialView,
+}: {
+  config: UnitConfig;
+  initialView?: string;
+}) {
+  const [activeView, setActiveView] = useState(() => resolveInitialView(config, initialView));
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { getCompleted, toggleComplete, getProgress } = useProgress();
@@ -87,6 +102,10 @@ export function UnitShell({ config }: { config: UnitConfig }) {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  useEffect(() => {
+    setActiveView(resolveInitialView(config, initialView));
+  }, [config, initialView]);
 
   const navigate = (id: string) => {
     setActiveView(id);

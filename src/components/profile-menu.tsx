@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -222,7 +223,7 @@ export function ProfileMenu({ className = "" }: { className?: string }) {
 
             {/* Guest: sign in prompt */}
             {guest && (
-              <a
+              <Link
                 href="/signin"
                 onClick={() => setGuestMode(false)}
                 className="w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-primary hover:bg-accent transition-colors cursor-pointer"
@@ -231,7 +232,7 @@ export function ProfileMenu({ className = "" }: { className?: string }) {
                   <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
                 </svg>
                 Sign in to save progress
-              </a>
+              </Link>
             )}
 
             {/* Sign out */}

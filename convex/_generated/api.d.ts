@@ -9,8 +9,10 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as examRuns from "../examRuns.js";
 import type * as http from "../http.js";
 import type * as mistakes from "../mistakes.js";
+import type * as predictions from "../predictions.js";
 import type * as progress from "../progress.js";
 import type * as rls from "../rls.js";
 import type * as user from "../user.js";
@@ -23,8 +25,10 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  examRuns: typeof examRuns;
   http: typeof http;
   mistakes: typeof mistakes;
+  predictions: typeof predictions;
   progress: typeof progress;
   rls: typeof rls;
   user: typeof user;

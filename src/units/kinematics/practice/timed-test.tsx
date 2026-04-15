@@ -9,6 +9,8 @@ import { useMistakes } from "@/contexts/mistake-context";
 
 interface Question { question: string; choices: string[]; correct: number; topic: string; }
 
+const getTimestamp = () => Date.now();
+
 const questions: Question[] = [
   { topic: "Kinematics", question: "An object starts at rest and accelerates at 4 m/s² for 5 s. Final velocity?", choices: ["10 m/s", "20 m/s", "25 m/s", "40 m/s"], correct: 1 },
   { topic: "Kinematics", question: "A ball is thrown up at 19.6 m/s. Time to reach max height?", choices: ["1 s", "2 s", "4 s", "9.8 s"], correct: 1 },
@@ -33,15 +35,20 @@ export function TimedTest() {
 
   useEffect(() => {
     if (!started || finished) return;
-    if (timeLeft <= 0) { setFinished(true); return; }
-    const timer = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+    const timer = setTimeout(() => {
+      if (timeLeft <= 1) {
+        setFinished(true);
+      } else {
+        setTimeLeft(t => t - 1);
+      }
+    }, 1000);
     return () => clearTimeout(timer);
   }, [started, finished, timeLeft]);
 
   const submit = useCallback(() => {
     answers.forEach((a, i) => {
       if (a !== null && a !== questions[i].correct) {
-        addMistake({ unit: "kinematics", topic: questions[i].topic, question: questions[i].question, yourAnswer: questions[i].choices[a], correctAnswer: questions[i].choices[questions[i].correct], timestamp: Date.now() });
+        addMistake({ unit: "kinematics", topic: questions[i].topic, question: questions[i].question, yourAnswer: questions[i].choices[a], correctAnswer: questions[i].choices[questions[i].correct], timestamp: getTimestamp() });
       }
     });
     setFinished(true);

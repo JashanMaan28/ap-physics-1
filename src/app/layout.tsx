@@ -7,6 +7,7 @@ import { MistakeProvider } from "@/contexts/mistake-context";
 import { ProgressProvider } from "@/contexts/progress-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ArcadeProvider } from "@/contexts/arcade-context";
+import { InsightsProvider } from "@/contexts/insights-context";
 import { ToastProvider } from "@/components/effects/toast";
 import { EasterEggProvider } from "@/components/effects/easter-egg-provider";
 import "./globals.css";
@@ -46,7 +47,9 @@ export default function RootLayout({
                 <EasterEggProvider>
                   <ProgressProvider>
                     <MistakeProvider>
-                      <ArcadeProvider>{children}</ArcadeProvider>
+                      <InsightsProvider>
+                        <ArcadeProvider>{children}</ArcadeProvider>
+                      </InsightsProvider>
                     </MistakeProvider>
                   </ProgressProvider>
                 </EasterEggProvider>

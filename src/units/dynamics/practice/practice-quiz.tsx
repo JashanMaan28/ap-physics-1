@@ -175,6 +175,8 @@ const questions = [
   },
 ];
 
+const getTimestamp = () => Date.now();
+
 export function PracticeQuiz() {
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -200,7 +202,7 @@ export function PracticeQuiz() {
         question: q.question,
         yourAnswer: q.options[idx],
         correctAnswer: q.options[q.correct],
-        timestamp: Date.now(),
+        timestamp: getTimestamp(),
       });
     }
   };

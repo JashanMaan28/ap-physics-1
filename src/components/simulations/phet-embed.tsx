@@ -4,16 +4,24 @@ import { useState, useRef, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { SimulationPredictionCard } from "@/components/arcade/simulation-prediction-card";
+import { PredictionPanel } from "@/components/insights/prediction-panel";
+import type { PredictionManifest } from "@/types/insights";
 
 interface PhETEmbedProps {
   title: string;
   description: string;
   simUrl: string;
   tips?: string[];
+  predictionManifest?: PredictionManifest;
 }
 
-export function PhETEmbed({ title, description, simUrl, tips }: PhETEmbedProps) {
+export function PhETEmbed({
+  title,
+  description,
+  simUrl,
+  tips,
+  predictionManifest,
+}: PhETEmbedProps) {
   const [loaded, setLoaded] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,7 +39,7 @@ export function PhETEmbed({ title, description, simUrl, tips }: PhETEmbedProps) 
 
   return (
     <div className="space-y-4">
-      <SimulationPredictionCard title={title} />
+      {predictionManifest && <PredictionPanel manifest={predictionManifest} />}
 
       <Card className="overflow-hidden border-white/[0.08] bg-white/[0.02]">
         <CardHeader>

@@ -4,11 +4,13 @@ import { AngularMomentum } from "./topics/angular-momentum";
 import { ConservationAngular } from "./topics/conservation-angular";
 import { RollingMotion } from "./topics/rolling-motion";
 import { CombinedRotation } from "./topics/combined-rotation";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -20,6 +22,10 @@ import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { TorquePhETSim } from "./simulations/torque-sim";
+
+const PracticeQuiz = createUnitPracticeQuiz("rotating-systems");
+const FRQPractice = createUnitFrqPractice("rotating-systems");
+const TimedTest = createUnitTimedTest("rotating-systems");
 
 export const rotatingSystemsConfig: UnitConfig = {
   slug: "rotating-systems",

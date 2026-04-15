@@ -684,7 +684,7 @@ function BuoyancyPanel() {
           <Tex display>{String.raw`F_b = \rho_{fluid} \cdot V_{displaced} \cdot g`}</Tex>
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          Archimedes' Principle: buoyant force equals the weight of displaced fluid.
+          Archimedes&apos; Principle: buoyant force equals the weight of displaced fluid.
         </p>
       </div>
 

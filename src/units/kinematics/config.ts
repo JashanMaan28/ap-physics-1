@@ -4,11 +4,13 @@ import { Acceleration } from "./topics/acceleration";
 import { KinematicEquations } from "./topics/kinematic-equations";
 import { ProjectileMotion } from "./topics/projectile-motion";
 import { MotionGraphs } from "./topics/motion-graphs";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -22,6 +24,10 @@ import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { ProjectileSim } from "./simulations/projectile-sim";
 import { MovingManSim } from "./simulations/moving-man-sim";
 import { ProjectileLauncher } from "./simulations/projectile-launcher";
+
+const PracticeQuiz = createUnitPracticeQuiz("kinematics");
+const FRQPractice = createUnitFrqPractice("kinematics");
+const TimedTest = createUnitTimedTest("kinematics");
 
 export const kinematicsConfig: UnitConfig = {
   slug: "kinematics",

@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { SimCanvas } from "@/components/simulations/sim-canvas";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 const TWO_PI = 2 * Math.PI;
 
@@ -11,23 +12,32 @@ export function PendulumSim() {
   const [length, setLength] = useState(2);
   const [gravity, setGravity] = useState(9.8);
   const [initAngle, setInitAngle] = useState(30);
+  const [measuredPeriod, setMeasuredPeriod] = useState<number | undefined>(undefined);
+  const [resolutionToken, setResolutionToken] = useState<number | null>(null);
 
-  const stateRef = useRef({ theta: 0, omega: 0, time: 0 });
+  const stateRef = useRef({
+    theta: (initAngle * Math.PI) / 180,
+    omega: 0,
+    time: 0,
+  });
+  const previousThetaRef = useRef<number | null>(null);
+  const firstMatchingCrossingRef = useRef<number | null>(null);
+  const reportedPeriodRef = useRef(false);
 
   const period = TWO_PI * Math.sqrt(length / gravity);
 
   const reset = useCallback(() => {
+    previousThetaRef.current = null;
+    firstMatchingCrossingRef.current = null;
+    reportedPeriodRef.current = false;
+    setMeasuredPeriod(undefined);
+    setResolutionToken(null);
     stateRef.current = {
       theta: (initAngle * Math.PI) / 180,
       omega: 0,
       time: 0,
     };
   }, [initAngle]);
-
-  // Init
-  if (stateRef.current.theta === 0 && stateRef.current.omega === 0) {
-    stateRef.current = { theta: (initAngle * Math.PI) / 180, omega: 0, time: 0 };
-  }
 
   const onDraw = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, dt: number) => {
     const W = canvas.width;
@@ -45,6 +55,23 @@ export function PendulumSim() {
       s.omega += alpha * dt;
       s.theta += s.omega * dt;
       s.time += dt;
+
+      const previousTheta = previousThetaRef.current;
+      if (
+        previousTheta !== null &&
+        previousTheta > 0 &&
+        s.theta <= 0 &&
+        s.omega < 0
+      ) {
+        if (firstMatchingCrossingRef.current === null) {
+          firstMatchingCrossingRef.current = s.time;
+        } else if (!reportedPeriodRef.current) {
+          reportedPeriodRef.current = true;
+          setMeasuredPeriod(Number((s.time - firstMatchingCrossingRef.current).toFixed(4)));
+          setResolutionToken(Date.now());
+        }
+      }
+      previousThetaRef.current = s.theta;
     }
 
     // Drawing
@@ -153,6 +180,9 @@ export function PendulumSim() {
       height={450}
       onDraw={onDraw}
       onReset={reset}
+      predictionManifest={getSimulationManifestBySimId("pendulum-lab-native")}
+      autoActualNumber={measuredPeriod}
+      resolutionToken={resolutionToken}
       controls={
         <div className="grid gap-4 sm:grid-cols-3">
           <div>

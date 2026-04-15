@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function BalancingActSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("balancing-act-phet")}
       title="Balancing Act"
       simUrl="https://phet.colorado.edu/sims/html/balancing-act/latest/balancing-act_en.html"
       description="Place masses on a seesaw and find the balance point. Explore torque, rotational equilibrium, and the lever principle."

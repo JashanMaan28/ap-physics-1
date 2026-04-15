@@ -5,11 +5,13 @@ import { RotationalEquilibrium } from "./topics/rotational-equilibrium";
 import { MomentOfInertia } from "./topics/moment-of-inertia";
 import { NewtonsSecondRotation } from "./topics/newtons-second-rotation";
 import { AngularKinematics } from "./topics/angular-kinematics";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
@@ -21,6 +23,10 @@ import { BalancingActSim } from "./simulations/balancing-act-sim";
 import { ConceptMap } from "./explore/concept-map";
 import { RealWorld } from "./explore/real-world";
 import { WhatIf } from "./explore/what-if";
+
+const PracticeQuiz = createUnitPracticeQuiz("torque");
+const FRQPractice = createUnitFrqPractice("torque");
+const TimedTest = createUnitTimedTest("torque");
 
 export const torqueConfig: UnitConfig = {
   slug: "torque",

@@ -11,6 +11,7 @@ import { units } from "@/data/units";
 import { unitConfigs } from "@/units/registry";
 import { useProgress } from "@/contexts/progress-context";
 import { useMistakes } from "@/contexts/mistake-context";
+import { useInsights } from "@/contexts/insights-context";
 import { useToast } from "@/components/effects/toast";
 import {
   createShareCardText,
@@ -57,7 +58,6 @@ interface ArcadeState {
   xp: number;
   streak: number;
   lastActiveDate: string | null;
-  awardedTopicIds: string[];
   notebook: NotebookEntry[];
   dailyChallenges: DailyChallengeRecord[];
   bossBattles: BossBattleRecord[];
@@ -112,7 +112,6 @@ const defaultState: ArcadeState = {
   xp: 0,
   streak: 0,
   lastActiveDate: null,
-  awardedTopicIds: [],
   notebook: [],
   dailyChallenges: [],
   bossBattles: [],
@@ -192,6 +191,73 @@ function createId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function getRewardDateKey(timestamp: number | null | undefined) {
+  if (!timestamp) {
+    return getTodayKey();
+  }
+
+  return new Date(timestamp).toISOString().slice(0, 10);
+}
+
+function getPredictionRewardXp(
+  predictions: Array<{
+    outcome: "pending" | "hit" | "close" | "miss";
+    resolvedAt: number | null;
+  }>
+) {
+  const rewardedCountsByDay: Record<string, number> = {};
+  let xp = 0;
+
+  const resolvedPredictions = predictions
+    .filter((entry) => entry.resolvedAt !== null)
+    .sort((a, b) => (a.resolvedAt ?? 0) - (b.resolvedAt ?? 0));
+
+  for (const prediction of resolvedPredictions) {
+    const rewardDay = getRewardDateKey(prediction.resolvedAt);
+    const rewardedToday = rewardedCountsByDay[rewardDay] ?? 0;
+
+    if (rewardedToday < 3) {
+      xp += 12;
+      rewardedCountsByDay[rewardDay] = rewardedToday + 1;
+    }
+
+    if (prediction.outcome === "hit" || prediction.outcome === "close") {
+      xp += 6;
+    }
+  }
+
+  return xp;
+}
+
+function getExamRunRewardXp(
+  examRuns: Array<{
+    modeKind: string;
+    correctCount: number;
+    completedAt: number;
+  }>
+) {
+  const rewardedCountsByDay: Record<string, number> = {};
+  let xp = 0;
+
+  const sortedRuns = [...examRuns].sort((a, b) => a.completedAt - b.completedAt);
+
+  for (const run of sortedRuns) {
+    const rewardDay = getRewardDateKey(run.completedAt);
+    const rewardedToday = rewardedCountsByDay[rewardDay] ?? 0;
+
+    if (rewardedToday < 2) {
+      xp += 25;
+      rewardedCountsByDay[rewardDay] = rewardedToday + 1;
+    }
+
+    if (run.modeKind !== "frq-focus-block") {
+      xp += run.correctCount * 2;
+    }
+  }
+
+  return xp;
+}
+
 export function useArcade() {
   return useContext(ArcadeContext);
 }
@@ -199,6 +265,7 @@ export function useArcade() {
 export function ArcadeProvider({ children }: { children: React.ReactNode }) {
   const { getCompleted, getOverallProgress, getProgress } = useProgress();
   const { mistakes } = useMistakes();
+  const { predictions, examRuns } = useInsights();
   const { toast } = useToast();
   const [state, setState] = useState<ArcadeState>(() => loadState());
 
@@ -254,30 +321,11 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
 
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
-
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      setState((prev) => {
-        const newTopics = completedTopicIds.filter(
-          (topicId) => !prev.awardedTopicIds.includes(topicId)
-        );
-
-        if (newTopics.length === 0) {
-          return prev;
-        }
-
-        return {
-          ...prev,
-          xp: prev.xp + newTopics.length * 35,
-          awardedTopicIds: [...prev.awardedTopicIds, ...newTopics],
-        };
-      });
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [completedTopicIds]);
-
-  const level = Math.floor(state.xp / 120) + 1;
+  const topicXp = completedTopicIds.length * 35;
+  const predictionXp = useMemo(() => getPredictionRewardXp(predictions), [predictions]);
+  const examRunXp = useMemo(() => getExamRunRewardXp(examRuns), [examRuns]);
+  const totalXp = state.xp + topicXp + predictionXp + examRunXp;
+  const level = Math.floor(totalXp / 120) + 1;
   const nextLevelXp = level * 120;
 
   const achievements: Achievement[] = useMemo(() => {
@@ -288,16 +336,20 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
       ...state.formulaRounds.map((round) => round.bestStreak)
     );
     const noteCount = state.notebook.filter((entry) => entry.kind === "note").length;
-    const predictionCount = state.notebook.filter(
-      (entry) => entry.kind === "prediction"
-    ).length;
+    const resolvedPredictions = predictions.filter(
+      (entry) => entry.resolvedAt !== null
+    );
+    const predictionCount = resolvedPredictions.length;
+    const examRunCount = examRuns.length;
+    const bestPrediction = resolvedPredictions.some((entry) => entry.outcome === "hit");
+    const strongExamRuns = examRuns.filter((entry) => entry.accuracy >= 80).length;
 
     return [
       {
         id: "first-vector",
         title: "First Vector",
         description: "Complete your first topic.",
-        unlocked: state.awardedTopicIds.length >= 1,
+        unlocked: completedTopicIds.length >= 1,
       },
       {
         id: "daily-solver",
@@ -330,6 +382,24 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
         unlocked: predictionCount >= 3,
       },
       {
+        id: "call-the-shot",
+        title: "Call the Shot",
+        description: "Resolve your first prediction-versus-reality attempt.",
+        unlocked: predictionCount >= 1,
+      },
+      {
+        id: "dead-on",
+        title: "Dead On",
+        description: "Land a hit on a simulation prediction.",
+        unlocked: bestPrediction,
+      },
+      {
+        id: "lab-forecaster",
+        title: "Lab Forecaster",
+        description: "Resolve 5 simulation predictions.",
+        unlocked: predictionCount >= 5,
+      },
+      {
         id: "lab-rat",
         title: "Lab Rat",
         description: "Write 5 notebook entries.",
@@ -348,6 +418,18 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
         unlocked: state.draftsGenerated >= 1,
       },
       {
+        id: "exam-runner",
+        title: "Exam Runner",
+        description: "Finish your first exam mode block.",
+        unlocked: examRunCount >= 1,
+      },
+      {
+        id: "pressure-proof",
+        title: "Pressure Proof",
+        description: "Post three strong exam mode runs.",
+        unlocked: strongExamRuns >= 3,
+      },
+      {
         id: "share-collector",
         title: "Share Collector",
         description: "Copy a result card.",
@@ -361,8 +443,8 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
       },
     ];
   }, [
+    completedTopicIds.length,
     overallProgress,
-    state.awardedTopicIds.length,
     state.bossBattles,
     state.dailyChallenges,
     state.draftsGenerated,
@@ -370,6 +452,8 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
     state.notebook,
     state.rematchWins,
     state.shareCopies,
+    predictions,
+    examRuns,
   ]);
 
   useEffect(() => {
@@ -439,7 +523,6 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
 
     setState((prev) => ({
       ...prev,
-      xp: prev.xp + 10,
       notebook: [entry, ...prev.notebook].slice(0, 60),
     }));
   };
@@ -573,7 +656,7 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
 
     const text = createShareCardText({
       level,
-      xp: state.xp,
+      xp: totalXp,
       streak: state.streak,
       progress: overallProgress,
       dailyBest,
@@ -597,7 +680,7 @@ export function ArcadeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const value = {
-    xp: state.xp,
+    xp: totalXp,
     level,
     streak: state.streak,
     nextLevelXp,

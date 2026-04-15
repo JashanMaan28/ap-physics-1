@@ -105,11 +105,11 @@ export function MistakeTracker() {
             No mistakes yet!
           </h2>
           <p className="text-slate-500 text-center max-w-sm">
-            You're on a clean slate. Keep practicing — any mistakes you make
+            You&apos;re on a clean slate. Keep practicing. Any mistakes you make
             while studying will appear here so you can review them.
           </p>
           <p className="text-sm text-slate-400 italic">
-            "Every expert was once a beginner."
+            &quot;Every expert was once a beginner.&quot;
           </p>
         </CardContent>
       </Card>
@@ -171,7 +171,7 @@ export function MistakeTracker() {
               ⚠ Weak Areas
             </CardTitle>
             <CardDescription className="text-orange-600">
-              Topics where you've made 2 or more mistakes
+              Topics where you&apos;ve made 2 or more mistakes
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -195,7 +195,7 @@ export function MistakeTracker() {
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   {STUDY_SUGGESTIONS[topic] ??
-                    `You've missed ${count} ${topic} questions. Review this topic carefully.`}
+                    `You have missed ${count} ${topic} questions. Review this topic carefully.`}
                 </p>
                 <div className="pt-1">
                   <Progress

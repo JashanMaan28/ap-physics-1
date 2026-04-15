@@ -3,7 +3,8 @@
 import { useRef, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { SimulationPredictionCard } from "@/components/arcade/simulation-prediction-card";
+import { PredictionPanel } from "@/components/insights/prediction-panel";
+import type { PredictionManifest } from "@/types/insights";
 
 interface SimCanvasProps {
   title: string;
@@ -14,9 +15,26 @@ interface SimCanvasProps {
   onReset?: () => void;
   controls?: React.ReactNode;
   overlay?: React.ReactNode;
+  predictionManifest?: PredictionManifest;
+  autoActualNumber?: number;
+  autoActualChoice?: string;
+  resolutionToken?: string | number | null;
 }
 
-export function SimCanvas({ title, description, width = 800, height = 500, onDraw, onReset, controls, overlay }: SimCanvasProps) {
+export function SimCanvas({
+  title,
+  description,
+  width = 800,
+  height = 500,
+  onDraw,
+  onReset,
+  controls,
+  overlay,
+  predictionManifest,
+  autoActualNumber,
+  autoActualChoice,
+  resolutionToken,
+}: SimCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -74,7 +92,14 @@ export function SimCanvas({ title, description, width = 800, height = 500, onDra
 
   return (
     <div className="space-y-4">
-      <SimulationPredictionCard title={title} />
+      {predictionManifest && (
+        <PredictionPanel
+          manifest={predictionManifest}
+          autoActualNumber={autoActualNumber}
+          autoActualChoice={autoActualChoice}
+          resolutionToken={resolutionToken}
+        />
+      )}
 
       <Card className="overflow-hidden border-white/[0.08] bg-white/[0.02]">
         <CardHeader>

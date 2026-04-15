@@ -5,7 +5,6 @@ import { PascalsLaw } from "@/components/topics/pascals-law";
 import { Buoyancy } from "@/components/topics/buoyancy";
 import { ContinuityEquation } from "@/components/topics/continuity";
 import { BernoullisEquation } from "@/components/topics/bernoullis";
-import { PracticeQuiz } from "@/components/topics/practice-quiz";
 import { EquationSolver } from "@/components/tools/equation-solver";
 import { UnitConverter } from "@/components/tools/unit-converter";
 import { FBDBuilder } from "@/components/tools/fbd-builder";
@@ -16,12 +15,19 @@ import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { UnderPressureSim } from "./simulations/under-pressure-sim";
 import { FluidFlowSim } from "./simulations/fluid-flow-sim";
 import { ProblemGenerator } from "@/components/practice/problem-generator";
-import { FRQPractice } from "@/components/practice/frq-practice";
-import { TimedTest } from "@/components/practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
 import { ConceptMap } from "@/components/explore/concept-map";
 import { RealWorldExamples } from "@/components/explore/real-world";
 import { WhatIfScenarios } from "@/components/explore/what-if";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
+
+const PracticeQuiz = createUnitPracticeQuiz("fluids");
+const FRQPractice = createUnitFrqPractice("fluids");
+const TimedTest = createUnitTimedTest("fluids");
 
 export const fluidsConfig: UnitConfig = {
   slug: "fluids",

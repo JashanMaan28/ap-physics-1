@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -347,7 +346,7 @@ export function WhatIfScenarios() {
 
       {/* Footer hint */}
       <p className="pt-2 text-center text-xs text-muted-foreground">
-        Each "What If?" is a real AP Physics 1 concept in disguise.
+        Each &quot;What If?&quot; is a real AP Physics 1 concept in disguise.
       </p>
     </div>
   );

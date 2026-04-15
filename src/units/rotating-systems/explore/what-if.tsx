@@ -15,9 +15,9 @@ interface WhatIfScenario {
 const scenarios: WhatIfScenario[] = [
   {
     id: 1,
-    title: "What if Earth's radius doubled (but same mass)?",
+    title: "What if Earth&rsquo;s radius doubled (but same mass)?",
     description:
-      "How would Earth's rotation change? What would happen to the length of a day?",
+      "How would Earth&rsquo;s rotation change? What would happen to the length of a day?",
   },
   {
     id: 2,
@@ -154,7 +154,7 @@ function NoConservationExplorer() {
       <div className="bg-gray-800 rounded-lg p-3">
         <p className="text-teal-300 font-bold">Planetary Orbits</p>
         <p>
-          Planets could slow down or speed up randomly in their orbits. Kepler's
+          Planets could slow down or speed up randomly in their orbits. Kepler&rsquo;s
           second law (equal areas in equal times) would fail. Orbital mechanics
           would be unpredictable, and stable solar systems might not exist.
         </p>
@@ -171,9 +171,9 @@ function NoConservationExplorer() {
         <p className="text-yellow-300 font-bold">The Deep Reason</p>
         <p className="text-gray-300">
           Angular momentum conservation comes from rotational symmetry of space
-          (Noether's theorem). If angular momentum weren't conserved, it would
-          mean space has a preferred direction — physics would depend on which way
-          you're facing!
+          (Noether&rsquo;s theorem). If angular momentum weren&apos;t conserved, it would
+          mean space has a preferred direction, and physics would depend on which way
+          you&apos;re facing!
         </p>
       </div>
     </div>

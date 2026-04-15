@@ -21,6 +21,8 @@ interface QuizQuestion {
   explanation: string;
 }
 
+const getTimestamp = () => Date.now();
+
 const questions: QuizQuestion[] = [
   {
     id: 1,
@@ -199,7 +201,7 @@ export function PracticeQuiz() {
         question: q.question,
         yourAnswer: q.options[idx],
         correctAnswer: q.options[q.correct],
-        timestamp: Date.now(),
+        timestamp: getTimestamp(),
       });
     }
   }

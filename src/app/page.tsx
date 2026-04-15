@@ -10,6 +10,7 @@ import { ProfileMenu } from "@/components/profile-menu";
 import { useToast } from "@/components/effects/toast";
 import { Confetti } from "@/components/effects/confetti";
 import { ArcadePreview } from "@/components/arcade/arcade-preview";
+import { RadarPreviewCard } from "@/components/insights/radar-preview-card";
 
 /* ─── Floating equations that drift across the hero ─── */
 const EQUATIONS = [
@@ -188,7 +189,6 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [enterDone, setEnterDone] = useState(false);
   const [confettiColor, setConfettiColor] = useState<string | null>(null);
-  const [showNewtonApple, setShowNewtonApple] = useState(false);
   const [weightCard, setWeightCard] = useState<{ slug: string; mass: number } | null>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const footerClicks = useRef<number[]>([]);
@@ -199,7 +199,10 @@ export default function HomePage() {
     } catch { return new Set(); }
   });
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
   // Clear entrance animation delays after cards have animated in
   useEffect(() => {
     if (mounted) {
@@ -242,13 +245,7 @@ export default function HomePage() {
   }
   const overall = getOverallProgress(unitTotals);
   const totalTopics = Object.values(unitTotals).reduce((a, b) => a + b, 0);
-
-  // Newton's Apple badge — show if 100% overall
-  useEffect(() => {
-    if (mounted && overall === 100) {
-      setShowNewtonApple(true);
-    }
-  }, [mounted, overall]);
+  const showNewtonApple = mounted && overall === 100;
 
   // Confetti when a unit reaches 100%
   useEffect(() => {
@@ -334,8 +331,14 @@ export default function HomePage() {
               >
                 Enter Study Arcade
               </Link>
+              <Link
+                href="/exam"
+                className="rounded-full border border-foreground/15 bg-card/70 px-5 py-2 text-sm font-medium text-foreground/80 transition hover:bg-card"
+              >
+                Open Exam Mode
+              </Link>
               <span className="text-xs text-foreground/30">
-                Daily challenge, boss battles, notebook, and more
+                Daily challenge, boss battles, focused exam blocks, and more
               </span>
             </div>
           </div>
@@ -479,6 +482,13 @@ export default function HomePage() {
             return <div key={unit.slug}>{card}</div>;
           })}
         </div>
+      </section>
+
+      <section className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
+        <RadarPreviewCard
+          title="Weak Spot Radar"
+          description="A live preview of the units pulling readiness down the most."
+        />
       </section>
 
       <ArcadePreview />

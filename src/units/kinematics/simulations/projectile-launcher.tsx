@@ -5,6 +5,7 @@ import { SimCanvas } from "@/components/simulations/sim-canvas";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 const g = 9.8;
 
@@ -12,19 +13,30 @@ export function ProjectileLauncher() {
   const [angle, setAngle] = useState(45);
   const [speed, setSpeed] = useState(25);
   const [showAir, setShowAir] = useState(false);
-
-  const trailRef = useRef<{ x: number; y: number }[]>([]);
-  const ghostRef = useRef<{ x: number; y: number }[]>([]);
-  const posRef = useRef({ x: 0, y: 0, vx: 0, vy: 0, landed: false });
-
+  const [resolvedRange, setResolvedRange] = useState<number | undefined>(undefined);
+  const [resolutionToken, setResolutionToken] = useState<number | null>(null);
   const rad = (angle * Math.PI) / 180;
   const range = (speed * speed * Math.sin(2 * rad)) / g;
   const maxH = (speed * speed * Math.sin(rad) * Math.sin(rad)) / (2 * g);
   const totalT = (2 * speed * Math.sin(rad)) / g;
 
+  const trailRef = useRef<{ x: number; y: number }[]>([]);
+  const ghostRef = useRef<{ x: number; y: number }[]>([]);
+  const posRef = useRef({
+    x: 0,
+    y: 0,
+    vx: speed * Math.cos(rad),
+    vy: speed * Math.sin(rad),
+    landed: false,
+  });
+  const reportedLandingRef = useRef(false);
+
   const reset = useCallback(() => {
     trailRef.current = [];
     ghostRef.current = [];
+    reportedLandingRef.current = false;
+    setResolvedRange(undefined);
+    setResolutionToken(null);
     posRef.current = {
       x: 0, y: 0,
       vx: speed * Math.cos(rad),
@@ -32,16 +44,6 @@ export function ProjectileLauncher() {
       landed: false,
     };
   }, [speed, rad]);
-
-  // Initialize on first render
-  if (posRef.current.vx === 0 && posRef.current.vy === 0) {
-    posRef.current = {
-      x: 0, y: 0,
-      vx: speed * Math.cos(rad),
-      vy: speed * Math.sin(rad),
-      landed: false,
-    };
-  }
 
   const onDraw = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, dt: number) => {
     const W = canvas.width;
@@ -86,6 +88,11 @@ export function ProjectileLauncher() {
 
       if (p.y < 0) { p.y = 0; p.landed = true; }
       trailRef.current.push({ x: p.x, y: p.y });
+      if (p.landed && !reportedLandingRef.current) {
+        reportedLandingRef.current = true;
+        setResolvedRange(Number(p.x.toFixed(4)));
+        setResolutionToken(Date.now());
+      }
     }
 
     // Ghost trajectory (ideal, no air)
@@ -111,7 +118,11 @@ export function ProjectileLauncher() {
       ghostRef.current.forEach((pt, i) => {
         const sx = originX + pt.x * scale;
         const sy = groundY - pt.y * scale;
-        i === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+        if (i === 0) {
+          ctx.moveTo(sx, sy);
+        } else {
+          ctx.lineTo(sx, sy);
+        }
       });
       ctx.stroke();
       ctx.setLineDash([]);
@@ -125,7 +136,11 @@ export function ProjectileLauncher() {
       trailRef.current.forEach((pt, i) => {
         const sx = originX + pt.x * scale;
         const sy = groundY - pt.y * scale;
-        i === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+        if (i === 0) {
+          ctx.moveTo(sx, sy);
+        } else {
+          ctx.lineTo(sx, sy);
+        }
       });
       ctx.stroke();
 
@@ -195,6 +210,9 @@ export function ProjectileLauncher() {
       height={450}
       onDraw={onDraw}
       onReset={reset}
+      predictionManifest={getSimulationManifestBySimId("projectile-launcher")}
+      autoActualNumber={resolvedRange}
+      resolutionToken={resolutionToken}
       controls={
         <div className="grid gap-4 sm:grid-cols-3">
           <div>

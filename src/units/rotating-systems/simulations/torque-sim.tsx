@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function TorquePhETSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("torque-phet")}
       title="Torque"
       simUrl="https://phet.colorado.edu/sims/cheerpj/rotation/latest/rotation.html?simulation=torque"
       description="Apply forces to a rotating platform and observe angular acceleration. Explore the relationship between torque, moment of inertia, and angular motion."

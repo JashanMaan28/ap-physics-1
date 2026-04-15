@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { units } from "@/data/units";
 import { useMistakes } from "@/contexts/mistake-context";
 import { useArcade } from "@/contexts/arcade-context";
+import { useInsightsView } from "@/components/insights/use-insights-view";
+import { RadarPreviewCard } from "@/components/insights/radar-preview-card";
 import {
   buildExamDraft,
   createShareCardText,
@@ -213,6 +215,7 @@ export function StudyArcade() {
     copyShareCard,
   } = useArcade();
   const { mistakes } = useMistakes();
+  const { examRuns } = useInsightsView();
 
   const [tab, setTab] = useState<ArcadeTab>(initialTab);
   const [challengeTab, setChallengeTab] = useState<ChallengeTab>("daily");
@@ -441,6 +444,30 @@ export function StudyArcade() {
               </div>
 
               <div className="space-y-6">
+                <RadarPreviewCard
+                  href="/exam"
+                  title="Weak Spot Radar"
+                  description="Top urgency signals, with drill-downs in Exam Mode."
+                />
+
+                <Section title="Recent Exam Stats" description="Exam Mode summary">
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <div className="rounded-[1.5rem] border border-white/10 bg-background/60 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-foreground/40">Runs</p>
+                      <p className="mt-2 text-2xl font-black">{examRuns.length}</p>
+                    </div>
+                    <div className="rounded-[1.5rem] border border-white/10 bg-background/60 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-foreground/40">Latest</p>
+                      <p className="mt-2 text-2xl font-black">
+                        {examRuns[0] ? `${Math.round(examRuns[0].accuracy)}%` : "—"}
+                      </p>
+                    </div>
+                  </div>
+                  <Link href="/exam" className="text-sm font-medium text-primary hover:underline">
+                    Open Exam Mode
+                  </Link>
+                </Section>
+
                 <Section title="Share Card" description="A compact preview instead of a huge standalone block.">
                   <div className="rounded-[1.5rem] border border-primary/20 bg-[linear-gradient(135deg,rgba(59,130,246,0.16),rgba(16,185,129,0.08))] p-5">
                     <pre className="whitespace-pre-wrap font-mono text-sm leading-6 text-foreground/80">{shareText}</pre>

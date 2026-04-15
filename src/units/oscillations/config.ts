@@ -4,11 +4,13 @@ import { SpringMass } from "./topics/spring-mass";
 import { Pendulum } from "./topics/pendulum";
 import { EnergySHM } from "./topics/energy-shm";
 import { SHMGraphs } from "./topics/shm-graphs";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -22,6 +24,10 @@ import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { PendulumLabSim } from "./simulations/pendulum-lab-sim";
 import { SpringsSim } from "./simulations/springs-sim";
 import { PendulumSim } from "./simulations/pendulum-sim";
+
+const PracticeQuiz = createUnitPracticeQuiz("oscillations");
+const FRQPractice = createUnitFrqPractice("oscillations");
+const TimedTest = createUnitTimedTest("oscillations");
 
 export const oscillationsConfig: UnitConfig = {
   slug: "oscillations",

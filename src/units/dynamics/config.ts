@@ -4,11 +4,13 @@ import { Friction } from "./topics/friction";
 import { TensionNormal } from "./topics/tension-normal";
 import { InclinedPlanes } from "./topics/inclined-planes";
 import { AtwoodMachines } from "./topics/atwood-machines";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -21,6 +23,10 @@ import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { ForcesSim } from "./simulations/forces-sim";
 import { FrictionSim } from "./simulations/friction-sim";
+
+const PracticeQuiz = createUnitPracticeQuiz("dynamics");
+const FRQPractice = createUnitFrqPractice("dynamics");
+const TimedTest = createUnitTimedTest("dynamics");
 
 export const dynamicsConfig: UnitConfig = {
   slug: "dynamics",

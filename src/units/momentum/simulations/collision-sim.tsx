@@ -3,8 +3,8 @@
 import { useState, useCallback, useRef } from "react";
 import { SimCanvas } from "@/components/simulations/sim-canvas";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function CollisionSim() {
   const [m1, setM1] = useState(2);
@@ -12,10 +12,18 @@ export function CollisionSim() {
   const [v1i, setV1i] = useState(5);
   const [v2i, setV2i] = useState(-2);
   const [elastic, setElastic] = useState(true);
+  const [resolvedVelocity, setResolvedVelocity] = useState<number | undefined>(undefined);
+  const [resolutionToken, setResolutionToken] = useState<number | null>(null);
 
   const stateRef = useRef({
-    x1: 0, x2: 0, v1: 0, v2: 0, collided: false, phase: "before" as "before" | "colliding" | "after",
+    x1: 200,
+    x2: 550,
+    v1: v1i,
+    v2: v2i,
+    collided: false,
+    phase: "before" as "before" | "colliding" | "after",
   });
+  const reportedCollisionRef = useRef(false);
 
   const computeFinal = useCallback(() => {
     if (elastic) {
@@ -29,13 +37,11 @@ export function CollisionSim() {
   }, [m1, m2, v1i, v2i, elastic]);
 
   const reset = useCallback(() => {
+    reportedCollisionRef.current = false;
+    setResolvedVelocity(undefined);
+    setResolutionToken(null);
     stateRef.current = { x1: 200, x2: 550, v1: v1i, v2: v2i, collided: false, phase: "before" };
   }, [v1i, v2i]);
-
-  // Init
-  if (stateRef.current.x1 === 0) {
-    stateRef.current = { x1: 200, x2: 550, v1: v1i, v2: v2i, collided: false, phase: "before" };
-  }
 
   const onDraw = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, dt: number) => {
     const W = canvas.width;
@@ -71,6 +77,11 @@ export function CollisionSim() {
         const { v1f, v2f } = computeFinal();
         s.v1 = v1f;
         s.v2 = v2f;
+        if (!reportedCollisionRef.current) {
+          reportedCollisionRef.current = true;
+          setResolvedVelocity(Number(v1f.toFixed(4)));
+          setResolutionToken(Date.now());
+        }
         // Separate them
         const overlap = (s.x1 + r1) - (s.x2 - r2);
         s.x1 -= overlap / 2;
@@ -165,6 +176,9 @@ export function CollisionSim() {
       height={400}
       onDraw={onDraw}
       onReset={reset}
+      predictionManifest={getSimulationManifestBySimId("collision-simulator")}
+      autoActualNumber={resolvedVelocity}
+      resolutionToken={resolutionToken}
       controls={
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <div>

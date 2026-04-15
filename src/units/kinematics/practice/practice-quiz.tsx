@@ -9,6 +9,8 @@ import { useMistakes } from "@/contexts/mistake-context";
 
 interface Question { id: number; topic: string; question: string; choices: string[]; correct: number; explanation: string; }
 
+const getTimestamp = () => Date.now();
+
 const questions: Question[] = [
   { id: 1, topic: "Position & Velocity", question: "A car travels 120 m in 8 s. What is its average velocity?", choices: ["12 m/s", "15 m/s", "960 m/s", "0.067 m/s"], correct: 1, explanation: "v = Δx/Δt = 120/8 = 15 m/s." },
   { id: 2, topic: "Position & Velocity", question: "An object moves from x = 3 m to x = −5 m. What is the displacement?", choices: ["8 m", "−8 m", "2 m", "−2 m"], correct: 1, explanation: "Δx = x_f − x_i = −5 − 3 = −8 m." },
@@ -51,7 +53,7 @@ export function PracticeQuiz() {
     if (idx === q.correct) {
       setScore(s => s + 1);
     } else {
-      addMistake({ unit: "kinematics", topic: q.topic, question: q.question, yourAnswer: q.choices[idx], correctAnswer: q.choices[q.correct], timestamp: Date.now() });
+      addMistake({ unit: "kinematics", topic: q.topic, question: q.question, yourAnswer: q.choices[idx], correctAnswer: q.choices[q.correct], timestamp: getTimestamp() });
     }
   };
 

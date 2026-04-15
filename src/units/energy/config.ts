@@ -4,11 +4,13 @@ import { KineticEnergy } from "./topics/kinetic-energy";
 import { PotentialEnergy } from "./topics/potential-energy";
 import { ConservationEnergy } from "./topics/conservation-energy";
 import { Power } from "./topics/power";
-import { PracticeQuiz } from "./practice/practice-quiz";
 import { ProblemGenerator } from "./practice/problem-generator";
-import { FRQPractice } from "./practice/frq-practice";
-import { TimedTest } from "./practice/timed-test";
 import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import {
+  createUnitFrqPractice,
+  createUnitPracticeQuiz,
+  createUnitTimedTest,
+} from "@/components/practice/unit-practice";
 import { Flashcards } from "./review/flashcards";
 import { WorkedExamples } from "./review/worked-examples";
 import { FormulaSheet } from "./review/formula-sheet";
@@ -21,6 +23,10 @@ import { FBDBuilder } from "@/components/tools/fbd-builder";
 import { MistakeTracker } from "@/components/review/mistake-tracker";
 import { SkateParkSim } from "./simulations/skate-park-sim";
 import { SpringsEnergySim } from "./simulations/springs-energy-sim";
+
+const PracticeQuiz = createUnitPracticeQuiz("energy");
+const FRQPractice = createUnitFrqPractice("energy");
+const TimedTest = createUnitTimedTest("energy");
 
 export const energyConfig: UnitConfig = {
   slug: "energy",

@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function UnderPressureSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("under-pressure-phet")}
       title="Under Pressure"
       simUrl="https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure_en.html"
       description="Explore how pressure varies with depth, fluid density, and gravity. Verify P = P₀ + ρgh with virtual pressure sensors."

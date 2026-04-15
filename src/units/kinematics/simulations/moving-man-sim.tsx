@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function MovingManSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("moving-man-phet")}
       title="The Moving Man"
       simUrl="https://phet.colorado.edu/sims/cheerpj/moving-man/latest/moving-man.html?simulation=moving-man"
       description="Drag the man back and forth and watch position, velocity, and acceleration graphs update in real time."

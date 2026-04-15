@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function CollisionLabSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("collision-lab-phet")}
       title="Collision Lab"
       simUrl="https://phet.colorado.edu/sims/html/collision-lab/latest/collision-lab_en.html"
       description="Set up 1D and 2D collisions between objects. Adjust masses and velocities to explore conservation of momentum and energy."

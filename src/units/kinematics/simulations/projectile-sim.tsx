@@ -1,10 +1,12 @@
 "use client";
 
 import { PhETEmbed } from "@/components/simulations/phet-embed";
+import { getSimulationManifestBySimId } from "@/lib/simulation-manifests";
 
 export function ProjectileSim() {
   return (
     <PhETEmbed
+      predictionManifest={getSimulationManifestBySimId("projectile-motion-phet")}
       title="Projectile Motion"
       simUrl="https://phet.colorado.edu/sims/html/projectile-motion/latest/projectile-motion_en.html"
       description="Launch objects at different angles and speeds. Observe how range, max height, and flight time depend on launch parameters."

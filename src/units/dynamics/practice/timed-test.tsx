@@ -72,12 +72,14 @@ export function TimedTest() {
 
   useEffect(() => {
     if (!started || finished) return;
-    if (timeLeft <= 0) {
-      setFinished(true);
-      return;
-    }
-    const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(timer);
+    const timer = setTimeout(() => {
+      if (timeLeft <= 1) {
+        setFinished(true);
+      } else {
+        setTimeLeft((t) => t - 1);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
   }, [started, finished, timeLeft]);
 
   const minutes = Math.floor(timeLeft / 60);
