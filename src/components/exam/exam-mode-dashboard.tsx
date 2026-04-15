@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { RadarPreviewCard } from "@/components/insights/radar-preview-card";
 import { WeakSpotRadar } from "@/components/insights/weak-spot-radar";
 import { useInsightsView } from "@/components/insights/use-insights-view";
 import { recommendNextExamBlock } from "@/lib/insights";
+import { HomeIcon, type HomeIconHandle } from "@/components/icons/home-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { ExamRunner } from "@/components/exam/exam-runner";
 import type { ExamModeKind } from "@/types/insights";
 
 export function ExamModeDashboard() {
+  const homeIconRef = useRef<HomeIconHandle>(null);
   const { readiness, examRuns } = useInsightsView();
   const [activeMode, setActiveMode] = useState<ExamModeKind | null>(null);
   const recommendation = recommendNextExamBlock(readiness);
@@ -38,8 +40,15 @@ export function ExamModeDashboard() {
               Use the radar, launch timed blocks, and track whether recent exam work is moving readiness in the right direction.
             </p>
           </div>
-          <Link href="/" className="text-sm text-primary hover:underline">
-            Back to home
+          <Link
+            href="/"
+            onMouseEnter={() => homeIconRef.current?.startAnimation()}
+            onMouseLeave={() => homeIconRef.current?.stopAnimation()}
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-card/80 px-3 py-2 text-sm text-foreground/75 transition hover:border-primary/30 hover:text-foreground"
+            aria-label="Go home"
+          >
+            <HomeIcon ref={homeIconRef} size={20} className="text-primary" />
+            <span>Home</span>
           </Link>
         </div>
 
