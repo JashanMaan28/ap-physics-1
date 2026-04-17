@@ -1,10 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { ErrorBoundary } from "@/components/error-boundary";
+
+function isTypingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -388,7 +395,7 @@ function FRQPartCard({
           {part.label.toUpperCase()}
         </span>
         <div className="flex-1 space-y-1">
-          <p className="text-sm leading-relaxed text-foreground">{part.question}</p>
+          <p className="text-sm md:text-base leading-relaxed text-foreground">{part.question}</p>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs font-medium text-muted-foreground border-border">
               {part.points} {part.points === 1 ? "point" : "points"}
@@ -472,6 +479,14 @@ function FRQPartCard({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function FRQPractice() {
+  return (
+    <ErrorBoundary fallbackLabel="This FRQ practice failed to load">
+      <FRQPracticeInner />
+    </ErrorBoundary>
+  );
+}
+
+function FRQPracticeInner() {
   const [activeId, setActiveId] = useState<number>(1);
   const [problemStates, setProblemStates] = useState<Record<number, ProblemState>>(() => {
     const init: Record<number, ProblemState> = {};
@@ -483,6 +498,24 @@ export function FRQPractice() {
     });
     return init;
   });
+
+  useEffect(() => {
+    if (frqProblems.length === 0) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return;
+      const idx = frqProblems.findIndex((p) => p.id === activeId);
+      if (idx < 0) return;
+      if (e.key === "ArrowLeft" && idx > 0) {
+        e.preventDefault();
+        setActiveId(frqProblems[idx - 1].id);
+      } else if (e.key === "ArrowRight" && idx < frqProblems.length - 1) {
+        e.preventDefault();
+        setActiveId(frqProblems[idx + 1].id);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [activeId]);
 
   function updatePartState(problemId: number, partLabel: string, update: Partial<PartState>) {
     setProblemStates((prev) => ({
@@ -497,6 +530,23 @@ export function FRQPractice() {
   function getAttemptedCount(problemId: number): number {
     const ps = problemStates[problemId];
     return Object.values(ps).filter((s) => s.attempted).length;
+  }
+
+  if (frqProblems.length === 0) {
+    return (
+      <div className="mx-auto max-w-4xl p-4 sm:p-6">
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+            <p className="text-base font-semibold text-foreground">
+              No FRQ questions in the bank for this unit yet
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Check back later — new free-response problems are added as content is built out.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const activeProblem = frqProblems.find((p) => p.id === activeId)!;
@@ -519,6 +569,9 @@ export function FRQPractice() {
         </h1>
         <p className="text-sm text-muted-foreground">
           Practice AP-style FRQs. Write your answers, then reveal the rubric or a model response.
+        </p>
+        <p className="text-[11px] text-muted-foreground">
+          Tip: ← → to switch between problems
         </p>
       </div>
 

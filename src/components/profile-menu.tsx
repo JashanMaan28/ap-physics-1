@@ -235,6 +235,40 @@ export function ProfileMenu({ className = "" }: { className?: string }) {
               </Link>
             )}
 
+            {/* Reset study progress */}
+            <button
+              onClick={() => {
+                if (typeof window === "undefined") return;
+                const ok = window.confirm(
+                  "Reset all local study progress? This clears flashcard mastery, quiz scores, arcade runs, mistakes, and insights. Theme and sign-in are kept.",
+                );
+                if (!ok) return;
+                const KEEP = new Set([
+                  "theme",
+                  "ap-physics-theme",
+                  "ap-physics-guest",
+                ]);
+                try {
+                  const keys: string[] = [];
+                  for (let i = 0; i < window.localStorage.length; i += 1) {
+                    const k = window.localStorage.key(i);
+                    if (k && !KEEP.has(k)) keys.push(k);
+                  }
+                  keys.forEach((k) => window.localStorage.removeItem(k));
+                  toast("Progress reset — reloading", "🧹", 1500);
+                  window.setTimeout(() => window.location.reload(), 400);
+                } catch {
+                  toast("Could not reset progress", "⚠️", 2000);
+                }
+              }}
+              className="w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors cursor-pointer text-left"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z" />
+              </svg>
+              Reset Study Progress
+            </button>
+
             {/* Sign out */}
             <button
               onClick={handleSignOut}

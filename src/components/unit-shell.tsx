@@ -12,6 +12,7 @@ import type { UnitConfig, TopicProps } from "@/types/unit";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ProfileMenu } from "@/components/profile-menu";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 function SectionIcon({ type, size = 16 }: { type: string; size?: number }) {
   const props = {
@@ -385,7 +386,11 @@ export function UnitShell({
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="px-4 py-5 sm:px-6 sm:py-8 lg:px-10">{renderContent()}</div>
+          <div className="px-4 py-5 sm:px-6 sm:py-8 lg:px-10">
+            <ErrorBoundary fallbackLabel="This section failed to load">
+              {renderContent()}
+            </ErrorBoundary>
+          </div>
         </main>
       </div>
     </div>

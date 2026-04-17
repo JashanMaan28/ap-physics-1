@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useMistakes } from "@/app/fluids-study";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -207,6 +208,14 @@ const GENERATORS: Record<Topic, () => Problem> = {
 // ── component ─────────────────────────────────────────────────────────────────
 
 export function ProblemGenerator() {
+  return (
+    <ErrorBoundary fallbackLabel="The problem generator failed to load">
+      <ProblemGeneratorInner />
+    </ErrorBoundary>
+  );
+}
+
+function ProblemGeneratorInner() {
   const { addMistake } = useMistakes();
 
   const [selectedTopics, setSelectedTopics] = useState<Set<Topic>>(
@@ -217,6 +226,7 @@ export function ProblemGenerator() {
   const [checked, setChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [score, setScore] = useState({ correct: 0, attempted: 0 });
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleTopic = (topic: Topic) => {
     setSelectedTopics(prev => {
@@ -232,13 +242,18 @@ export function ProblemGenerator() {
   };
 
   const generateProblem = useCallback(() => {
+    setIsLoading(true);
     const topics = Array.from(selectedTopics);
     const topic = pick(topics);
-    const newProblem = GENERATORS[topic]();
-    setProblem(newProblem);
-    setUserAnswer("");
-    setChecked(false);
-    setIsCorrect(null);
+    // Brief loading state for smoother UX on repeated generation
+    window.setTimeout(() => {
+      const newProblem = GENERATORS[topic]();
+      setProblem(newProblem);
+      setUserAnswer("");
+      setChecked(false);
+      setIsCorrect(null);
+      setIsLoading(false);
+    }, 120);
   }, [selectedTopics]);
 
   const checkAnswer = () => {
@@ -307,9 +322,16 @@ export function ProblemGenerator() {
       </Card>
 
       {/* Generate button */}
-      <Button onClick={generateProblem} className="w-full" size="lg">
-        Generate New Problem
+      <Button onClick={generateProblem} className="w-full" size="lg" disabled={isLoading}>
+        {isLoading ? "Generating problem…" : "Generate New Problem"}
       </Button>
+
+      {/* Loading state */}
+      {isLoading && !problem && (
+        <div className="text-center py-12 text-muted-foreground text-sm">
+          Generating problem…
+        </div>
+      )}
 
       {/* Problem card */}
       {problem && (
@@ -318,7 +340,7 @@ export function ProblemGenerator() {
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-xs">{TOPIC_LABELS[problem.topic]}</Badge>
             </div>
-            <CardDescription className="text-base text-foreground leading-relaxed pt-1">
+            <CardDescription className="text-sm md:text-base text-foreground leading-relaxed pt-1">
               {problem.text}
             </CardDescription>
           </CardHeader>
@@ -329,7 +351,7 @@ export function ProblemGenerator() {
               <Label htmlFor="answer" className="text-sm font-medium">
                 Your Answer <span className="text-muted-foreground font-normal">({problem.unit})</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <input
                   id="answer"
                   type="number"
@@ -339,7 +361,7 @@ export function ProblemGenerator() {
                   onKeyDown={handleKeyDown}
                   disabled={checked}
                   placeholder={`Enter value in ${problem.unit}`}
-                  className="flex-1 font-mono rounded-md border border-input bg-background px-3 py-2 text-sm
+                  className="flex-1 min-w-[180px] font-mono rounded-md border border-input bg-background px-3 py-2 text-sm
                              focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60 disabled:cursor-not-allowed"
                 />
                 {!checked && (
@@ -401,9 +423,9 @@ export function ProblemGenerator() {
         </Card>
       )}
 
-      {!problem && (
+      {!problem && !isLoading && (
         <div className="text-center py-12 text-muted-foreground text-sm">
-          Press <span className="font-mono bg-muted px-1.5 py-0.5 rounded">Generate New Problem</span> to start practicing.
+          Click <span className="font-mono bg-muted px-1.5 py-0.5 rounded">Generate</span> to get a new problem.
         </div>
       )}
     </div>

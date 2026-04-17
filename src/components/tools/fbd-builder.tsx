@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -720,6 +720,7 @@ export function FBDBuilder() {
 
   const [selectedScenarioId, setSelectedScenarioId] = useState<ScenarioId>(unitScenarios[0].id);
   const [activeForces, setActiveForces] = useState<Set<ForceId>>(new Set());
+  const [history, setHistory] = useState<Set<ForceId>[]>([]);
   const [mass, setMass] = useState(2);
   const [volume, setVolume] = useState(0.001);
   const [fluidDensity, setFluidDensity] = useState(1000);
@@ -800,6 +801,7 @@ export function FBDBuilder() {
 
   const toggleForce = (id: ForceId) => {
     setActiveForces((prev) => {
+      setHistory((h) => [...h.slice(-19), new Set(prev)]);
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -807,6 +809,27 @@ export function FBDBuilder() {
     });
     setCheckResult(null);
   };
+
+  const undo = () => {
+    setHistory((h) => {
+      if (h.length === 0) return h;
+      const prev = h[h.length - 1];
+      setActiveForces(new Set(prev));
+      setCheckResult(null);
+      return h.slice(0, -1);
+    });
+  };
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const handleCheck = () => {
     const expected = new Set(scenario.expectedForces);
@@ -817,6 +840,7 @@ export function FBDBuilder() {
   };
 
   const handleReset = () => {
+    setHistory((h) => [...h.slice(-19), new Set(activeForces)]);
     setActiveForces(new Set());
     setCheckResult(null);
   };
@@ -960,12 +984,21 @@ export function FBDBuilder() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Button
                   onClick={handleCheck}
-                  className="flex-1 text-xs font-mono bg-teal-700 hover:bg-teal-600 text-white border-0 tracking-wider"
+                  className="flex-1 min-w-[140px] text-xs font-mono bg-teal-700 hover:bg-teal-600 text-white border-0 tracking-wider"
                 >
                   CHECK DIAGRAM
+                </Button>
+                <Button
+                  onClick={undo}
+                  disabled={history.length === 0}
+                  variant="outline"
+                  title="Undo last change (Ctrl+Z)"
+                  className="text-xs font-mono border-slate-600 text-slate-400 hover:text-slate-200 hover:border-slate-400 tracking-wider disabled:opacity-40"
+                >
+                  UNDO
                 </Button>
                 <Button
                   onClick={handleReset}

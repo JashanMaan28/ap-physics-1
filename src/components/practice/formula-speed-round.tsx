@@ -151,8 +151,20 @@ export function FormulaSpeedRound() {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <Badge
-                variant={inProgress && timeLeft <= 10 ? "destructive" : "secondary"}
-                className="font-mono"
+                variant={
+                  inProgress && timeLeft <= 10
+                    ? "destructive"
+                    : inProgress && timeLeft <= 30
+                      ? "outline"
+                      : "secondary"
+                }
+                className={`font-mono ${
+                  inProgress && timeLeft <= 10
+                    ? "animate-pulse"
+                    : inProgress && timeLeft <= 30
+                      ? "border-amber-500/60 text-amber-400"
+                      : ""
+                }`}
               >
                 {active ? `${timeLeft}s` : `${ROUND_DURATION}s round`}
               </Badge>

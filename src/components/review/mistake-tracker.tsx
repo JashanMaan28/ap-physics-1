@@ -100,15 +100,13 @@ export function MistakeTracker() {
     return (
       <Card className="max-w-2xl mx-auto mt-8">
         <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
-          <div className="text-5xl">🎉</div>
-          <h2 className="text-2xl font-semibold text-slate-800">
-            No mistakes yet!
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground text-center">
+            No mistakes logged yet — you&apos;re off to a clean start.
           </h2>
-          <p className="text-slate-500 text-center max-w-sm">
-            You&apos;re on a clean slate. Keep practicing. Any mistakes you make
-            while studying will appear here so you can review them.
+          <p className="text-muted-foreground text-center max-w-sm text-sm">
+            Any mistakes you make while practicing will appear here so you can review them.
           </p>
-          <p className="text-sm text-slate-400 italic">
+          <p className="text-xs text-muted-foreground italic">
             &quot;Every expert was once a beginner.&quot;
           </p>
         </CardContent>

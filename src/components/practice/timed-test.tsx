@@ -7,6 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useMistakes } from "@/app/fluids-study";
+import { ErrorBoundary } from "@/components/error-boundary";
+
+function isTypingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable;
+}
 
 // ─── Question Bank ─────────────────────────────────────────────────────────────
 
@@ -239,6 +246,14 @@ function formatTime(seconds: number): string {
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export function TimedTest() {
+  return (
+    <ErrorBoundary fallbackLabel="This timed test failed to load">
+      <TimedTestInner />
+    </ErrorBoundary>
+  );
+}
+
+function TimedTestInner() {
   const { addMistake } = useMistakes();
 
   const [phase, setPhase] = useState<Phase>("intro");
@@ -284,6 +299,49 @@ export function TimedTest() {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [phase, handleSubmit]);
+
+  // ── Keyboard shortcuts (test phase) ──────────────────────────────────────
+
+  useEffect(() => {
+    if (phase !== "test") return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return;
+      const q = questions[current];
+      if (!q) return;
+
+      const digit = parseInt(e.key, 10);
+      if (!Number.isNaN(digit) && digit >= 1 && digit <= q.options.length) {
+        e.preventDefault();
+        setAnswers((prev) =>
+          prev.map((a, i) => (i === current ? { ...a, selected: digit - 1 } : a))
+        );
+        return;
+      }
+
+      if (e.key === "ArrowLeft" && current > 0) {
+        e.preventDefault();
+        setCurrent((c) => c - 1);
+        return;
+      }
+
+      if (e.key === "ArrowRight" && current < NUM_QUESTIONS - 1) {
+        e.preventDefault();
+        setCurrent((c) => c + 1);
+        return;
+      }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (current < NUM_QUESTIONS - 1) {
+          setCurrent((c) => c + 1);
+        } else {
+          setPhase("review");
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [phase, current, questions]);
 
   // ── Record mistakes on results ────────────────────────────────────────────
 
@@ -339,6 +397,21 @@ export function TimedTest() {
   const unansweredCount = answers.filter((a) => a.selected === null).length;
   const isLowTime = timeLeft < 120;
   const score = questions.filter((q, i) => answers[i]?.selected === q.correct).length;
+
+  const timerTextClass =
+    timeLeft <= 10
+      ? "text-red-500 animate-pulse font-bold"
+      : timeLeft <= 30
+        ? "text-red-500 animate-pulse"
+        : timeLeft <= 60
+          ? "text-amber-500"
+          : "text-white";
+  const timerBorderClass =
+    timeLeft <= 30
+      ? "border-red-500/50"
+      : timeLeft <= 60
+        ? "border-amber-500/50"
+        : "border-slate-700";
 
   // ─────────────────────────────────────────────────────────────────────────────
   // INTRO SCREEN
@@ -412,14 +485,16 @@ export function TimedTest() {
       <div className="min-h-screen bg-slate-950 pb-8">
         {/* Sticky Header */}
         <div
-          className={`sticky top-0 z-50 border-b px-4 py-2 flex items-center justify-between shadow-lg transition-colors duration-700 ${
-            isLowTime
-              ? "bg-red-950 border-red-800"
-              : "bg-slate-900 border-slate-700"
+          className={`sticky top-0 z-30 border-b px-4 py-2 flex flex-wrap items-center justify-between gap-2 shadow-lg backdrop-blur transition-colors duration-300 ${
+            timeLeft <= 30
+              ? "bg-red-950/80 border-red-500/50"
+              : timeLeft <= 60
+                ? "bg-amber-950/60 border-amber-500/50"
+                : "bg-slate-900/80 border-slate-700"
           }`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-slate-400 text-sm">
+            <span className="text-slate-400 text-xs md:text-sm">
               Question {current + 1} of {NUM_QUESTIONS}
             </span>
             <Badge variant="outline" className="border-slate-600 text-slate-300 text-xs">
@@ -428,14 +503,12 @@ export function TimedTest() {
           </div>
 
           <div
-            className={`font-mono text-xl font-bold tracking-widest transition-colors duration-700 ${
-              isLowTime ? "text-red-400 animate-pulse" : "text-white"
-            }`}
+            className={`font-mono text-lg md:text-xl font-bold tracking-widest transition-colors duration-300 ${timerTextClass} ${timerBorderClass}`}
           >
             {formatTime(timeLeft)}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {flaggedCount > 0 && (
               <Badge className="bg-amber-600/20 text-amber-400 border-amber-700 text-xs">
                 {flaggedCount} flagged
@@ -479,8 +552,11 @@ export function TimedTest() {
 
           <Card className="bg-slate-900 border-slate-700">
             <CardContent className="pt-6 pb-4">
-              <p className="text-white text-base leading-relaxed font-medium mb-6">
+              <p className="text-white text-sm md:text-base leading-relaxed font-medium mb-3">
                 {q.text}
+              </p>
+              <p className="text-[11px] text-slate-500 mb-4">
+                Tip: 1-{q.options.length} to select · ← → to navigate · Enter to advance
               </p>
 
               <div className="space-y-3">
@@ -499,6 +575,7 @@ export function TimedTest() {
                       <span className="font-bold mr-2 text-slate-400">
                         {["A", "B", "C", "D"][i]}.
                       </span>
+                      <span className="mr-1 font-mono text-xs text-slate-500">({i + 1})</span>
                       {opt}
                     </button>
                   );
@@ -508,7 +585,7 @@ export function TimedTest() {
           </Card>
 
           {/* Nav row */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <Button
               variant="outline"
               onClick={() => setCurrent((c) => Math.max(0, c - 1))}
@@ -560,10 +637,14 @@ export function TimedTest() {
       <div className="min-h-screen bg-slate-950 p-4">
         <div className="max-w-xl mx-auto space-y-4">
           <div
-            className={`sticky top-0 z-50 py-2 px-4 rounded-lg text-center font-mono text-lg font-bold border transition-colors ${
-              isLowTime
-                ? "bg-red-950 border-red-700 text-red-400 animate-pulse"
-                : "bg-slate-900 border-slate-700 text-white"
+            className={`sticky top-0 z-30 py-2 px-4 rounded-lg text-center font-mono text-base md:text-lg font-bold border backdrop-blur transition-colors ${
+              timeLeft <= 10
+                ? "bg-red-950/80 border-red-500/50 text-red-500 animate-pulse"
+                : timeLeft <= 30
+                  ? "bg-red-950/70 border-red-500/50 text-red-500 animate-pulse"
+                  : timeLeft <= 60
+                    ? "bg-amber-950/60 border-amber-500/50 text-amber-500"
+                    : "bg-slate-900/80 border-slate-700 text-white"
             }`}
           >
             {formatTime(timeLeft)} remaining
@@ -636,17 +717,17 @@ export function TimedTest() {
             </CardContent>
           </Card>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <Button
               variant="outline"
               onClick={() => setPhase("test")}
-              className="flex-1 border-slate-600 text-slate-300 hover:text-white"
+              className="flex-1 min-w-[140px] border-slate-600 text-slate-300 hover:text-white"
             >
               ← Back to Test
             </Button>
             <Button
               onClick={() => handleSubmit(false)}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold"
+              className="flex-1 min-w-[140px] bg-emerald-600 hover:bg-emerald-500 text-white font-semibold"
             >
               Submit Test
             </Button>

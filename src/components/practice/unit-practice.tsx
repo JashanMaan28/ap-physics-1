@@ -10,6 +10,13 @@ import { getUnitPracticeBank } from "@/content/practice/banks";
 import { getUnitBySlug } from "@/data/units";
 import { useMistakes } from "@/contexts/mistake-context";
 import type { PracticeFrqProblem } from "@/content/practice/types";
+import { ErrorBoundary } from "@/components/error-boundary";
+
+function isTypingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable;
+}
 
 function useUnitBank(unitSlug: string) {
   return useMemo(() => getUnitPracticeBank(unitSlug), [unitSlug]);
@@ -25,12 +32,57 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(0);
 
-  if (!bank || bank.quizQuestions.length === 0) {
+  const question = bank?.quizQuestions[currentIndex];
+  const done = !!bank && answered >= bank.quizQuestions.length;
+
+  useEffect(() => {
+    if (!bank || done || !question) return;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return;
+
+      const digit = parseInt(e.key, 10);
+      if (!showAnswer && !Number.isNaN(digit) && digit >= 1 && digit <= question.choices.length) {
+        e.preventDefault();
+        const choiceIndex = digit - 1;
+        const choice = question.choices[choiceIndex];
+        setSelected(choiceIndex);
+        setShowAnswer(true);
+        setAnswered((value) => value + 1);
+        if (choiceIndex === question.answer) {
+          setScore((value) => value + 1);
+        } else {
+          addMistake({
+            unit: unitSlug,
+            topic: question.topicKey,
+            question: question.prompt,
+            yourAnswer: choice,
+            correctAnswer: question.choices[question.answer],
+            timestamp: Date.now(),
+          });
+        }
+        return;
+      }
+
+      if (e.key === "Enter" && showAnswer) {
+        e.preventDefault();
+        if (currentIndex === bank.quizQuestions.length - 1) {
+          setAnswered(bank.quizQuestions.length);
+          return;
+        }
+        setCurrentIndex((value) => value + 1);
+        setSelected(null);
+        setShowAnswer(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [addMistake, bank, currentIndex, done, question, showAnswer, unitSlug]);
+
+  if (!bank || bank.quizQuestions.length === 0 || !question) {
     return null;
   }
-
-  const question = bank.quizQuestions[currentIndex];
-  const done = answered >= bank.quizQuestions.length;
 
   if (done) {
     const percent = Math.round((score / bank.quizQuestions.length) * 100);
@@ -79,7 +131,10 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <Badge variant="outline">{question.topicKey}</Badge>
-        <p className="text-base font-medium">{question.prompt}</p>
+        <p className="text-sm md:text-base font-medium">{question.prompt}</p>
+        <p className="text-[11px] text-muted-foreground">
+          Tip: 1-{question.choices.length} to select · Enter to advance
+        </p>
         <div className="grid gap-2">
           {question.choices.map((choice, choiceIndex) => {
             const isCorrect = choiceIndex === question.answer;
@@ -118,6 +173,7 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
                 }}
                 className={`rounded-xl border px-4 py-3 text-left text-sm transition ${className}`}
               >
+                <span className="mr-2 font-mono text-xs text-muted-foreground">{choiceIndex + 1}.</span>
                 {choice}
               </button>
             );
@@ -205,16 +261,65 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
     });
   }, [addMistake, answers, bank, finished, unitSlug]);
 
-  if (!bank || bank.quizQuestions.length === 0) {
-    return null;
-  }
-
-  const totalQuestions = Math.min(10, bank.quizQuestions.length);
-  const questions = bank.quizQuestions.slice(0, totalQuestions);
+  const totalQuestions = Math.min(10, bank?.quizQuestions.length ?? 0);
+  const questions = useMemo(
+    () => (bank ? bank.quizQuestions.slice(0, totalQuestions) : []),
+    [bank, totalQuestions]
+  );
   const score = questions.reduce(
     (sum, question, index) => sum + (answers[index] === question.answer ? 1 : 0),
     0
   );
+
+  useEffect(() => {
+    if (!started || finished || questions.length === 0) return;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return;
+      const current = questions[currentIndex];
+      if (!current) return;
+
+      const digit = parseInt(e.key, 10);
+      if (!Number.isNaN(digit) && digit >= 1 && digit <= current.choices.length) {
+        e.preventDefault();
+        const choiceIndex = digit - 1;
+        setAnswers((prev) => {
+          const next = [...prev];
+          next[currentIndex] = choiceIndex;
+          return next;
+        });
+        return;
+      }
+
+      if (e.key === "ArrowLeft" && currentIndex > 0) {
+        e.preventDefault();
+        setCurrentIndex((v) => v - 1);
+        return;
+      }
+
+      if (e.key === "ArrowRight" && currentIndex < questions.length - 1) {
+        e.preventDefault();
+        setCurrentIndex((v) => v + 1);
+        return;
+      }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (currentIndex < questions.length - 1) {
+          setCurrentIndex((v) => v + 1);
+        } else {
+          setFinished(true);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [currentIndex, finished, questions, started]);
+
+  if (!bank || bank.quizQuestions.length === 0) {
+    return null;
+  }
 
   if (!started) {
     return (
@@ -263,56 +368,79 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
 
   const current = questions[currentIndex];
 
+  const timerClass =
+    timeLeft <= 10
+      ? "text-red-500 border-red-500/50 animate-pulse font-bold"
+      : timeLeft <= 30
+        ? "text-red-500 border-red-500/50 animate-pulse"
+        : timeLeft <= 60
+          ? "text-amber-500 border-amber-500/50"
+          : "";
+
   return (
-    <Card className="mx-auto max-w-3xl">
-      <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>
-            Question {currentIndex + 1} of {questions.length}
-          </CardTitle>
-          <Badge variant={timeLeft < 60 ? "destructive" : "secondary"} className="font-mono">
-            {formatTimer(timeLeft)}
-          </Badge>
-        </div>
-        <Progress value={(currentIndex / questions.length) * 100} className="h-1.5" />
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Badge variant="outline">{current.topicKey}</Badge>
-        <p className="text-base font-medium">{current.prompt}</p>
-        <div className="grid gap-2">
-          {current.choices.map((choice, choiceIndex) => (
-            <button
-              key={choice}
-              type="button"
-              onClick={() =>
-                setAnswers((prev) => {
-                  const next = [...prev];
-                  next[currentIndex] = choiceIndex;
-                  return next;
-                })
-              }
-              className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
-                answers[currentIndex] === choiceIndex ? "border-primary bg-primary/10" : "hover:bg-muted"
-              }`}
-            >
-              {choice}
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          {currentIndex > 0 && (
-            <Button variant="outline" onClick={() => setCurrentIndex((value) => value - 1)}>
-              Previous
-            </Button>
-          )}
-          {currentIndex < questions.length - 1 ? (
-            <Button onClick={() => setCurrentIndex((value) => value + 1)}>Next</Button>
-          ) : (
-            <Button onClick={() => setFinished(true)}>Submit Test</Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+    <div className="mx-auto max-w-3xl">
+      <div className="sticky top-0 z-30 -mx-4 mb-4 flex items-center justify-between gap-3 border-b bg-background/80 px-4 py-2 backdrop-blur sm:mx-0 sm:rounded-b-lg sm:px-4">
+        <span className="text-xs text-muted-foreground">
+          Question {currentIndex + 1} of {questions.length}
+        </span>
+        <Badge variant="outline" className={`font-mono text-sm ${timerClass}`}>
+          {formatTimer(timeLeft)}
+        </Badge>
+      </div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle className="text-base md:text-lg">
+              Question {currentIndex + 1} of {questions.length}
+            </CardTitle>
+            <Badge variant={timeLeft <= 30 ? "destructive" : timeLeft <= 60 ? "outline" : "secondary"} className="font-mono">
+              {formatTimer(timeLeft)}
+            </Badge>
+          </div>
+          <Progress value={(currentIndex / questions.length) * 100} className="h-1.5" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Badge variant="outline">{current.topicKey}</Badge>
+          <p className="text-sm md:text-base font-medium">{current.prompt}</p>
+          <p className="text-[11px] text-muted-foreground">
+            Tip: 1-{current.choices.length} to select · ← → to navigate · Enter to advance
+          </p>
+          <div className="grid gap-2">
+            {current.choices.map((choice, choiceIndex) => (
+              <button
+                key={choice}
+                type="button"
+                onClick={() =>
+                  setAnswers((prev) => {
+                    const next = [...prev];
+                    next[currentIndex] = choiceIndex;
+                    return next;
+                  })
+                }
+                className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+                  answers[currentIndex] === choiceIndex ? "border-primary bg-primary/10" : "hover:bg-muted"
+                }`}
+              >
+                <span className="mr-2 font-mono text-xs text-muted-foreground">{choiceIndex + 1}.</span>
+                {choice}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {currentIndex > 0 && (
+              <Button variant="outline" onClick={() => setCurrentIndex((value) => value - 1)}>
+                Previous
+              </Button>
+            )}
+            {currentIndex < questions.length - 1 ? (
+              <Button onClick={() => setCurrentIndex((value) => value + 1)}>Next</Button>
+            ) : (
+              <Button onClick={() => setFinished(true)}>Submit Test</Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -423,18 +551,30 @@ function FrqPracticeView({ unitSlug }: { unitSlug: string }) {
 
 export function createUnitPracticeQuiz(unitSlug: string) {
   return function UnitPracticeQuiz() {
-    return <PracticeQuizView unitSlug={unitSlug} />;
+    return (
+      <ErrorBoundary fallbackLabel="This practice quiz failed to load">
+        <PracticeQuizView unitSlug={unitSlug} />
+      </ErrorBoundary>
+    );
   };
 }
 
 export function createUnitTimedTest(unitSlug: string) {
   return function UnitTimedTest() {
-    return <TimedTestView unitSlug={unitSlug} />;
+    return (
+      <ErrorBoundary fallbackLabel="This timed test failed to load">
+        <TimedTestView unitSlug={unitSlug} />
+      </ErrorBoundary>
+    );
   };
 }
 
 export function createUnitFrqPractice(unitSlug: string) {
   return function UnitFrqPractice() {
-    return <FrqPracticeView unitSlug={unitSlug} />;
+    return (
+      <ErrorBoundary fallbackLabel="This FRQ practice failed to load">
+        <FrqPracticeView unitSlug={unitSlug} />
+      </ErrorBoundary>
+    );
   };
 }
