@@ -16,6 +16,8 @@ export interface PracticeFrqPart {
   sampleResponse: string;
 }
 
+export type PracticeFrqDifficulty = "easy" | "medium" | "hard";
+
 export interface PracticeFrqProblem {
   id: string;
   unitSlug: string;
@@ -24,6 +26,8 @@ export interface PracticeFrqProblem {
   scenario: string;
   given: string[];
   parts: PracticeFrqPart[];
+  difficulty?: PracticeFrqDifficulty;
+  estimatedMinutes?: number;
 }
 
 export interface UnitPracticeBank {
