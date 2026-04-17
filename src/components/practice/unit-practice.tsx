@@ -4,12 +4,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { getUnitPracticeBank } from "@/content/practice/banks";
 import { getUnitBySlug } from "@/units/registry";
 import { useMistakes } from "@/contexts/mistake-context";
-import type { PracticeFrqProblem } from "@/content/practice/types";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import type {
+  PracticeFrqDifficulty,
+  PracticeFrqProblem,
+} from "@/content/practice/types";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 function isTypingTarget(target: EventTarget | null): boolean {
@@ -444,108 +449,495 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
   );
 }
 
-function FrqProblemCard({
+type FrqPartState = {
+  draft: string;
+  submitted: boolean;
+  checked: number[];
+};
+
+type FrqProblemState = {
+  parts: Record<string, FrqPartState>;
+};
+
+const EMPTY_FRQ_STATE: FrqProblemState = { parts: {} };
+
+function getPartState(state: FrqProblemState, label: string): FrqPartState {
+  return state.parts[label] ?? { draft: "", submitted: false, checked: [] };
+}
+
+function problemTotalPoints(problem: PracticeFrqProblem): number {
+  return problem.parts.reduce((sum, part) => sum + part.points, 0);
+}
+
+function problemEarnedPoints(problem: PracticeFrqProblem, state: FrqProblemState): number {
+  return problem.parts.reduce((sum, part) => {
+    const partState = getPartState(state, part.label);
+    if (!partState.submitted || part.rubric.length === 0) return sum;
+    const fraction = partState.checked.length / part.rubric.length;
+    return sum + part.points * fraction;
+  }, 0);
+}
+
+function problemPartsSubmitted(problem: PracticeFrqProblem, state: FrqProblemState): number {
+  return problem.parts.reduce(
+    (count, part) => count + (getPartState(state, part.label).submitted ? 1 : 0),
+    0,
+  );
+}
+
+function difficultyBadgeClass(difficulty?: PracticeFrqDifficulty): string {
+  switch (difficulty) {
+    case "easy":
+      return "border-green-500/50 text-green-600 dark:text-green-400";
+    case "medium":
+      return "border-amber-500/50 text-amber-600 dark:text-amber-400";
+    case "hard":
+      return "border-red-500/50 text-red-600 dark:text-red-400";
+    default:
+      return "";
+  }
+}
+
+function FrqPartBlock({
   problem,
-  openKey,
-  setOpenKey,
+  part,
+  state,
+  updateState,
 }: {
   problem: PracticeFrqProblem;
-  openKey: string | null;
-  setOpenKey: (value: string | null) => void;
+  part: PracticeFrqProblem["parts"][number];
+  state: FrqProblemState;
+  updateState: (updater: (prev: FrqProblemState) => FrqProblemState) => void;
 }) {
+  const partState = getPartState(state, part.label);
+  const [draft, setDraft] = useState(partState.draft);
+
+  const setPart = (partial: Partial<FrqPartState>) => {
+    updateState((prev) => {
+      const existing = getPartState(prev, part.label);
+      return {
+        ...prev,
+        parts: {
+          ...prev.parts,
+          [part.label]: { ...existing, ...partial },
+        },
+      };
+    });
+  };
+
+  const handleSubmit = () => {
+    const text = draft.trim();
+    if (!text) return;
+    setPart({ draft: text, submitted: true, checked: [] });
+  };
+
+  const handleResubmit = () => {
+    setPart({ submitted: false });
+  };
+
+  const handleClear = () => {
+    setDraft("");
+    setPart({ draft: "", submitted: false, checked: [] });
+  };
+
+  const toggleRubricItem = (index: number) => {
+    const current = partState.checked;
+    const next = current.includes(index)
+      ? current.filter((i) => i !== index)
+      : [...current, index].sort((a, b) => a - b);
+    setPart({ checked: next });
+  };
+
+  const earned =
+    part.rubric.length === 0
+      ? part.points
+      : Math.round((partState.checked.length / part.rubric.length) * part.points * 10) / 10;
+
+  return (
+    <div className="space-y-3 rounded-xl border bg-card p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <p className="text-sm font-medium leading-relaxed">
+          <span className="mr-1 font-mono text-muted-foreground">({part.label})</span>
+          {part.question}
+        </p>
+        <div className="flex items-center gap-2">
+          {partState.submitted && (
+            <Badge variant="secondary" className="font-mono">
+              {earned}/{part.points}
+            </Badge>
+          )}
+          <Badge variant="outline">{part.points} pt{part.points === 1 ? "" : "s"}</Badge>
+        </div>
+      </div>
+
+      {!partState.submitted ? (
+        <div className="space-y-2">
+          <Label
+            htmlFor={`${problem.id}-${part.label}-response`}
+            className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+          >
+            Your response
+          </Label>
+          <textarea
+            id={`${problem.id}-${part.label}-response`}
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={() => {
+              if (draft !== partState.draft) {
+                setPart({ draft });
+              }
+            }}
+            onKeyDown={(event) => {
+              if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                event.preventDefault();
+                handleSubmit();
+              }
+            }}
+            placeholder="Write your answer here. Show your work and reasoning. Ctrl/Cmd+Enter to submit."
+            className="min-h-28 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm leading-relaxed outline-none ring-ring/50 transition focus-visible:ring-3"
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" onClick={handleSubmit} disabled={!draft.trim()}>
+              Submit Response
+            </Button>
+            {draft.length > 0 && (
+              <Button size="sm" variant="ghost" onClick={() => setDraft("")}>
+                Clear
+              </Button>
+            )}
+            <span className="ml-auto text-[11px] text-muted-foreground">
+              {draft.length} characters · autosaved on blur
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="rounded-lg border bg-muted/30 p-3 text-sm">
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Your response
+            </p>
+            <p className="whitespace-pre-wrap text-foreground/90">{partState.draft}</p>
+          </div>
+
+          <div className="rounded-lg border border-dashed bg-background p-3 text-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Self-score against rubric
+              </p>
+              <span className="font-mono text-xs text-muted-foreground">
+                {partState.checked.length}/{part.rubric.length} items
+              </span>
+            </div>
+            <ul className="space-y-1.5">
+              {part.rubric.map((item, index) => {
+                const checked = partState.checked.includes(index);
+                return (
+                  <li key={item}>
+                    <button
+                      type="button"
+                      onClick={() => toggleRubricItem(index)}
+                      className={`flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm transition hover:bg-muted ${
+                        checked ? "text-foreground" : "text-muted-foreground"
+                      }`}
+                    >
+                      <span
+                        aria-hidden
+                        className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border text-[10px] ${
+                          checked
+                            ? "border-green-500 bg-green-500/20 text-green-600 dark:text-green-400"
+                            : "border-muted-foreground/40"
+                        }`}
+                      >
+                        {checked ? "✓" : ""}
+                      </span>
+                      <span className="leading-snug">{item}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className="rounded-lg border bg-muted/30 p-3 text-sm">
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Sample response
+            </p>
+            <p className="whitespace-pre-wrap text-muted-foreground">{part.sampleResponse}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" variant="outline" onClick={handleResubmit}>
+              Edit response
+            </Button>
+            <Button size="sm" variant="ghost" onClick={handleClear}>
+              Clear
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FrqProblemCard({ problem }: { problem: PracticeFrqProblem }) {
+  const [state, setState] = useLocalStorage<FrqProblemState>(
+    `frq-state:v1:${problem.id}`,
+    EMPTY_FRQ_STATE,
+  );
+
+  const submittedCount = problemPartsSubmitted(problem, state);
+  const totalParts = problem.parts.length;
+  const totalPoints = problemTotalPoints(problem);
+  const earnedPoints = Math.round(problemEarnedPoints(problem, state) * 10) / 10;
+  const allSubmitted = submittedCount === totalParts;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{problem.title}</CardTitle>
-        <CardDescription>{problem.scenario}</CardDescription>
-        <div className="flex flex-wrap gap-2">
-          {problem.given.map((item) => (
-            <Badge key={item} variant="secondary" className="font-mono text-[10px]">
-              {item}
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="space-y-1">
+            <CardTitle>{problem.title}</CardTitle>
+            <CardDescription>{problem.scenario}</CardDescription>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {problem.difficulty && (
+              <Badge
+                variant="outline"
+                className={`capitalize ${difficultyBadgeClass(problem.difficulty)}`}
+              >
+                {problem.difficulty}
+              </Badge>
+            )}
+            {problem.estimatedMinutes && (
+              <Badge variant="secondary" className="font-mono">
+                ~{problem.estimatedMinutes} min
+              </Badge>
+            )}
+            <Badge variant="outline" className="font-mono">
+              {totalPoints} pts
             </Badge>
-          ))}
+          </div>
+        </div>
+        {problem.given.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {problem.given.map((item) => (
+              <Badge key={item} variant="secondary" className="font-mono text-[10px]">
+                {item}
+              </Badge>
+            ))}
+          </div>
+        )}
+        <div className="space-y-1 pt-2">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+            <span>
+              {submittedCount}/{totalParts} parts submitted
+            </span>
+            {allSubmitted && (
+              <span className="font-mono">
+                Self-score {earnedPoints}/{totalPoints}
+              </span>
+            )}
+          </div>
+          <Progress
+            value={totalParts === 0 ? 0 : (submittedCount / totalParts) * 100}
+            className="h-1.5"
+          />
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {problem.parts.map((part) => {
-          const key = `${problem.id}:${part.label}`;
-          const open = openKey === key;
-          return (
-            <div key={key} className="space-y-2">
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-sm font-medium">
-                  ({part.label}) {part.question}
-                </p>
-                <Badge variant="outline">{part.points} pts</Badge>
-              </div>
-              {open ? (
-                <div className="rounded-xl border bg-muted/40 p-4 text-sm">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Rubric
-                  </p>
-                  {part.rubric.map((item) => (
-                    <p key={item} className="text-muted-foreground">
-                      {item}
-                    </p>
-                  ))}
-                  <Separator className="my-3" />
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Sample Response
-                  </p>
-                  <p className="whitespace-pre-line text-muted-foreground">
-                    {part.sampleResponse}
-                  </p>
-                </div>
-              ) : (
-                <Button variant="ghost" size="sm" onClick={() => setOpenKey(key)}>
-                  Show Rubric
-                </Button>
-              )}
-            </div>
-          );
-        })}
+      <CardContent className="space-y-3">
+        {problem.parts.map((part) => (
+          <FrqPartBlock
+            key={`${problem.id}:${part.label}`}
+            problem={problem}
+            part={part}
+            state={state}
+            updateState={setState}
+          />
+        ))}
+        {submittedCount > 0 && (
+          <div className="flex justify-end pt-1">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setState(EMPTY_FRQ_STATE)}
+            >
+              Reset all parts
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
 
+type FrqDifficultyFilter = PracticeFrqDifficulty | "all";
+
+const DIFFICULTY_FILTERS: { label: string; value: FrqDifficultyFilter }[] = [
+  { label: "All", value: "all" },
+  { label: "Easy", value: "easy" },
+  { label: "Medium", value: "medium" },
+  { label: "Hard", value: "hard" },
+];
+
 function FrqPracticeView({ unitSlug }: { unitSlug: string }) {
   const bank = useUnitBank(unitSlug);
   const unit = getUnitBySlug(unitSlug);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [difficulty, setDifficulty] = useState<FrqDifficultyFilter>("all");
+
+  const filteredProblems = useMemo(() => {
+    if (!bank) return [];
+    if (difficulty === "all") return bank.frqProblems;
+    return bank.frqProblems.filter((problem) => problem.difficulty === difficulty);
+  }, [bank, difficulty]);
 
   if (!bank || bank.frqProblems.length === 0) {
     return null;
   }
 
-  const activeProblem = bank.frqProblems[activeIndex];
+  const resolvedIndex = activeId
+    ? filteredProblems.findIndex((problem) => problem.id === activeId)
+    : -1;
+  const activeIndex = resolvedIndex >= 0 ? resolvedIndex : 0;
+  const activeProblem = filteredProblems[activeIndex];
+
+  const availableDifficulties = new Set(
+    bank.frqProblems.map((problem) => problem.difficulty).filter(Boolean),
+  );
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>{unit?.shortName} FRQ Practice</CardTitle>
-          <CardDescription>Shared rubric bank</CardDescription>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="space-y-1">
+              <CardTitle>{unit?.shortName} FRQ Practice</CardTitle>
+              <CardDescription>
+                Write your answer, submit, then self-score against the rubric and sample response.
+              </CardDescription>
+            </div>
+            <Badge variant="secondary" className="font-mono">
+              {bank.frqProblems.length} problem{bank.frqProblems.length === 1 ? "" : "s"}
+            </Badge>
+          </div>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
-          {bank.frqProblems.map((problem, index) => (
-            <Button
-              key={problem.id}
-              variant={index === activeIndex ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                setActiveIndex(index);
-                setOpenKey(null);
-              }}
-            >
-              {problem.title}
-            </Button>
-          ))}
+        <CardContent className="space-y-3">
+          {availableDifficulties.size > 1 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Filter
+              </span>
+              {DIFFICULTY_FILTERS.map((filter) => {
+                const count =
+                  filter.value === "all"
+                    ? bank.frqProblems.length
+                    : bank.frqProblems.filter((p) => p.difficulty === filter.value).length;
+                if (filter.value !== "all" && count === 0) return null;
+                return (
+                  <Button
+                    key={filter.value}
+                    size="xs"
+                    variant={filter.value === difficulty ? "default" : "outline"}
+                    onClick={() => setDifficulty(filter.value)}
+                  >
+                    {filter.label}
+                    <span className="ml-1 font-mono text-[10px] opacity-70">{count}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          )}
+          <Separator />
+          <div className="flex flex-wrap gap-2">
+            {filteredProblems.map((problem) => (
+              <FrqProblemNavButton
+                key={problem.id}
+                problem={problem}
+                isActive={problem.id === activeProblem?.id}
+                onSelect={() => setActiveId(problem.id)}
+              />
+            ))}
+          </div>
         </CardContent>
       </Card>
-      <FrqProblemCard problem={activeProblem} openKey={openKey} setOpenKey={setOpenKey} />
+      {activeProblem ? (
+        <>
+          <FrqProblemCard key={activeProblem.id} problem={activeProblem} />
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={activeIndex <= 0}
+              onClick={() => {
+                const next = filteredProblems[activeIndex - 1];
+                if (next) setActiveId(next.id);
+              }}
+            >
+              Previous
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              Problem {activeIndex + 1} of {filteredProblems.length}
+            </span>
+            <Button
+              size="sm"
+              disabled={activeIndex >= filteredProblems.length - 1}
+              onClick={() => {
+                const next = filteredProblems[activeIndex + 1];
+                if (next) setActiveId(next.id);
+              }}
+            >
+              Next
+            </Button>
+          </div>
+        </>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center text-sm text-muted-foreground">
+            No FRQs match the current filter.
+          </CardContent>
+        </Card>
+      )}
     </div>
+  );
+}
+
+function FrqProblemNavButton({
+  problem,
+  isActive,
+  onSelect,
+}: {
+  problem: PracticeFrqProblem;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  const [state] = useLocalStorage<FrqProblemState>(
+    `frq-state:v1:${problem.id}`,
+    EMPTY_FRQ_STATE,
+  );
+  const submitted = problemPartsSubmitted(problem, state);
+  const total = problem.parts.length;
+  const complete = submitted === total && total > 0;
+
+  return (
+    <Button
+      variant={isActive ? "default" : "outline"}
+      size="sm"
+      onClick={onSelect}
+      className="gap-1.5"
+    >
+      <span>{problem.title}</span>
+      <span
+        className={`rounded-full px-1.5 font-mono text-[10px] ${
+          isActive
+            ? "bg-primary-foreground/20"
+            : complete
+              ? "bg-green-500/15 text-green-600 dark:text-green-400"
+              : "bg-muted"
+        }`}
+      >
+        {submitted}/{total}
+      </span>
+    </Button>
   );
 }
 
