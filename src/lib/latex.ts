@@ -6,18 +6,18 @@
  */
 
 const GREEK_MAP: Record<string, string> = {
-  "α": "\\alpha", "β": "\\beta", "γ": "\\gamma", "δ": "\\delta",
-  "ε": "\\varepsilon", "ζ": "\\zeta", "η": "\\eta", "θ": "\\theta",
-  "ι": "\\iota", "κ": "\\kappa", "λ": "\\lambda", "μ": "\\mu",
-  "ν": "\\nu", "ξ": "\\xi", "π": "\\pi", "ρ": "\\rho",
-  "σ": "\\sigma", "τ": "\\tau", "υ": "\\upsilon", "φ": "\\varphi",
-  "χ": "\\chi", "ψ": "\\psi", "ω": "\\omega",
-  "Α": "A", "Β": "B", "Γ": "\\Gamma", "Δ": "\\Delta",
-  "Ε": "E", "Ζ": "Z", "Η": "H", "Θ": "\\Theta",
-  "Ι": "I", "Κ": "K", "Λ": "\\Lambda", "Μ": "M",
-  "Ν": "N", "Ξ": "\\Xi", "Π": "\\Pi", "Ρ": "P",
-  "Σ": "\\Sigma", "Τ": "T", "Υ": "\\Upsilon", "Φ": "\\Phi",
-  "Χ": "X", "Ψ": "\\Psi", "Ω": "\\Omega",
+  "α": "\\alpha ", "β": "\\beta ", "γ": "\\gamma ", "δ": "\\delta ",
+  "ε": "\\varepsilon ", "ζ": "\\zeta ", "η": "\\eta ", "θ": "\\theta ",
+  "ι": "\\iota ", "κ": "\\kappa ", "λ": "\\lambda ", "μ": "\\mu ",
+  "ν": "\\nu ", "ξ": "\\xi ", "π": "\\pi ", "ρ": "\\rho ",
+  "σ": "\\sigma ", "τ": "\\tau ", "υ": "\\upsilon ", "φ": "\\varphi ",
+  "χ": "\\chi ", "ψ": "\\psi ", "ω": "\\omega ",
+  "Α": "A", "Β": "B", "Γ": "\\Gamma ", "Δ": "\\Delta ",
+  "Ε": "E", "Ζ": "Z", "Η": "H", "Θ": "\\Theta ",
+  "Ι": "I", "Κ": "K", "Λ": "\\Lambda ", "Μ": "M",
+  "Ν": "N", "Ξ": "\\Xi ", "Π": "\\Pi ", "Ρ": "P",
+  "Σ": "\\Sigma ", "Τ": "T", "Υ": "\\Upsilon ", "Φ": "\\Phi ",
+  "Χ": "X", "Ψ": "\\Psi ", "Ω": "\\Omega ",
 };
 
 const SUB_MAP: Record<string, string> = {
@@ -57,7 +57,6 @@ const SYMBOL_MAP: Record<string, string> = {
   "∫": "\\int ",
   "∂": "\\partial ",
   "∇": "\\nabla ",
-  "√": "\\sqrt ",
   "½": "\\tfrac{1}{2}",
   "⅓": "\\tfrac{1}{3}",
   "⅔": "\\tfrac{2}{3}",
@@ -104,11 +103,17 @@ export function toLatex(input: string): string {
     return `^{${body}}`;
   });
 
-  // 5) Other symbols (·, ×, √, fractions, …).
+  // 5) Other symbols (·, ×, fractions, …). Unicode √ is handled in step 6
+  //    to avoid double-escaping when followed by parentheses.
   s = mapRun(s, SYMBOL_MAP);
 
-  // 6) ASCII sqrt(x) → \sqrt{x}.
+  // 6) Sqrt handling — Unicode √ and ASCII sqrt, with or without parens.
+  s = s.replace(/√\s*\(([^()]+)\)/g, (_m, body) => `\\sqrt{${body}}`);
   s = s.replace(/\bsqrt\s*\(([^()]+)\)/g, (_m, body) => `\\sqrt{${body}}`);
+  // Bare √token such as √2 or √g.
+  s = s.replace(/√\s*([A-Za-z0-9]+)/g, (_m, body) => `\\sqrt{${body}}`);
+  // Any remaining stray √ — fall back to the command form.
+  s = s.replace(/√/g, "\\sqrt");
 
   // 7) Plain-text subscripts: x_0, v_f, P_atm → x_{0}, v_{f}, P_{atm}.
   //    Only when not already followed by a brace.
