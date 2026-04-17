@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface WorkedExample {
   title: string;
@@ -136,7 +137,7 @@ export function WorkedExamples() {
                 {revealedSteps.has(i) ? (
                   <div className="rounded-lg border p-3">
                     <p className="text-sm font-semibold text-primary mb-1">Step {i + 1}: {step.label}</p>
-                    <p className="text-sm">{step.content}</p>
+                    <PhysicsText className="text-sm">{step.content}</PhysicsText>
                   </div>
                 ) : (
                   <Button variant="outline" size="sm" onClick={() => revealStep(i)} className="w-full justify-start">

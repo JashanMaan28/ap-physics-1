@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Flashcard {
   front: string;
@@ -99,7 +100,7 @@ export function Flashcards() {
         <CardContent className="flex flex-col items-center justify-center min-h-[200px] p-8 text-center">
           <Badge variant="outline" className="mb-4">{card.category}</Badge>
           {flipped ? (
-            <p className="text-lg text-foreground">{card.back}</p>
+            <PhysicsText className="text-lg text-foreground">{card.back}</PhysicsText>
           ) : (
             <p className="text-xl font-semibold text-foreground">{card.front}</p>
           )}

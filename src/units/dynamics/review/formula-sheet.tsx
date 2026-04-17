@@ -3,6 +3,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 const sections = [
   {
@@ -88,9 +90,9 @@ export function FormulaSheet() {
             {section.formulas.map((f, fIdx) => (
               <div key={fIdx}>
                 <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="font-mono text-sm shrink-0 mt-0.5">
-                    {f.formula}
-                  </Badge>
+                  <div className="rounded-md border border-border bg-background px-2 py-0.5 shrink-0 mt-0.5 text-sm">
+                    <Tex display={false}>{toLatex(f.formula)}</Tex>
+                  </div>
                   <p className="text-sm text-muted-foreground">{f.description}</p>
                 </div>
                 {fIdx < section.formulas.length - 1 && <Separator className="mt-3" />}

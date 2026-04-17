@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 const examples = [
   {
@@ -141,7 +142,7 @@ export function WorkedExamples() {
                       <Badge variant="outline" className="shrink-0 mt-0.5">
                         Step {idx + 1}
                       </Badge>
-                      <p className="text-sm">{step}</p>
+                      <PhysicsText className="text-sm">{step}</PhysicsText>
                     </div>
                   ))}
                   <Separator />

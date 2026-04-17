@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 const formulas = [
   {
@@ -83,9 +85,9 @@ export function FormulaSheet({
                           <p className="text-sm font-medium text-muted-foreground">
                             {item.name}
                           </p>
-                          <p className="text-lg font-mono font-semibold">
-                            {item.formula}
-                          </p>
+                          <div className="text-lg font-semibold">
+                            <Tex display>{toLatex(item.formula)}</Tex>
+                          </div>
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">

@@ -15,6 +15,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 const ROUND_DURATION = 45;
 const QUESTION_COUNT = 6;
@@ -214,14 +216,15 @@ export function FormulaSpeedRound() {
                               : "border-border text-foreground/75 hover:border-primary/40"
                       } ${score !== null ? "cursor-default" : "cursor-pointer"}`}
                     >
-                      {choice}
+                      <Tex display={false}>{toLatex(choice)}</Tex>
                     </button>
                   );
                 })}
               </div>
               {score !== null && (
                 <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-sm text-foreground/80">
-                  Correct formula: <span className="font-mono">{question.formula}</span>
+                  <span className="mr-2">Correct formula:</span>
+                  <Tex display={false}>{toLatex(question.formula)}</Tex>
                 </div>
               )}
             </CardContent>

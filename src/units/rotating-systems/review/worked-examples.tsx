@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface WorkedExample {
   id: number;
@@ -215,9 +216,9 @@ export function WorkedExamples() {
                 )}
               </div>
               {revealedSteps.has(i) && (
-                <pre className="text-gray-300 text-sm whitespace-pre-wrap font-mono">
+                <PhysicsText className="text-gray-300 text-sm">
                   {step.content}
-                </pre>
+                </PhysicsText>
               )}
             </div>
           ))}

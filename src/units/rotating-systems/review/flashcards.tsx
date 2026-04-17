@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Flashcard {
   front: string;
@@ -96,7 +97,7 @@ export function Flashcards() {
           ) : (
             <div>
               <p className="mb-4 text-xs text-muted-foreground">ANSWER</p>
-              <p className="text-xl font-mono text-foreground">{card.back}</p>
+              <PhysicsText className="text-xl text-foreground">{card.back}</PhysicsText>
             </div>
           )}
           <Badge variant="outline" className="mt-4 border-teal-500/40 bg-teal-500/10 text-teal-300">{card.topic}</Badge>

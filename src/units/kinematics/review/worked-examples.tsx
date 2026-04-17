@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Example { id: number; title: string; problem: string; steps: { label: string; work: string }[]; answer: string; }
 
@@ -89,7 +90,7 @@ export function WorkedExamples() {
               {ex.steps.map((s, i) => (
                 <div key={i}>
                   <Badge variant="outline" className="text-[10px] mb-1">Step {i + 1}: {s.label}</Badge>
-                  <p className="text-sm font-mono whitespace-pre-line text-muted-foreground">{s.work}</p>
+                  <PhysicsText className="text-sm text-muted-foreground">{s.work}</PhysicsText>
                 </div>
               ))}
               <Separator />

@@ -3,6 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 const sections = [
   {
@@ -68,7 +70,7 @@ export function FormulaSheet() {
             <div className="space-y-2">
               {sec.formulas.map((f, i) => (
                 <div key={i} className="flex items-center justify-between rounded-md border bg-background px-3 py-2.5 gap-2">
-                  <p className="font-mono text-sm font-semibold">{f.eq}</p>
+                  <div className="text-sm font-semibold text-foreground"><Tex display={false}>{toLatex(f.eq)}</Tex></div>
                   {f.note && <Badge variant="outline" className="text-[10px] shrink-0">{f.note}</Badge>}
                 </div>
               ))}

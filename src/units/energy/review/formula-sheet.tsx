@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface Formula {
   name: string;
@@ -57,9 +59,9 @@ export function FormulaSheet() {
                 <Badge variant="outline" className="mb-2">
                   {f.name}
                 </Badge>
-                <p className="text-2xl font-mono font-bold text-amber-700">
-                  {f.formula}
-                </p>
+                <div className="text-2xl font-bold text-amber-700 dark:text-amber-400">
+                  <Tex display>{toLatex(f.formula)}</Tex>
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   {f.variables}
                 </p>

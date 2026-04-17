@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface FormulaEntry {
   formula: string;
@@ -111,9 +113,9 @@ export function FormulaSheet() {
                   {i > 0 && <Separator className="mb-4" />}
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <p className="font-mono text-lg font-bold" style={{ color: section.color }}>
-                        {f.formula}
-                      </p>
+                      <div className="text-lg font-bold" style={{ color: section.color }}>
+                        <Tex display>{toLatex(f.formula)}</Tex>
+                      </div>
                       <p className="text-sm font-medium mt-1">{f.name}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{f.variables}</p>
                     </div>

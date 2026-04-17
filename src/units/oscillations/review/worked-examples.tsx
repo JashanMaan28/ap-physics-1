@@ -15,6 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 const examples = [
   {
@@ -111,9 +112,10 @@ export function WorkedExamples({
                     <div>
                       <p className="font-medium text-sm mb-2">Solution Steps</p>
                       {ex.steps.map((step, j) => (
-                        <p key={j} className="text-sm font-mono ml-2 mb-1">
-                          {j + 1}. {step}
-                        </p>
+                        <div key={j} className="ml-2 mb-1 flex gap-1">
+                          <span className="text-sm">{j + 1}.</span>
+                          <PhysicsText className="text-sm">{step}</PhysicsText>
+                        </div>
                       ))}
                     </div>
                     <Separator />

@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Flashcard {
   front: string;
@@ -104,9 +105,11 @@ export function Flashcards({
               <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                 {flipped ? "Answer" : "Question"}
               </p>
-              <p className="text-lg font-medium text-foreground">
-                {flipped ? card.back : card.front}
-              </p>
+              {flipped ? (
+                <PhysicsText className="text-lg font-medium text-foreground">{card.back}</PhysicsText>
+              ) : (
+                <p className="text-lg font-medium text-foreground">{card.front}</p>
+              )}
             </CardContent>
           </Card>
 

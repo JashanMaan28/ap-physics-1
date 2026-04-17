@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Flashcard { id: number; topic: string; front: string; back: string; }
 
@@ -62,7 +63,7 @@ export function Flashcards() {
         <CardContent className="p-6 text-center">
           <Badge variant="outline" className="mb-3 text-[10px]">{card.topic}</Badge>
           {flipped ? (
-            <p className="whitespace-pre-line text-sm text-foreground">{card.back}</p>
+            <PhysicsText className="text-sm text-foreground">{card.back}</PhysicsText>
           ) : (
             <p className="text-base font-medium text-foreground">{card.front}</p>
           )}

@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface Formula {
   name: string;
@@ -105,8 +107,8 @@ export function FormulaSheet() {
                     {f.apWeight === "high" ? "Must Know" : f.apWeight === "medium" ? "Important" : "Good to Know"}
                   </Badge>
                 </div>
-                <div className="text-2xl font-mono font-bold text-center py-3 bg-muted rounded">
-                  {f.equation}
+                <div className="text-2xl font-bold text-center py-3 bg-muted rounded">
+                  <Tex display>{toLatex(f.equation)}</Tex>
                 </div>
                 <p className="text-sm"><strong>Variables:</strong> {f.variables}</p>
                 <p className="text-sm text-muted-foreground">{f.notes}</p>
@@ -122,8 +124,8 @@ export function FormulaSheet() {
               <Card key={i} className="border-purple-500/30">
                 <CardContent className="pt-4 space-y-2">
                   <h3 className="font-semibold">{f.name}</h3>
-                  <div className="text-2xl font-mono font-bold text-center py-3 bg-purple-500/10 rounded">
-                    {f.equation}
+                  <div className="text-2xl font-bold text-center py-3 bg-purple-500/10 rounded">
+                    <Tex display>{toLatex(f.equation)}</Tex>
                   </div>
                   <p className="text-sm">{f.variables}</p>
                   <p className="text-sm text-muted-foreground">{f.notes}</p>
@@ -137,9 +139,9 @@ export function FormulaSheet() {
             <CardContent className="pt-6">
               <div className="grid gap-3">
                 {formulas.map((f, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded bg-muted">
+                  <div key={i} className="flex items-center justify-between p-3 rounded bg-muted gap-3">
                     <span className="font-medium text-sm">{f.name}</span>
-                    <span className="font-mono font-bold">{f.equation}</span>
+                    <span className="font-bold"><Tex display={false}>{toLatex(f.equation)}</Tex></span>
                   </div>
                 ))}
               </div>

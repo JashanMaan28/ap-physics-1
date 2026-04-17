@@ -3,6 +3,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface FormulaRowProps {
   equation: string;
@@ -13,8 +15,8 @@ interface FormulaRowProps {
 function FormulaRow({ equation, variables, whenToUse }: FormulaRowProps) {
   return (
     <div className="border border-border rounded-md p-3 bg-background">
-      <div className="mb-2 overflow-x-auto font-mono text-base font-semibold tracking-wide text-foreground whitespace-nowrap">
-        {equation}
+      <div className="mb-2 overflow-x-auto text-base font-semibold tracking-wide text-foreground">
+        <Tex display>{toLatex(equation)}</Tex>
       </div>
       <div className="mb-2 grid grid-cols-1 gap-y-1.5">
         {variables.map((v) => (

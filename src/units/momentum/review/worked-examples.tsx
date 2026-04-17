@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface WorkedExample {
   title: string;
@@ -110,9 +111,9 @@ export function WorkedExamples() {
                   {ex.steps.map((step, si) => (
                     <div key={si} className="space-y-1">
                       <p className="font-semibold text-sm text-purple-500">{step.label}</p>
-                      <div className="bg-muted p-3 rounded font-mono text-sm whitespace-pre-line">
+                      <PhysicsText className="bg-muted p-3 rounded text-sm">
                         {step.content}
-                      </div>
+                      </PhysicsText>
                     </div>
                   ))}
 

@@ -3,6 +3,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface FormulaEntry {
   name: string;
@@ -112,8 +114,8 @@ export function FormulaSheet() {
                   {section.formulas.map((f) => (
                     <tr key={f.name} className="border-b border-gray-800">
                       <td className="text-gray-300 py-2 pr-4">{f.name}</td>
-                      <td className="text-teal-300 font-mono py-2 pr-4">
-                        {f.formula}
+                      <td className="text-teal-300 py-2 pr-4">
+                        <Tex display={false}>{toLatex(f.formula)}</Tex>
                       </td>
                       <td className="text-gray-500 py-2 pr-4">{f.units}</td>
                       <td className="text-gray-500 py-2">{f.notes}</td>

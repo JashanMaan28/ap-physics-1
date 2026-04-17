@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 const cards = [
   { front: "Newton's First Law", back: "An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted on by a net external force (Law of Inertia)." },
@@ -78,7 +79,7 @@ export function Flashcards() {
           ) : (
             <div>
               <p className="text-xs text-muted-foreground mb-2">ANSWER (click to flip)</p>
-              <p className="text-lg text-foreground">{card.back}</p>
+              <PhysicsText className="text-lg text-foreground">{card.back}</PhysicsText>
             </div>
           )}
         </CardContent>

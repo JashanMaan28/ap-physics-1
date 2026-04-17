@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface WorkedExample {
   id: number;
@@ -154,9 +155,9 @@ export function WorkedExamples() {
                   Step {i + 1}: {step.title}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <p className="font-mono text-sm bg-gray-50 p-3 rounded">
+                  <PhysicsText className="text-sm bg-gray-50 p-3 rounded">
                     {step.content}
-                  </p>
+                  </PhysicsText>
                 </AccordionContent>
               </AccordionItem>
             ))}
