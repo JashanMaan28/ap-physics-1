@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { getUnitPracticeBank } from "@/content/practice/banks";
-import { getUnitBySlug } from "@/data/units";
+import { getUnitBySlug } from "@/units/registry";
 import { useMistakes } from "@/contexts/mistake-context";
 import type { PracticeFrqProblem } from "@/content/practice/types";
 import { ErrorBoundary } from "@/components/error-boundary";

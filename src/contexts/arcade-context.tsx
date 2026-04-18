@@ -7,8 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { units } from "@/data/units";
-import { unitConfigs } from "@/units/registry";
+import { unitConfigs, units } from "@/units/registry";
 import { useProgress } from "@/contexts/progress-context";
 import { useMistakes } from "@/contexts/mistake-context";
 import { useInsights } from "@/contexts/insights-context";

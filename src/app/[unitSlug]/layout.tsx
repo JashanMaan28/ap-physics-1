@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { units } from "@/data/units";
+import { units } from "@/units/meta";
 
 export async function generateMetadata({
   params,

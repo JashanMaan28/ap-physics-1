@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { energyMeta } from "@/units/meta";
 import { Work } from "./topics/work";
 import { KineticEnergy } from "./topics/kinetic-energy";
 import { PotentialEnergy } from "./topics/potential-energy";
@@ -29,13 +30,7 @@ const FRQPractice = createUnitFrqPractice("energy");
 const TimedTest = createUnitTimedTest("energy");
 
 export const energyConfig: UnitConfig = {
-  slug: "energy",
-  number: 3,
-  name: "Work, Energy, and Power",
-  shortName: "Energy",
-  examWeight: "18–23%",
-  color: "#f59e0b",
-  description: "Work, kinetic energy, gravitational and spring PE, conservation of energy, and power.",
+  ...energyMeta,
   learnTopicIds: ["work", "kinetic-energy", "potential-energy", "conservation-energy", "power"],
   sections: [
     {

@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { units } from "@/data/units";
 import { useProgress } from "@/contexts/progress-context";
-import { unitConfigs } from "@/units/registry";
+import { unitConfigs, units } from "@/units/registry";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ProfileMenu } from "@/components/profile-menu";
 import { useToast } from "@/components/effects/toast";

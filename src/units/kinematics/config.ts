@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { kinematicsMeta } from "@/units/meta";
 import { PositionVelocity } from "./topics/position-velocity";
 import { Acceleration } from "./topics/acceleration";
 import { KinematicEquations } from "./topics/kinematic-equations";
@@ -30,13 +31,7 @@ const FRQPractice = createUnitFrqPractice("kinematics");
 const TimedTest = createUnitTimedTest("kinematics");
 
 export const kinematicsConfig: UnitConfig = {
-  slug: "kinematics",
-  number: 1,
-  name: "Kinematics",
-  shortName: "Kinematics",
-  examWeight: "10–15%",
-  color: "#3b82f6",
-  description: "Position, velocity, acceleration, kinematic equations, projectile motion, and motion graphs.",
+  ...kinematicsMeta,
   learnTopicIds: ["position-velocity", "acceleration", "kinematic-equations", "projectile-motion", "motion-graphs"],
   sections: [
     {

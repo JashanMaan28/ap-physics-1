@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { torqueMeta } from "@/units/meta";
 
 import { TorqueBasics } from "./topics/torque-basics";
 import { RotationalEquilibrium } from "./topics/rotational-equilibrium";
@@ -29,13 +30,7 @@ const FRQPractice = createUnitFrqPractice("torque");
 const TimedTest = createUnitTimedTest("torque");
 
 export const torqueConfig: UnitConfig = {
-  slug: "torque",
-  number: 5,
-  name: "Torque and Rotational Dynamics",
-  shortName: "Torque",
-  examWeight: "10–15%",
-  color: "#ec4899",
-  description: "Torque, rotational equilibrium, moment of inertia, and Newton's second law for rotation.",
+  ...torqueMeta,
   learnTopicIds: [
     "torque-basics",
     "rotational-equilibrium",

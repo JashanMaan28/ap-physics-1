@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { fluidsMeta } from "@/units/meta";
 
 import { PressureDepth } from "@/components/topics/pressure-depth";
 import { PascalsLaw } from "@/components/topics/pascals-law";
@@ -30,13 +31,7 @@ const FRQPractice = createUnitFrqPractice("fluids");
 const TimedTest = createUnitTimedTest("fluids");
 
 export const fluidsConfig: UnitConfig = {
-  slug: "fluids",
-  number: 8,
-  name: "Fluids",
-  shortName: "Fluids",
-  examWeight: "10–15%",
-  color: "#0ea5e9",
-  description: "Pressure, Pascal's law, buoyancy, continuity equation, and Bernoulli's equation.",
+  ...fluidsMeta,
   learnTopicIds: ["pressure", "pascal", "buoyancy", "continuity", "bernoulli"],
   sections: [
     {

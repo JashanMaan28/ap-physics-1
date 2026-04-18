@@ -10,7 +10,7 @@ export interface Section {
   items: SectionItem[];
 }
 
-export interface UnitConfig {
+export interface UnitMeta {
   slug: string;
   number: number;
   name: string;
@@ -18,6 +18,9 @@ export interface UnitConfig {
   examWeight: string;
   color: string;
   description: string;
+}
+
+export interface UnitConfig extends UnitMeta {
   sections: Section[];
   /** Map from item id → React component */
   componentMap: Record<string, React.ComponentType<TopicProps> | React.ComponentType>;

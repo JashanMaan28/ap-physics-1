@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { oscillationsMeta } from "@/units/meta";
 import { SHMBasics } from "./topics/shm-basics";
 import { SpringMass } from "./topics/spring-mass";
 import { Pendulum } from "./topics/pendulum";
@@ -30,13 +31,7 @@ const FRQPractice = createUnitFrqPractice("oscillations");
 const TimedTest = createUnitTimedTest("oscillations");
 
 export const oscillationsConfig: UnitConfig = {
-  slug: "oscillations",
-  number: 7,
-  name: "Oscillations",
-  shortName: "Oscillations",
-  examWeight: "5–8%",
-  color: "#06b6d4",
-  description: "Simple harmonic motion, spring-mass systems, pendulums, and energy in SHM.",
+  ...oscillationsMeta,
   learnTopicIds: ["shm-basics", "spring-mass", "pendulum", "energy-shm", "shm-graphs"],
   sections: [
     {

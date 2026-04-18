@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { units } from "@/data/units";
+import { units } from "@/units/registry";
 import { useArcade } from "@/contexts/arcade-context";
 import { getFormulaSprint } from "@/lib/arcade-data";
 import { Badge } from "@/components/ui/badge";

@@ -1,12 +1,11 @@
 "use client";
 
 import { useMemo } from "react";
-import { units } from "@/data/units";
 import { useInsights } from "@/contexts/insights-context";
 import { useMistakes } from "@/contexts/mistake-context";
 import { useProgress } from "@/contexts/progress-context";
 import { deriveReadinessSnapshot, deriveWeakSpotNodes, type RadarInputs } from "@/lib/insights";
-import { unitConfigs } from "@/units/registry";
+import { unitConfigs, units } from "@/units/registry";
 
 export function useInsightsView() {
   const { predictions, examRuns } = useInsights();

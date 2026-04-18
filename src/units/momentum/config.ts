@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { momentumMeta } from "@/units/meta";
 import { MomentumImpulse } from "./topics/momentum-impulse";
 import { ImpulseForce } from "./topics/impulse-force";
 import { ConservationMomentum } from "./topics/conservation-momentum";
@@ -29,13 +30,7 @@ const FRQPractice = createUnitFrqPractice("momentum");
 const TimedTest = createUnitTimedTest("momentum");
 
 export const momentumConfig: UnitConfig = {
-  slug: "momentum",
-  number: 4,
-  name: "Linear Momentum",
-  shortName: "Momentum",
-  examWeight: "10–15%",
-  color: "#8b5cf6",
-  description: "Momentum, impulse, conservation of momentum, and elastic/inelastic collisions.",
+  ...momentumMeta,
   learnTopicIds: ["momentum-impulse", "impulse-force", "conservation-momentum", "elastic-collisions", "inelastic-collisions"],
   sections: [
     {

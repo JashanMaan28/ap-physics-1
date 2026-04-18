@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { rotatingSystemsMeta } from "@/units/meta";
 import { RotationalKE } from "./topics/rotational-ke";
 import { AngularMomentum } from "./topics/angular-momentum";
 import { ConservationAngular } from "./topics/conservation-angular";
@@ -28,13 +29,7 @@ const FRQPractice = createUnitFrqPractice("rotating-systems");
 const TimedTest = createUnitTimedTest("rotating-systems");
 
 export const rotatingSystemsConfig: UnitConfig = {
-  slug: "rotating-systems",
-  number: 6,
-  name: "Energy and Momentum of Rotating Systems",
-  shortName: "Rotating Systems",
-  examWeight: "5–8%",
-  color: "#14b8a6",
-  description: "Rotational KE, angular momentum, conservation of angular momentum, and rolling motion.",
+  ...rotatingSystemsMeta,
   learnTopicIds: ["rotational-ke", "angular-momentum", "conservation-angular", "rolling-motion", "combined-rotation"],
   sections: [
     {

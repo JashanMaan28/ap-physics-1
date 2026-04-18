@@ -1,6 +1,5 @@
-import { units } from "@/data/units";
 import { simulationManifests } from "@/lib/simulation-manifests";
-import { unitConfigs } from "@/units/registry";
+import { unitConfigs, units } from "@/units/registry";
 import type { MistakeEntry } from "@/types/unit";
 import type {
   ExamBlockRecommendation,

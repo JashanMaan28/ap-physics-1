@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { units } from "@/data/units";
+import { units } from "@/units/registry";
 import { useArcade } from "@/contexts/arcade-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

@@ -8,7 +8,10 @@ import { rotatingSystemsConfig } from "./rotating-systems/config";
 import { oscillationsConfig } from "./oscillations/config";
 import { fluidsConfig } from "./fluids/config";
 
-// All unit configs keyed by slug
+// All unit configs keyed by slug. Importing this module pulls in every unit's
+// component map (client-only factories, topic components, simulations, etc.),
+// so it is NOT safe to import from a server component. Server components that
+// only need metadata should import from `@/units/meta` instead.
 export const unitConfigs: Record<string, UnitConfig> = {
   kinematics: kinematicsConfig,
   dynamics: dynamicsConfig,
@@ -19,3 +22,5 @@ export const unitConfigs: Record<string, UnitConfig> = {
   oscillations: oscillationsConfig,
   fluids: fluidsConfig,
 };
+
+export { units, unitSlugs, getUnitBySlug } from "./meta";

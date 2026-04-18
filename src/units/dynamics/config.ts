@@ -1,4 +1,5 @@
 import type { UnitConfig } from "@/types/unit";
+import { dynamicsMeta } from "@/units/meta";
 import { NewtonsLaws } from "./topics/newtons-laws";
 import { Friction } from "./topics/friction";
 import { TensionNormal } from "./topics/tension-normal";
@@ -29,13 +30,7 @@ const FRQPractice = createUnitFrqPractice("dynamics");
 const TimedTest = createUnitTimedTest("dynamics");
 
 export const dynamicsConfig: UnitConfig = {
-  slug: "dynamics",
-  number: 2,
-  name: "Force and Translational Dynamics",
-  shortName: "Dynamics",
-  examWeight: "18–23%",
-  color: "#ef4444",
-  description: "Newton's three laws, friction, tension, normal force, inclined planes, and Atwood machines.",
+  ...dynamicsMeta,
   learnTopicIds: ["newtons-laws", "friction", "tension-normal", "inclined-planes", "atwood-machines"],
   sections: [
     {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { units } from "@/data/units";
+import { units } from "@/units/registry";
 import { useMistakes } from "@/contexts/mistake-context";
 import { useArcade } from "@/contexts/arcade-context";
 import { useInsightsView } from "@/components/insights/use-insights-view";

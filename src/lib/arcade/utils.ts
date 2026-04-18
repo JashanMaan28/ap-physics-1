@@ -1,4 +1,4 @@
-import { units } from "@/data/units";
+import { units } from "@/units/registry";
 import type { ExamDraftStep } from "./types";
 import { hashSeed } from "./seeding";
 
