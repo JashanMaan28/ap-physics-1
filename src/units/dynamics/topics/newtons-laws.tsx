@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -12,6 +11,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function NewtonsLaws({
   onComplete,
@@ -30,14 +32,23 @@ export function NewtonsLaws({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Newton&apos;s Laws of Motion</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Newton&apos;s Laws of Motion</CardTitle>
+              <CardDescription className="mt-1">
+                The foundation of classical mechanics -- three laws that describe the relationship
+                between forces and motion.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            The foundation of classical mechanics -- three laws that describe the relationship
-            between forces and motion.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* First Law */}
@@ -60,7 +71,7 @@ export function NewtonsLaws({
 
           {/* Second Law - Interactive */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Second Law (F = ma) -- Interactive</h3>
+            <h3 className="text-lg font-semibold">Second Law (<Tex>F = ma</Tex>) — Interactive</h3>
             <p className="text-muted-foreground">
               The net force on an object equals its mass times its acceleration. The acceleration is
               in the direction of the net force.
@@ -94,7 +105,7 @@ export function NewtonsLaws({
             </div>
 
             {/* SVG Animation */}
-            <div className="rounded-lg border bg-white p-2">
+            <div className="rounded-lg border bg-white dark:bg-slate-900 p-2">
               <svg viewBox="0 0 400 120" className="w-full">
                 {/* Ground */}
                 <line x1="0" y1="100" x2="400" y2="100" stroke="#888" strokeWidth="2" />
@@ -162,12 +173,11 @@ export function NewtonsLaws({
               </svg>
             </div>
 
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-blue-50 border-blue-200 dark:bg-blue-500/10 dark:border-blue-500/30">
               <CardContent className="pt-4">
-                <p className="text-lg font-semibold text-blue-900">
-                  a = F / m = {force} / {mass} ={" "}
-                  <span className="text-2xl">{acceleration.toFixed(2)} m/s²</span>
-                </p>
+                <div className="text-lg font-semibold text-blue-900 dark:text-blue-200">
+                  <Tex display>{toLatex(`a = F / m = ${force} / ${mass} = ${acceleration.toFixed(2)} \\text{ m/s}^2`)}</Tex>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -182,7 +192,7 @@ export function NewtonsLaws({
               force on object B, object B simultaneously exerts a force equal in magnitude and
               opposite in direction on object A.
             </p>
-            <div className="rounded-lg border bg-white p-2">
+            <div className="rounded-lg border bg-white dark:bg-slate-900 p-2">
               <svg viewBox="0 0 400 100" className="w-full">
                 {/* Block A */}
                 <rect x={120} y={30} width={60} height={40} fill="#ef4444" rx={4} />
@@ -206,7 +216,7 @@ export function NewtonsLaws({
               </svg>
             </div>
             <p className="text-sm text-muted-foreground">
-              F_AB = -F_BA. The forces are equal in magnitude, opposite in direction, and act on
+              <Tex>{"F_{AB} = -F_{BA}"}</Tex>. The forces are equal in magnitude, opposite in direction, and act on
               different objects.
             </p>
           </div>
@@ -214,15 +224,15 @@ export function NewtonsLaws({
           <Separator />
 
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardHeader>
-              <CardTitle className="text-lg text-amber-900">Key Formula</CardTitle>
+              <CardTitle className="text-lg text-amber-900 dark:text-amber-200">Key Formula</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-center text-2xl font-bold text-amber-900">
-                &Sigma;F = ma
-              </p>
-              <p className="text-center text-sm text-amber-700 mt-1">
+              <div className="text-center text-2xl font-bold text-amber-900 dark:text-amber-200">
+                <Tex display>{"\\Sigma \\vec{F} = m \\vec{a}"}</Tex>
+              </div>
+              <p className="text-center text-sm text-amber-700 dark:text-amber-300/80 mt-1">
                 Net force equals mass times acceleration (vector equation)
               </p>
             </CardContent>
@@ -245,8 +255,7 @@ export function NewtonsLaws({
               <AccordionItem value="q2">
                 <AccordionTrigger>Is weight a force?</AccordionTrigger>
                 <AccordionContent>
-                  Yes. Weight W = mg is the gravitational force the Earth exerts on an object. Mass
-                  is a scalar property of the object; weight is a force vector pointing toward Earth.
+                  <PhysicsText display={false}>{"Yes. Weight W = mg is the gravitational force the Earth exerts on an object. Mass is a scalar property of the object; weight is a force vector pointing toward Earth."}</PhysicsText>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="q3">
@@ -257,20 +266,13 @@ export function NewtonsLaws({
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="q4">
-                <AccordionTrigger>Does F = ma work for variable mass systems?</AccordionTrigger>
+                <AccordionTrigger>Does <Tex>F = ma</Tex> work for variable mass systems?</AccordionTrigger>
                 <AccordionContent>
-                  The more general form is F = dp/dt (rate of change of momentum). For constant mass,
-                  this simplifies to F = ma. Rocket problems require the momentum form.
+                  <PhysicsText display={false}>{"The more general form is F = dp/dt (rate of change of momentum). For constant mass, this simplifies to F = ma. Rocket problems require the momentum form."}</PhysicsText>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full" size="lg">
-            {isComplete ? "Topic Completed" : "Mark as Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

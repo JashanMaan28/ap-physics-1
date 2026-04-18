@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -18,6 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function SHMBasics({
   onComplete,
@@ -54,30 +55,38 @@ export function SHMBasics({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Simple Harmonic Motion Basics</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Simple Harmonic Motion Basics</CardTitle>
+              <CardDescription className="mt-1">
+                Simple harmonic motion (SHM) is periodic motion where the restoring
+                force is proportional to displacement from equilibrium.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Simple harmonic motion (SHM) is periodic motion where the restoring
-            force is proportional to displacement from equilibrium.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10">
+          <Card className="border-cyan-200 bg-cyan-50 dark:border-cyan-400/20 dark:bg-cyan-500/10 dark:border-cyan-500/30">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50">Key Formula</p>
-              <p className="mt-1 text-2xl font-mono text-cyan-800 dark:text-cyan-100">
-                x(t) = A cos(&omega;t)
+              <p className="text-lg font-semibold text-cyan-900 dark:text-cyan-50 dark:text-cyan-200">Key Formula</p>
+              <div className="mt-1 text-2xl text-cyan-800 dark:text-cyan-100 dark:text-cyan-300">
+                <Tex display>{"x(t) = A\\cos(\\omega t)"}</Tex>
+              </div>
+              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80 dark:text-cyan-300">
+                <Tex>x</Tex> = position (m), <Tex>A</Tex> = amplitude (m), <Tex>{"\\omega"}</Tex> = angular frequency (rad/s), <Tex>t</Tex> = time (s)
               </p>
-              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
-                x = position (m), A = amplitude (m), &omega; = angular frequency
-                (rad/s), t = time (s)
-              </p>
-              <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80">
-                &omega; = 2&pi;f = 2&pi;/T
-              </p>
+              <div className="mt-1 text-sm text-cyan-700 dark:text-cyan-100/80 dark:text-cyan-300">
+                <Tex>{"\\omega = 2\\pi f = 2\\pi/T"}</Tex>
+              </div>
             </CardContent>
           </Card>
 
@@ -201,12 +210,6 @@ export function SHMBasics({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full">
-            {isComplete ? "Completed" : "Mark Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

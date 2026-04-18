@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -18,6 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function PotentialEnergy({
   onComplete,
@@ -44,35 +45,42 @@ export function PotentialEnergy({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Potential Energy</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Potential Energy</CardTitle>
+              <CardDescription className="mt-1">
+                Potential energy is stored energy due to an object&apos;s position or
+                configuration.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Potential energy is stored energy due to an object&apos;s position or
-            configuration.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formulas */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-amber-900">
+              <p className="text-lg font-semibold text-amber-900 dark:text-amber-200">
                 Key Formulas
               </p>
-              <p className="text-2xl font-mono text-amber-800 mt-1">
-                PE_grav = mgh
+              <div className="text-2xl text-amber-800 dark:text-amber-200 mt-1 dark:text-amber-300">
+                <Tex display>{"PE_{grav} = mgh"}</Tex>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
+                Gravitational PE: <Tex>m</Tex> = mass (kg), <Tex>{"g = 9.8 \\text{ m/s}^2"}</Tex>, <Tex>h</Tex> = height (m)
               </p>
-              <p className="text-sm text-amber-700 mt-1">
-                Gravitational PE: m = mass (kg), g = 9.8 m/s&sup2;, h = height
-                (m)
-              </p>
-              <p className="text-2xl font-mono text-amber-800 mt-3">
-                PE_spring = &frac12;kx&sup2;
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
-                Elastic PE: k = spring constant (N/m), x = compression/extension
-                (m)
+              <div className="text-2xl text-amber-800 dark:text-amber-200 mt-3 dark:text-amber-300">
+                <Tex display>{"PE_{spring} = \\tfrac{1}{2}kx^2"}</Tex>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
+                Elastic PE: <Tex>k</Tex> = spring constant (N/m), <Tex>x</Tex> = compression/extension (m)
               </p>
             </CardContent>
           </Card>
@@ -88,7 +96,7 @@ export function PotentialEnergy({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white"
+              className="border rounded bg-white dark:bg-slate-900"
             >
               {/* Ground */}
               <line
@@ -238,9 +246,7 @@ export function PotentialEnergy({
                 Does a compressed and stretched spring have the same PE?
               </AccordionTrigger>
               <AccordionContent>
-                Yes, because PE_spring = &frac12;kx&sup2; depends on x&sup2;.
-                Whether the spring is compressed or stretched by the same amount
-                x, the elastic PE is the same.
+                <PhysicsText display={false}>{"Yes, because PE_spring = ½kx² depends on x². Whether the spring is compressed or stretched by the same amount x, the elastic PE is the same."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q3">
@@ -254,12 +260,6 @@ export function PotentialEnergy({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full">
-            {isComplete ? "Completed" : "Mark Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -35,7 +36,7 @@ export function CombinedRotation({ onComplete, isComplete }: TopicProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-teal-400">
             Combined Translation + Rotation
@@ -45,7 +46,14 @@ export function CombinedRotation({ onComplete, isComplete }: TopicProps) {
             Atwood machines
           </p>
         </div>
-        {isComplete && <Badge className="bg-teal-600">Completed</Badge>}
+        <Button
+          variant={isComplete ? "default" : "outline"}
+          size="sm"
+          onClick={onComplete}
+          className="cursor-pointer shrink-0"
+        >
+          {isComplete ? "Completed" : "Mark Complete"}
+        </Button>
       </div>
 
       {/* Key Formula */}
@@ -55,15 +63,9 @@ export function CombinedRotation({ onComplete, isComplete }: TopicProps) {
         </CardHeader>
         <CardContent>
           <div className="text-center space-y-2 py-4">
-            <p className="text-xl font-mono text-white">
-              &Sigma;F = ma (translating mass)
-            </p>
-            <p className="text-xl font-mono text-white">
-              &Sigma;&tau; = I&alpha; (rotating pulley)
-            </p>
-            <p className="text-xl font-mono text-white">
-              a = R&alpha; (string constraint)
-            </p>
+            <div className="text-xl text-white"><Tex display>{"\\Sigma F = ma"}</Tex> <span className="text-sm text-gray-400">(translating mass)</span></div>
+            <div className="text-xl text-white"><Tex display>{"\\Sigma \\tau = I\\alpha"}</Tex> <span className="text-sm text-gray-400">(rotating pulley)</span></div>
+            <div className="text-xl text-white"><Tex display>{"a = R\\alpha"}</Tex> <span className="text-sm text-gray-400">(string constraint)</span></div>
           </div>
           <div className="text-gray-300 text-sm mt-2">
             <p>
@@ -267,16 +269,6 @@ export function CombinedRotation({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      {/* Mark Complete */}
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          disabled={isComplete}
-          className="bg-teal-600 hover:bg-teal-700"
-        >
-          {isComplete ? "Completed" : "Mark Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

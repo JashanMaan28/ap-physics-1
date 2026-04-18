@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -12,6 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function AtwoodMachines({
   onComplete,
@@ -37,14 +38,23 @@ export function AtwoodMachines({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Atwood Machines</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Atwood Machines</CardTitle>
+              <CardDescription className="mt-1">
+                Two masses connected by a string over a frictionless, massless pulley. A classic system
+                for studying Newton&apos;s second law.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Two masses connected by a string over a frictionless, massless pulley. A classic system
-            for studying Newton&apos;s second law.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Theory */}
@@ -73,7 +83,7 @@ export function AtwoodMachines({
           </div>
 
           {/* SVG Diagram */}
-          <div className="rounded-lg border bg-white p-2">
+          <div className="rounded-lg border bg-white dark:bg-slate-900 p-2">
             <svg viewBox="0 0 300 240" className="w-full max-w-sm mx-auto">
               {/* Support bar */}
               <rect x="100" y="10" width="100" height="8" fill="#64748b" rx="2" />
@@ -148,32 +158,32 @@ export function AtwoodMachines({
 
           {/* Results */}
           <div className="grid gap-3 sm:grid-cols-2">
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/30">
               <CardContent className="pt-4 text-center">
                 <p className="text-xs text-muted-foreground">Acceleration</p>
-                <p className="text-sm text-green-800 mt-1">
-                  a = (m₁ - m₂)g / (m₁ + m₂)
-                </p>
-                <p className="text-2xl font-bold text-green-900">{acceleration.toFixed(2)} m/s²</p>
+                <div className="text-sm text-green-800 dark:text-green-300 mt-1">
+                  <Tex>{"a = (m_1 - m_2)g / (m_1 + m_2)"}</Tex>
+                </div>
+                <p className="text-2xl font-bold text-green-900 dark:text-green-200">{acceleration.toFixed(2)} m/s²</p>
               </CardContent>
             </Card>
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-blue-50 border-blue-200 dark:bg-blue-500/10 dark:border-blue-500/30">
               <CardContent className="pt-4 text-center">
                 <p className="text-xs text-muted-foreground">Tension</p>
-                <p className="text-sm text-blue-800 mt-1">
-                  T = 2m₁m₂g / (m₁ + m₂)
-                </p>
-                <p className="text-2xl font-bold text-blue-900">{tension.toFixed(2)} N</p>
+                <div className="text-sm text-blue-800 dark:text-blue-300 mt-1">
+                  <Tex>{"T = 2 m_1 m_2 g / (m_1 + m_2)"}</Tex>
+                </div>
+                <p className="text-2xl font-bold text-blue-900 dark:text-blue-200">{tension.toFixed(2)} N</p>
               </CardContent>
             </Card>
           </div>
 
           {m1 === m2 && (
-            <Card className="bg-yellow-50 border-yellow-200">
+            <Card className="bg-yellow-50 border-yellow-200 dark:bg-yellow-500/10 dark:border-yellow-500/30">
               <CardContent className="pt-3 text-center">
-                <p className="font-semibold text-yellow-900">
-                  Equal masses: the system is in equilibrium (a = 0), and T = mg = {(m1 * g).toFixed(1)} N.
-                </p>
+                <div className="font-semibold text-yellow-900 dark:text-yellow-200">
+                  Equal masses: the system is in equilibrium (<Tex>a = 0</Tex>), and <Tex>{`T = mg = ${(m1 * g).toFixed(1)}`}</Tex> N.
+                </div>
               </CardContent>
             </Card>
           )}
@@ -181,14 +191,14 @@ export function AtwoodMachines({
           <Separator />
 
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardHeader>
-              <CardTitle className="text-lg text-amber-900">Key Formulas</CardTitle>
+              <CardTitle className="text-lg text-amber-900 dark:text-amber-200">Key Formulas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
-              <p className="text-center text-lg font-bold text-amber-900">a = (m₁ - m₂)g / (m₁ + m₂)</p>
-              <p className="text-center text-lg font-bold text-amber-900">T = 2m₁m₂g / (m₁ + m₂)</p>
-              <p className="text-center text-sm text-amber-700 mt-1">Massless rope, frictionless pulley</p>
+              <div className="text-center text-lg font-bold text-amber-900 dark:text-amber-200"><Tex display>{"a = (m_1 - m_2)g / (m_1 + m_2)"}</Tex></div>
+              <div className="text-center text-lg font-bold text-amber-900 dark:text-amber-200"><Tex display>{"T = 2 m_1 m_2 g / (m_1 + m_2)"}</Tex></div>
+              <p className="text-center text-sm text-amber-700 dark:text-amber-300/80 mt-1">Massless rope, frictionless pulley</p>
             </CardContent>
           </Card>
 
@@ -207,9 +217,7 @@ export function AtwoodMachines({
             <AccordionItem value="q2">
               <AccordionTrigger>What if one mass sits on a table (modified Atwood)?</AccordionTrigger>
               <AccordionContent>
-                In a modified Atwood machine, one mass hangs off the edge while the other slides on
-                a table. The hanging mass provides the driving force: a = m_hang * g / (m_hang + m_table)
-                without friction. Add friction as mu_k * m_table * g in the denominator treatment.
+                <PhysicsText display={false}>{"In a modified Atwood machine, one mass hangs off the edge while the other slides on a table. The hanging mass provides the driving force: a = m_hang · g / (m_hang + m_table) without friction. Add friction as μ_k · m_table · g in the denominator treatment."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q3">
@@ -220,12 +228,6 @@ export function AtwoodMachines({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full" size="lg">
-            {isComplete ? "Topic Completed" : "Mark as Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

@@ -10,6 +10,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -43,9 +45,14 @@ export function ElasticCollisions({ onComplete, isComplete }: TopicProps) {
               <CardTitle className="text-2xl">Elastic Collisions</CardTitle>
               <CardDescription>Both momentum and kinetic energy are conserved</CardDescription>
             </div>
-            <Badge variant={isComplete ? "default" : "secondary"}>
-              {isComplete ? "Completed" : "In Progress"}
-            </Badge>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
         </CardHeader>
       </Card>
@@ -72,22 +79,22 @@ export function ElasticCollisions({ onComplete, isComplete }: TopicProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>Key Formulas</span>
-            <Badge variant="outline" className="text-purple-600 border-purple-400">Must Know</Badge>
+            <Badge variant="outline" className="text-purple-600 border-purple-400 dark:text-purple-400">Must Know</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="text-center font-mono font-bold py-2 text-xl">
-            m<sub>1</sub>v<sub>1i</sub> + m<sub>2</sub>v<sub>2i</sub> = m<sub>1</sub>v<sub>1f</sub> + m<sub>2</sub>v<sub>2f</sub>
+          <div className="text-center font-bold py-2 text-xl">
+            <Tex display>{"m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f}"}</Tex>
           </div>
-          <div className="text-center font-mono font-bold py-2 text-xl">
-            &frac12;m<sub>1</sub>v<sub>1i</sub>&sup2; + &frac12;m<sub>2</sub>v<sub>2i</sub>&sup2; = &frac12;m<sub>1</sub>v<sub>1f</sub>&sup2; + &frac12;m<sub>2</sub>v<sub>2f</sub>&sup2;
+          <div className="text-center font-bold py-2 text-xl">
+            <Tex display>{"\\tfrac{1}{2}m_1 v_{1i}^2 + \\tfrac{1}{2}m_2 v_{2i}^2 = \\tfrac{1}{2}m_1 v_{1f}^2 + \\tfrac{1}{2}m_2 v_{2f}^2"}</Tex>
           </div>
           <Separator />
-          <p className="text-sm text-muted-foreground text-center">
-            For 1D elastic collision with object 2 initially at rest:<br />
-            v<sub>1f</sub> = v<sub>1i</sub>(m<sub>1</sub>&minus;m<sub>2</sub>)/(m<sub>1</sub>+m<sub>2</sub>) and
-            v<sub>2f</sub> = 2m<sub>1</sub>v<sub>1i</sub>/(m<sub>1</sub>+m<sub>2</sub>)
-          </p>
+          <div className="text-sm text-muted-foreground text-center space-y-1">
+            <p>For 1D elastic collision with object 2 initially at rest:</p>
+            <div><Tex display>{"v_{1f} = v_{1i}(m_1 - m_2)/(m_1 + m_2)"}</Tex></div>
+            <div><Tex display>{"v_{2f} = 2 m_1 v_{1i}/(m_1 + m_2)"}</Tex></div>
+          </div>
         </CardContent>
       </Card>
 
@@ -198,8 +205,8 @@ export function ElasticCollisions({ onComplete, isComplete }: TopicProps) {
               </div>
 
               <div className="flex gap-2 text-sm">
-                <Badge variant="outline" className="text-green-600 border-green-400">Momentum Conserved</Badge>
-                <Badge variant="outline" className="text-green-600 border-green-400">KE Conserved</Badge>
+                <Badge variant="outline" className="text-green-600 border-green-400 dark:text-green-400">Momentum Conserved</Badge>
+                <Badge variant="outline" className="text-green-600 border-green-400 dark:text-green-400">KE Conserved</Badge>
               </div>
             </CardContent>
           </Card>
@@ -265,16 +272,6 @@ export function ElasticCollisions({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          variant={isComplete ? "outline" : "default"}
-          size="lg"
-          className={isComplete ? "" : "bg-purple-600 hover:bg-purple-700"}
-        >
-          {isComplete ? "Completed ✓" : "Mark as Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

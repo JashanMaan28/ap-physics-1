@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -18,6 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function Power({
   onComplete,
@@ -44,33 +45,41 @@ export function Power({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Power</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Power</CardTitle>
+              <CardDescription className="mt-1">
+                Power is the rate at which work is done or energy is transferred.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Power is the rate at which work is done or energy is transferred.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-amber-900">
+              <p className="text-lg font-semibold text-amber-900 dark:text-amber-200">
                 Key Formulas
               </p>
-              <p className="text-2xl font-mono text-amber-800 mt-1">
-                P = W / t
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
+              <div className="text-2xl text-amber-800 dark:text-amber-200 mt-1 dark:text-amber-300">
+                <Tex display>{"P = W / t"}</Tex>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
                 Power = work / time
               </p>
-              <p className="text-2xl font-mono text-amber-800 mt-2">
-                P = F &middot; v
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
-                P = power (W), F = force (N), v = velocity (m/s). 1 watt = 1
-                J/s
+              <div className="text-2xl text-amber-800 dark:text-amber-200 mt-2 dark:text-amber-300">
+                <Tex display>{"P = F \\cdot v"}</Tex>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
+                <Tex>P</Tex> = power (W), <Tex>F</Tex> = force (N), <Tex>v</Tex> = velocity (m/s). <Tex>{"1 \\text{ W} = 1 \\text{ J/s}"}</Tex>
               </p>
             </CardContent>
           </Card>
@@ -84,7 +93,7 @@ export function Power({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white"
+              className="border rounded bg-white dark:bg-slate-900"
             >
               {/* P = Fv bar */}
               <rect x={60} y={40} width={barFV} height={30} fill="#f59e0b" rx={4} />
@@ -224,19 +233,10 @@ export function Power({
                 When do you use P = Fv vs P = W/t?
               </AccordionTrigger>
               <AccordionContent>
-                Use P = Fv when you know the instantaneous force and velocity
-                (e.g., a car engine pulling at constant speed). Use P = W/t
-                when you know the total work done over a time interval (average
-                power).
+                <PhysicsText display={false}>{"Use P = Fv when you know the instantaneous force and velocity (e.g., a car engine pulling at constant speed). Use P = W/t when you know the total work done over a time interval (average power)."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full">
-            {isComplete ? "Completed" : "Mark Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

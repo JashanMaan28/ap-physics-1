@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -32,14 +33,21 @@ export function AngularMomentum({ onComplete, isComplete }: TopicProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-teal-400">Angular Momentum</h2>
           <p className="text-gray-400 mt-1">
             The rotational analog of linear momentum
           </p>
         </div>
-        {isComplete && <Badge className="bg-teal-600">Completed</Badge>}
+        <Button
+          variant={isComplete ? "default" : "outline"}
+          size="sm"
+          onClick={onComplete}
+          className="cursor-pointer shrink-0"
+        >
+          {isComplete ? "Completed" : "Mark Complete"}
+        </Button>
       </div>
 
       {/* Key Formula */}
@@ -48,22 +56,14 @@ export function AngularMomentum({ onComplete, isComplete }: TopicProps) {
           <CardTitle className="text-teal-300 text-lg">Key Formula</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-3xl font-mono text-white py-4">
-            L = I&omega;
+          <div className="text-center text-3xl text-white py-4">
+            <Tex display>{"L = I\\omega"}</Tex>
           </div>
           <div className="text-gray-300 text-sm space-y-1 mt-2">
-            <p>
-              <strong>L</strong> = angular momentum (kg&middot;m&sup2;/s)
-            </p>
-            <p>
-              <strong>I</strong> = moment of inertia (kg&middot;m&sup2;)
-            </p>
-            <p>
-              <strong>&omega;</strong> = angular velocity (rad/s)
-            </p>
-            <p>
-              Analogous to p = mv in translational motion.
-            </p>
+            <p><Tex>L</Tex> = angular momentum (kg·m²/s)</p>
+            <p><Tex>I</Tex> = moment of inertia (kg·m²)</p>
+            <p><Tex>{"\\omega"}</Tex> = angular velocity (rad/s)</p>
+            <p>Analogous to <Tex>{"p = mv"}</Tex> in translational motion.</p>
           </div>
         </CardContent>
       </Card>
@@ -236,16 +236,6 @@ export function AngularMomentum({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      {/* Mark Complete */}
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          disabled={isComplete}
-          className="bg-teal-600 hover:bg-teal-700"
-        >
-          {isComplete ? "Completed" : "Mark Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

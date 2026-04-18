@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -18,6 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function ConservationEnergy({
   onComplete,
@@ -58,32 +59,41 @@ export function ConservationEnergy({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Conservation of Energy</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Conservation of Energy</CardTitle>
+              <CardDescription className="mt-1">
+                In an isolated system with no non-conservative forces, the total
+                mechanical energy remains constant.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            In an isolated system with no non-conservative forces, the total
-            mechanical energy remains constant.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-amber-900">
+              <p className="text-lg font-semibold text-amber-900 dark:text-amber-200">
                 Key Formula
               </p>
-              <p className="text-2xl font-mono text-amber-800 mt-1">
-                KE_i + PE_i = KE_f + PE_f
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
+              <div className="text-2xl text-amber-800 dark:text-amber-200 mt-1 dark:text-amber-300">
+                <Tex display>{"KE_i + PE_i = KE_f + PE_f"}</Tex>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
                 Total mechanical energy is conserved when only conservative
                 forces act.
               </p>
-              <p className="text-xl font-mono text-amber-800 mt-2">
-                E_total = KE + PE = constant
-              </p>
+              <div className="text-xl text-amber-800 dark:text-amber-200 mt-2 dark:text-amber-300">
+                <Tex display>{"E_{total} = KE + PE = \\text{constant}"}</Tex>
+              </div>
             </CardContent>
           </Card>
 
@@ -98,7 +108,7 @@ export function ConservationEnergy({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white"
+              className="border rounded bg-white dark:bg-slate-900"
             >
               {/* Pivot */}
               <circle cx={pivotX} cy={pivotY} r={5} fill="#333" />
@@ -284,10 +294,7 @@ export function ConservationEnergy({
                 How do you use conservation of energy to solve problems?
               </AccordionTrigger>
               <AccordionContent>
-                1. Choose a reference level for h = 0. 2. Identify the initial
-                and final states. 3. Write KE_i + PE_i = KE_f + PE_f. 4. Plug
-                in known values and solve for the unknown. This avoids the need
-                for force and acceleration analysis.
+                <PhysicsText display={false}>{"1. Choose a reference level for h = 0. 2. Identify the initial and final states. 3. Write KE_i + PE_i = KE_f + PE_f. 4. Plug in known values and solve for the unknown. This avoids the need for force and acceleration analysis."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q3">
@@ -302,12 +309,6 @@ export function ConservationEnergy({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full">
-            {isComplete ? "Completed" : "Mark Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

@@ -10,6 +10,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -38,9 +40,14 @@ export function InelasticCollisions({ onComplete, isComplete }: TopicProps) {
               <CardTitle className="text-2xl">Inelastic Collisions</CardTitle>
               <CardDescription>Momentum conserved, kinetic energy is NOT conserved</CardDescription>
             </div>
-            <Badge variant={isComplete ? "default" : "secondary"}>
-              {isComplete ? "Completed" : "In Progress"}
-            </Badge>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
         </CardHeader>
       </Card>
@@ -72,16 +79,16 @@ export function InelasticCollisions({ onComplete, isComplete }: TopicProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>Key Formula</span>
-            <Badge variant="outline" className="text-purple-600 border-purple-400">Must Know</Badge>
+            <Badge variant="outline" className="text-purple-600 border-purple-400 dark:text-purple-400">Must Know</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-2xl font-mono font-bold py-4">
-            m<sub>1</sub>v<sub>1i</sub> + m<sub>2</sub>v<sub>2i</sub> = (m<sub>1</sub> + m<sub>2</sub>)v<sub>f</sub>
+          <div className="text-center text-2xl font-bold py-4">
+            <Tex display>{"m_1 v_{1i} + m_2 v_{2i} = (m_1 + m_2)v_f"}</Tex>
           </div>
           <div className="text-center text-sm text-muted-foreground space-y-1">
-            <p>Objects stick together &rarr; single final velocity v<sub>f</sub></p>
-            <p>KE<sub>lost</sub> = KE<sub>before</sub> &minus; KE<sub>after</sub> &gt; 0</p>
+            <p>Objects stick together → single final velocity <Tex>v_f</Tex></p>
+            <p><Tex>{"KE_{lost} = KE_{before} - KE_{after} > 0"}</Tex></p>
           </div>
         </CardContent>
       </Card>
@@ -193,8 +200,8 @@ export function InelasticCollisions({ onComplete, isComplete }: TopicProps) {
                 </p>
               </div>
 
-              <Badge variant="outline" className="text-green-600 border-green-400">Momentum Conserved</Badge>
-              <Badge variant="outline" className="text-red-600 border-red-400 ml-2">KE NOT Conserved</Badge>
+              <Badge variant="outline" className="text-green-600 border-green-400 dark:text-green-400">Momentum Conserved</Badge>
+              <Badge variant="outline" className="text-red-600 border-red-400 ml-2 dark:text-red-400">KE NOT Conserved</Badge>
             </CardContent>
           </Card>
         </TabsContent>
@@ -272,16 +279,6 @@ export function InelasticCollisions({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          variant={isComplete ? "outline" : "default"}
-          size="lg"
-          className={isComplete ? "" : "bg-purple-600 hover:bg-purple-700"}
-        >
-          {isComplete ? "Completed ✓" : "Mark as Complete"}
-        </Button>
-      </div>
     </div>
   );
 }
