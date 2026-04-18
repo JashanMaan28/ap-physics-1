@@ -12,6 +12,8 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 import {
   Accordion,
   AccordionContent,
@@ -74,23 +76,14 @@ export function PressureDepth({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              P = P<sub>0</sub> + <span className="text-primary">&#961;</span>g
-              <span className="text-primary">h</span>
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"P = P_0 + \\rho gh"}</Tex>
+            </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground sm:grid-cols-4">
-              <span>
-                <strong>P</strong> = Absolute pressure
-              </span>
-              <span>
-                <strong>P&#8320;</strong> = Surface pressure
-              </span>
-              <span>
-                <strong>&#961;</strong> = Fluid density
-              </span>
-              <span>
-                <strong>h</strong> = Depth
-              </span>
+              <span><Tex>P</Tex> = Absolute pressure</span>
+              <span><Tex>P_0</Tex> = Surface pressure</span>
+              <span><Tex>{"\\rho"}</Tex> = Fluid density</span>
+              <span><Tex>h</Tex> = Depth</span>
             </div>
           </div>
 

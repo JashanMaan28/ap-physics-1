@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Problem {
   question: string;
@@ -141,10 +142,10 @@ export function ProblemGenerator({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Card className="bg-slate-50 dark:bg-slate-900/40">
+          <Card className="bg-slate-50 dark:bg-slate-900/40 dark:bg-slate-500/10">
             <CardContent className="pt-4">
               <Badge variant="outline" className="mb-2">{problem.topic}</Badge>
-              <p className="text-lg">{problem.question}</p>
+              <PhysicsText display={false} className="text-lg">{problem.question}</PhysicsText>
             </CardContent>
           </Card>
 
@@ -153,16 +154,16 @@ export function ProblemGenerator({
               Show Solution
             </Button>
           ) : (
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/30">
               <CardContent className="pt-4 space-y-2">
-                <p className="font-semibold text-green-900">Solution</p>
+                <p className="font-semibold text-green-900 dark:text-green-200">Solution</p>
                 {problem.steps.map((step, i) => (
-                  <p key={i} className="font-mono text-sm text-green-800">
-                    {i + 1}. {step}
-                  </p>
+                  <div key={i} className="text-sm text-green-800 dark:text-green-300">
+                    {i + 1}. <PhysicsText display={false} className="inline">{step}</PhysicsText>
+                  </div>
                 ))}
                 <Separator />
-                <p className="text-lg font-bold text-green-900">{problem.answer}</p>
+                <div className="text-lg font-bold text-green-900 dark:text-green-200"><PhysicsText display={false} className="inline">{problem.answer}</PhysicsText></div>
               </CardContent>
             </Card>
           )}

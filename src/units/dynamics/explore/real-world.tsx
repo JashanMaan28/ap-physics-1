@@ -3,6 +3,7 @@
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 const examples = [
   {
@@ -77,11 +78,11 @@ export function RealWorldExamples() {
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-muted-foreground">{ex.description}</p>
+            <PhysicsText display={false} className="text-muted-foreground">{ex.description}</PhysicsText>
             <Separator />
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
-              <p className="text-sm font-medium text-blue-900">The Physics:</p>
-              <p className="text-sm text-blue-800">{ex.physics}</p>
+            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 dark:bg-blue-500/10 dark:border-blue-500/30">
+              <p className="text-sm font-medium text-blue-900 dark:text-blue-200">The Physics:</p>
+              <PhysicsText display={false} className="text-sm text-blue-800 dark:text-blue-300">{ex.physics}</PhysicsText>
             </div>
           </CardContent>
         </Card>

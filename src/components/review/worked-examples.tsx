@@ -706,7 +706,7 @@ function ProblemCard({ problem }: ProblemCardProps) {
 
       <CardContent className="space-y-4">
         {/* Diagram */}
-        <div className="rounded-lg border border-border bg-slate-50 p-3 dark:bg-slate-900/40">
+        <div className="rounded-lg border border-border bg-slate-50 p-3 dark:bg-slate-900/40 dark:bg-slate-500/10">
           <button
             className="mb-2 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
             onClick={() => setShowDiagram((v) => !v)}
@@ -721,7 +721,7 @@ function ProblemCard({ problem }: ProblemCardProps) {
           <div className="space-y-3">
             {problem.steps.slice(0, revealedSteps).map((step, idx) => (
               <div key={idx} className="overflow-hidden rounded-lg border border-border bg-card">
-                <div className="flex items-center gap-2 bg-slate-100 px-3 py-2 dark:bg-slate-800">
+                <div className="flex items-center gap-2 bg-slate-100 px-3 py-2 dark:bg-slate-800 dark:bg-slate-500/20">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-700 text-white text-xs font-bold shrink-0">
                     {idx + 1}
                   </span>
@@ -731,7 +731,7 @@ function ProblemCard({ problem }: ProblemCardProps) {
                   {/* Equation */}
                   <div>
                     <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Equation</p>
-                    <div className="rounded border border-border bg-slate-50 px-2 py-1.5 text-foreground dark:bg-slate-900/60">
+                    <div className="rounded border border-border bg-slate-50 px-2 py-1.5 text-foreground dark:bg-slate-900/60 dark:bg-slate-500/10">
                       <Tex display>{step.equation}</Tex>
                     </div>
                   </div>
@@ -752,7 +752,7 @@ function ProblemCard({ problem }: ProblemCardProps) {
                   {/* Substitution */}
                   <div>
                     <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Substitution</p>
-                    <div className="rounded border border-blue-200 bg-blue-50 px-2 py-1.5 text-blue-900 dark:border-blue-400/40 dark:bg-blue-500/10 dark:text-blue-100">
+                    <div className="rounded border border-blue-200 bg-blue-50 px-2 py-1.5 text-blue-900 dark:border-blue-400/40 dark:bg-blue-500/10 dark:text-blue-100 dark:border-blue-500/30 dark:text-blue-200">
                       <Tex display>{step.substitution}</Tex>
                     </div>
                   </div>
@@ -764,9 +764,9 @@ function ProblemCard({ problem }: ProblemCardProps) {
                     </div>
                   </div>
                   {/* Explanation */}
-                  <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 dark:border-amber-400/40 dark:bg-amber-500/10">
+                  <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 dark:border-amber-400/40 dark:bg-amber-500/10 dark:border-amber-500/30">
                     <p className="mb-1 text-xs font-semibold text-amber-700 dark:text-amber-300">Why / Check</p>
-                    <p className="text-xs leading-relaxed text-amber-900 dark:text-amber-100">{step.explanation}</p>
+                    <p className="text-xs leading-relaxed text-amber-900 dark:text-amber-100 dark:text-amber-200">{step.explanation}</p>
                   </div>
                 </div>
               </div>

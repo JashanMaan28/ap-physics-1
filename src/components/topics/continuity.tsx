@@ -12,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
 import {
   Accordion,
   AccordionContent,
@@ -65,12 +66,12 @@ export function ContinuityEquation({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              A<sub>1</sub>v<sub>1</sub> = A<sub>2</sub>v<sub>2</sub>
-            </p>
-            <p className="mt-1 font-mono text-sm text-muted-foreground">
-              Flow rate Q = Av is constant for an incompressible fluid
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"A_1 v_1 = A_2 v_2"}</Tex>
+            </div>
+            <div className="mt-1 text-sm text-muted-foreground">
+              Flow rate <Tex>{"Q = Av"}</Tex> is constant for an incompressible fluid
+            </div>
           </div>
 
           <div className="grid gap-2 text-sm leading-relaxed text-muted-foreground sm:grid-cols-2">
@@ -141,7 +142,7 @@ export function ContinuityEquation({ onComplete, isComplete }: TopicProps) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span>Area (A&#8322;)</span>
-                    <span className="inline-flex items-center gap-1 rounded-lg bg-orange-100 px-3 py-1.5 font-mono text-sm font-semibold text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                    <span className="inline-flex items-center gap-1 rounded-lg bg-orange-100 px-3 py-1.5 font-mono text-sm font-semibold text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 dark:bg-orange-500/20">
                       {area2} cm&#178;
                     </span>
                   </div>
@@ -156,7 +157,7 @@ export function ContinuityEquation({ onComplete, isComplete }: TopicProps) {
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span>Velocity (v&#8322;)</span>
-                  <span className="inline-flex items-center gap-1 rounded-lg bg-orange-100 px-3 py-1.5 font-mono text-sm font-bold text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                  <span className="inline-flex items-center gap-1 rounded-lg bg-orange-100 px-3 py-1.5 font-mono text-sm font-bold text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 dark:bg-orange-500/20">
                     {velocity2.toFixed(1)} m/s
                   </span>
                 </div>

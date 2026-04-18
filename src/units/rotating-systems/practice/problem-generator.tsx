@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Problem {
   question: string;
@@ -109,23 +110,21 @@ export function ProblemGenerator() {
 
       <Card className="bg-gray-900 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white text-lg">{problem.question}</CardTitle>
+          <CardTitle className="text-white text-lg"><PhysicsText display={false} className="inline">{problem.question}</PhysicsText></CardTitle>
           <Badge className="bg-teal-900 text-teal-300 w-fit">{problem.topic}</Badge>
         </CardHeader>
         <CardContent className="space-y-4">
           {showHint && !showAnswer && (
             <div className="p-3 bg-yellow-900/20 border border-yellow-800 rounded-lg">
               <p className="text-yellow-300 text-sm font-bold">Hint:</p>
-              <p className="text-gray-300 text-sm">{problem.hint}</p>
+              <PhysicsText display={false} className="text-gray-300 text-sm">{problem.hint}</PhysicsText>
             </div>
           )}
 
           {showAnswer && (
             <div className="p-4 bg-teal-900/20 border border-teal-800 rounded-lg">
               <p className="text-teal-300 font-bold mb-2">Solution:</p>
-              <p className="text-gray-300 font-mono text-sm whitespace-pre-wrap">
-                {problem.answer}
-              </p>
+              <PhysicsText display={false} className="text-gray-300 text-sm">{problem.answer}</PhysicsText>
             </div>
           )}
 

@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 const scenarios = [
   {
@@ -75,7 +76,7 @@ export function WhatIfScenarios() {
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-muted-foreground font-medium">{scenario.summary}</p>
+            <PhysicsText display={false} className="text-muted-foreground font-medium">{scenario.summary}</PhysicsText>
             <Separator />
             <Accordion>
               <AccordionItem value="details">
@@ -85,7 +86,7 @@ export function WhatIfScenarios() {
                     {scenario.details.map((detail, dIdx) => (
                       <li key={dIdx} className="flex gap-2 text-sm">
                         <span className="text-muted-foreground shrink-0">{dIdx + 1}.</span>
-                        <span>{detail}</span>
+                        <PhysicsText display={false}>{detail}</PhysicsText>
                       </li>
                     ))}
                   </ul>

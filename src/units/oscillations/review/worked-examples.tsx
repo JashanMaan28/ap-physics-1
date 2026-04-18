@@ -103,7 +103,7 @@ export function WorkedExamples({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-3">
-                    <Card className="bg-slate-50 dark:bg-slate-900/40">
+                    <Card className="bg-slate-50 dark:bg-slate-900/40 dark:bg-slate-500/10">
                       <CardContent className="pt-4">
                         <p className="font-medium">Problem</p>
                         <p className="text-sm mt-1">{ex.problem}</p>
@@ -119,7 +119,7 @@ export function WorkedExamples({
                       ))}
                     </div>
                     <Separator />
-                    <p className="font-bold text-green-700">{ex.answer}</p>
+                    <p className="font-bold text-green-700 dark:text-green-300">{ex.answer}</p>
                   </div>
                 </AccordionContent>
               </AccordionItem>

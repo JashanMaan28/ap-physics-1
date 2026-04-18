@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 import { Tex } from "@/components/ui/math";
-import { looksLikeEquation, toLatex } from "@/lib/latex";
+import { autoWrapMath, looksLikeEquation, toLatex } from "@/lib/latex";
 
 interface PhysicsTextProps {
   /** Raw text that may contain equations mixed with prose, possibly with \n separators. */
@@ -43,6 +43,13 @@ function Line({ line, display }: { line: string; display: boolean }) {
   // If the author included inline math via $…$, honor it.
   if (/\$[^$]+\$/.test(line)) {
     return <InlineMixed line={line} />;
+  }
+
+  // Try to detect equation spans embedded in prose and wrap them so
+  // InlineMixed can render just those spans as math.
+  const wrapped = autoWrapMath(line);
+  if (wrapped !== line) {
+    return <InlineMixed line={wrapped} />;
   }
 
   if (looksLikeEquation(line)) {

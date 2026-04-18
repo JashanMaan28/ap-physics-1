@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Tex } from "@/components/ui/math";
 import { toLatex } from "@/lib/latex";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -397,7 +398,7 @@ function FRQPartCard({
           {part.label.toUpperCase()}
         </span>
         <div className="flex-1 space-y-1">
-          <p className="text-sm md:text-base leading-relaxed text-foreground">{part.question}</p>
+          <PhysicsText display={false} className="text-sm md:text-base leading-relaxed text-foreground">{part.question}</PhysicsText>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs font-medium text-muted-foreground border-border">
               {part.points} {part.points === 1 ? "point" : "points"}
@@ -447,16 +448,16 @@ function FRQPartCard({
 
       {/* Rubric reveal */}
       {state.showRubric && (
-        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/40 dark:bg-amber-500/10">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200">
+        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/40 dark:bg-amber-500/10 dark:border-amber-500/30">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200 dark:text-amber-300">
             AP Scoring Rubric — Part ({part.label.toUpperCase()}) — {part.points}{" "}
             {part.points === 1 ? "point" : "points"}
           </p>
           <ul className="space-y-1.5">
             {part.rubric.map((criterion, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs text-amber-900 dark:text-amber-100">
-                <span className="mt-0.5 text-amber-600 dark:text-amber-300">•</span>
-                <span>{criterion}</span>
+              <li key={i} className="flex items-start gap-2 text-xs text-amber-900 dark:text-amber-100 dark:text-amber-200">
+                <span className="mt-0.5 text-amber-600 dark:text-amber-300 dark:text-amber-400">•</span>
+                <PhysicsText display={false}>{criterion}</PhysicsText>
               </li>
             ))}
           </ul>
@@ -465,13 +466,11 @@ function FRQPartCard({
 
       {/* Sample response reveal */}
       {state.showSample && (
-        <div className="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-400/40 dark:bg-blue-500/10">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800 dark:text-blue-200">
+        <div className="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-400/40 dark:bg-blue-500/10 dark:border-blue-500/30">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800 dark:text-blue-200 dark:text-blue-300">
             Model Answer — Part ({part.label.toUpperCase()})
           </p>
-          <pre className="whitespace-pre-wrap font-sans text-xs leading-relaxed text-blue-900 dark:text-blue-100">
-            {part.sampleResponse}
-          </pre>
+          <PhysicsText display={false} className="text-xs leading-relaxed text-blue-900 dark:text-blue-100 dark:text-blue-200">{part.sampleResponse}</PhysicsText>
         </div>
       )}
     </div>
@@ -608,7 +607,7 @@ function FRQPracticeInner() {
 
       {/* Active problem card */}
       <Card className="border-border/60 shadow-sm">
-        <CardHeader className="border-b border-border/60 bg-slate-50 pb-4 dark:bg-slate-900/40">
+        <CardHeader className="border-b border-border/60 bg-slate-50 pb-4 dark:bg-slate-900/40 dark:bg-slate-500/10">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -660,7 +659,7 @@ function FRQPracticeInner() {
       </Card>
 
       {/* Progress summary */}
-      <div className="rounded-lg border border-border bg-slate-50 px-4 py-3 dark:bg-slate-900/40">
+      <div className="rounded-lg border border-border bg-slate-50 px-4 py-3 dark:bg-slate-900/40 dark:bg-slate-500/10">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Overall Progress
         </p>

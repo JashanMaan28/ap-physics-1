@@ -59,13 +59,13 @@ export function FormulaSheet() {
                 <Badge variant="outline" className="mb-2">
                   {f.name}
                 </Badge>
-                <div className="text-2xl font-bold text-amber-700 dark:text-amber-400">
+                <div className="text-2xl font-bold text-amber-700 dark:text-amber-400 dark:text-amber-300">
                   <Tex display>{toLatex(f.formula)}</Tex>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   {f.variables}
                 </p>
-                <p className="text-sm text-gray-600 mt-1 italic">{f.notes}</p>
+                <p className="text-sm text-gray-600 mt-1 italic dark:text-gray-400">{f.notes}</p>
               </div>
             </div>
           </CardContent>
@@ -81,7 +81,7 @@ export function FormulaSheet() {
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {constants.map((c, i) => (
-              <div key={i} className="flex items-center gap-3 p-2 rounded bg-gray-50">
+              <div key={i} className="flex items-center gap-3 p-2 rounded bg-gray-50 dark:bg-gray-500/10">
                 <Badge variant="secondary" className="font-mono">
                   {c.symbol}
                 </Badge>

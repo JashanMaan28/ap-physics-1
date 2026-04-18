@@ -1070,7 +1070,7 @@ export function FBDBuilder() {
                             >
                               {f.label}
                             </span>
-                            <span className="text-[10px] text-slate-600 font-mono">({f.symbol})</span>
+                            <span className="text-[10px] text-slate-600 font-mono dark:text-slate-400">({f.symbol})</span>
                           </div>
                           <div className="text-[10px] text-slate-500 font-mono truncate">
                             <span style={{ color: isOn ? f.color : undefined }}>

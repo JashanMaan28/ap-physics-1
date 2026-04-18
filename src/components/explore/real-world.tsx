@@ -555,7 +555,7 @@ export function RealWorldExamples() {
 
             <CardContent className="flex flex-1 flex-col gap-3 pt-0">
               {/* Illustration */}
-              <div className="rounded-md bg-slate-50 p-2 ring-1 ring-slate-200 dark:bg-slate-900/60 dark:ring-slate-700/60">
+              <div className="rounded-md bg-slate-50 p-2 ring-1 ring-slate-200 dark:bg-slate-900/60 dark:ring-slate-700/60 dark:bg-slate-500/10">
                 {ex.illustration}
               </div>
 
@@ -568,8 +568,8 @@ export function RealWorldExamples() {
 
               {/* Physics box */}
               <div className="rounded-md bg-indigo-50 p-2.5 ring-1 ring-indigo-200 dark:bg-indigo-500/10 dark:ring-indigo-400/30">
-                <p className="text-xs font-medium text-indigo-900 dark:text-indigo-100">{ex.principle}</p>
-                <p className="mt-1 font-mono text-xs text-indigo-800 dark:text-indigo-200">{ex.formula}</p>
+                <p className="text-xs font-medium text-indigo-900 dark:text-indigo-100 dark:text-indigo-200">{ex.principle}</p>
+                <p className="mt-1 font-mono text-xs text-indigo-800 dark:text-indigo-200 dark:text-indigo-300">{ex.formula}</p>
               </div>
             </CardContent>
           </Card>

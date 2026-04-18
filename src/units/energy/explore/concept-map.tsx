@@ -55,7 +55,7 @@ export function ConceptMap() {
             width={svgWidth}
             height={svgHeight}
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            className="border rounded bg-white w-full"
+            className="border rounded bg-white dark:bg-slate-900 w-full"
           >
             <defs>
               <marker

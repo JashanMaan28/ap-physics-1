@@ -19,6 +19,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -81,9 +83,9 @@ export function RotationalEquilibrium({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              &Sigma;&tau; = 0
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"\\Sigma \\tau = 0"}</Tex>
+            </div>
             <p className="mt-2 text-sm text-muted-foreground">
               For an object in rotational equilibrium, the sum of all torques about any
               point must equal zero. Counterclockwise torques balance clockwise torques.

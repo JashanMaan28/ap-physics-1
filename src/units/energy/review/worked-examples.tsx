@@ -155,7 +155,7 @@ export function WorkedExamples() {
                   Step {i + 1}: {step.title}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <PhysicsText className="text-sm bg-gray-50 p-3 rounded">
+                  <PhysicsText className="text-sm bg-gray-50 p-3 rounded dark:bg-gray-500/10">
                     {step.content}
                   </PhysicsText>
                 </AccordionContent>
@@ -165,10 +165,10 @@ export function WorkedExamples() {
 
           <Separator />
 
-          <Card className="bg-green-50 border-green-200">
+          <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/30">
             <CardContent className="pt-4">
-              <p className="font-semibold text-green-800">Final Answer</p>
-              <p className="text-green-700">{examples[current].answer}</p>
+              <p className="font-semibold text-green-800 dark:text-green-300">Final Answer</p>
+              <p className="text-green-700 dark:text-green-300">{examples[current].answer}</p>
             </CardContent>
           </Card>
         </CardContent>

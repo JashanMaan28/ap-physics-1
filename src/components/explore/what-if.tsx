@@ -198,7 +198,7 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200 dark:text-indigo-300">
               {scenario.id}
             </span>
             <CardTitle className="text-base font-semibold leading-snug text-foreground">
@@ -222,11 +222,11 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
       {isOpen && (
         <CardContent className="pl-10 pr-4 pb-4 space-y-4">
           {/* Think about it */}
-          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-400/40 dark:bg-amber-500/10">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-400/40 dark:bg-amber-500/10 dark:border-amber-500/30">
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
               Think about it...
             </p>
-            <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">{scenario.thinkPrompt}</p>
+            <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100 dark:text-amber-200">{scenario.thinkPrompt}</p>
           </div>
 
           {stage === "thinking" && (
@@ -248,7 +248,7 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
 
               {/* Physics explanation */}
               <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-300">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-300 dark:text-indigo-400">
                   The Physics
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">{scenario.answer}</p>
@@ -263,7 +263,7 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-indigo-300 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-400/60 dark:text-indigo-200 dark:hover:bg-indigo-500/15"
+                  className="border-indigo-300 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-400/60 dark:text-indigo-200 dark:hover:bg-indigo-500/15 dark:bg-indigo-500/10 dark:border-indigo-500/40 dark:text-indigo-300"
                   onClick={(e) => {
                     e.stopPropagation();
                     setStage("followup");
@@ -292,7 +292,7 @@ function ScenarioCard({ scenario }: { scenario: Scenario }) {
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="-ml-2 text-muted-foreground hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800"
+                    className="-ml-2 text-muted-foreground hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800 dark:bg-slate-500/20"
                     onClick={(e) => {
                       e.stopPropagation();
                       setStage("closed");
@@ -329,7 +329,7 @@ export function WhatIfScenarios() {
           <Badge variant="outline" className="bg-background text-xs text-muted-foreground border-border">
             tap → think → reveal → follow-up
           </Badge>
-          <Badge variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-500/10 dark:border-indigo-400/50 dark:text-indigo-200">
+          <Badge variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-500/10 dark:border-indigo-400/50 dark:text-indigo-200 dark:border-indigo-500/30 dark:text-indigo-300">
             10 scenarios
           </Badge>
         </div>

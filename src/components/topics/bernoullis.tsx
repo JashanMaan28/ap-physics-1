@@ -12,6 +12,8 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 import {
   Accordion,
   AccordionContent,
@@ -79,18 +81,18 @@ export function BernoullisEquation({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-lg font-bold tracking-tight sm:text-xl">
-              P + &#189;&#961;v&#178; + &#961;gh = constant
-            </p>
+            <div className="text-lg font-bold tracking-tight sm:text-xl">
+              <Tex display>{"P + \\tfrac{1}{2}\\rho v^2 + \\rho gh = \\text{constant}"}</Tex>
+            </div>
             <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground">
               <Badge variant="outline" className="font-normal">
-                P = Pressure energy
+                <Tex>P</Tex> = Pressure energy
               </Badge>
               <Badge variant="outline" className="font-normal">
-                &#189;&#961;v&#178; = Kinetic energy
+                <Tex>{"\\tfrac{1}{2}\\rho v^2"}</Tex> = Kinetic energy
               </Badge>
               <Badge variant="outline" className="font-normal">
-                &#961;gh = Potential energy
+                <Tex>{"\\rho gh"}</Tex> = Potential energy
               </Badge>
             </div>
           </div>

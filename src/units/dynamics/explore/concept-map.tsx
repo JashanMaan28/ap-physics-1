@@ -13,7 +13,7 @@ export function ConceptMap() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-lg border bg-white p-2 overflow-x-auto">
+          <div className="rounded-lg border bg-white dark:bg-slate-900 p-2 overflow-x-auto">
             <svg viewBox="0 0 700 480" className="w-full min-w-[600px]">
               {/* Central node: Forces */}
               <rect x="280" y="20" width="140" height="50" rx="10" fill="#ef4444" />

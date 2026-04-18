@@ -23,12 +23,12 @@ const ALL_CARDS: Flashcard[] = fluidsFlashcards as Flashcard[];
 const TOPICS: Topic[] = ["Pressure", "Pascal's", "Buoyancy", "Continuity", "Bernoulli's", "General"];
 
 const TOPIC_COLORS: Record<Topic, string> = {
-  "Pressure": "bg-blue-100 text-blue-800 border-blue-200",
-  "Pascal's": "bg-purple-100 text-purple-800 border-purple-200",
-  "Buoyancy": "bg-cyan-100 text-cyan-800 border-cyan-200",
-  "Continuity": "bg-green-100 text-green-800 border-green-200",
-  "Bernoulli's": "bg-orange-100 text-orange-800 border-orange-200",
-  "General": "bg-gray-100 text-gray-800 border-gray-200",
+  "Pressure": "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-500/20 dark:text-blue-200 dark:border-blue-400/40",
+  "Pascal's": "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-400/40",
+  "Buoyancy": "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-400/40",
+  "Continuity": "bg-green-100 text-green-800 border-green-200 dark:bg-green-500/20 dark:text-green-200 dark:border-green-400/40",
+  "Bernoulli's": "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-200 dark:border-orange-400/40",
+  "General": "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-500/20 dark:text-gray-200 dark:border-gray-400/40",
 };
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -135,7 +135,7 @@ export function Flashcards() {
           <span>Card {filteredDeck.length > 0 ? currentIndex + 1 : 0} of {filteredDeck.length}</span>
           <span className="flex gap-3">
             <span className="text-emerald-600">✓ Know it: {knowCount}</span>
-            <span className="text-amber-600">↺ Study more: {studyCount}</span>
+            <span className="text-amber-600 dark:text-amber-400">↺ Study more: {studyCount}</span>
           </span>
         </div>
         <Progress value={progressPct} className="h-2" />

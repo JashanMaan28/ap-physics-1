@@ -123,6 +123,12 @@ export function toLatex(input: string): string {
   // Any remaining stray √ — fall back to the command form.
   s = s.replace(/√/g, "\\sqrt");
 
+  // 6b) Auto-subscript: a single letter followed immediately by digit(s)
+  //     is treated as a subscript (`v0` → `v_{0}`, `H2O` → `H_{2}O`, `x10`
+  //     → `x_{10}`). Runs before explicit-underscore handling so both paths
+  //     land at the same normalized form.
+  s = s.replace(/([A-Za-z])(\d+)(?=\D|$)/g, "$1_{$2}");
+
   // 7) Plain-text subscripts: x_0, v_f, P_atm → x_{0}, v_{f}, P_{atm}.
   //    Only when not already followed by a brace.
   s = s.replace(/_([A-Za-z0-9]{1,5})(?![{A-Za-z0-9])/g, (_m, body) => `_{${body}}`);
@@ -236,6 +242,7 @@ function scanForward(s: string, start: number, boundaries: Set<string>): number 
   while (j < s.length && /\s/.test(s[j])) j++;
   // Allow a leading unary `-` on the denominator.
   if (j < s.length && s[j] === "-") j++;
+  const origJ = j;
   while (j < s.length) {
     const ch = s[j];
     if (ch === "(") depthParen++;
@@ -248,10 +255,118 @@ function scanForward(s: string, start: number, boundaries: Set<string>): number 
       depthBrace--;
     } else if (depthParen === 0 && depthBrace === 0) {
       if (ch === "/" || ch === "-" || boundaries.has(ch)) break;
+      // If we've accumulated a pure number and the next token starts with a
+      // letter, the denominator is just the number — stop. This prevents
+      // `1/2 at²` from folding `2 at²` into the denominator.
+      if (/\s/.test(ch)) {
+        const accumulated = s.slice(origJ, j).trim();
+        let ns = j;
+        while (ns < s.length && /\s/.test(s[ns])) ns++;
+        if (/^-?\d+(?:\.\d+)?$/.test(accumulated) && ns < s.length && /[A-Za-z\\]/.test(s[ns])) {
+          break;
+        }
+      }
     }
     j++;
   }
   return j;
+}
+
+/**
+ * Find equation-like spans inside a prose line and wrap them with `$…$` so
+ * downstream rendering (PhysicsText.InlineMixed) can split prose from math.
+ *
+ * An equation span is anchored to a relational operator (`=`, `≈`, `<`, `>`,
+ * `≤`, `≥`, `≠`). The span extends outward while remaining "math-compatible",
+ * stopping at 3+ letter alphabetic words (treated as prose) or
+ * sentence-ending punctuation (`.`, `!`, `?`, `;`, `,`). Decimal points
+ * inside numbers are preserved.
+ */
+export function autoWrapMath(line: string): string {
+  if (!line || line.indexOf("$") !== -1) return line;
+  const RELOP = /[=<>≈≤≥≠]/;
+  // 2-letter English fillers that shouldn't be included in a math span, but
+  // that a pure-length check would keep. Physics units like kg, Hz, Pa remain.
+  const SHORT_PROSE = new Set([
+    "at", "to", "in", "on", "of", "by", "is", "or", "no", "an", "as",
+    "if", "so", "be", "we", "do", "he", "me", "my", "up", "us", "it",
+  ]);
+  const isProse = (w: string) => {
+    if (!/^[A-Za-z]+$/.test(w)) return false;
+    if (w.length >= 3) return true;
+    return SHORT_PROSE.has(w.toLowerCase());
+  };
+
+  const pieces: string[] = [];
+  let i = 0;
+  while (i < line.length) {
+    const m = RELOP.exec(line.slice(i));
+    if (!m) {
+      pieces.push(line.slice(i));
+      break;
+    }
+    const opIdx = i + m.index;
+
+    // Walk left from opIdx to find span start.
+    let left = opIdx;
+    while (left > i) {
+      const ch = line[left - 1];
+      if (/\s/.test(ch)) {
+        let we = left - 1;
+        while (we > i && /\s/.test(line[we])) we--;
+        let ws = we;
+        while (ws > i && /\S/.test(line[ws - 1])) ws--;
+        const raw = line.slice(ws, we + 1);
+        const clean = raw.replace(/^[.!?;,:"'(]+|[.!?;,:"')]+$/g, "");
+        if (isProse(clean)) break;
+        left = ws;
+      } else {
+        left--;
+      }
+    }
+    while (left < opIdx && /\s/.test(line[left])) left++;
+
+    // Walk right from opIdx + 1 to find span end.
+    let right = opIdx + 1;
+    while (right < line.length) {
+      const ch = line[right];
+      if (ch === "." && right > 0 && /\d/.test(line[right - 1]) && right + 1 < line.length && /\d/.test(line[right + 1])) {
+        right++;
+        continue;
+      }
+      if (/[.!?;,:]/.test(ch)) break;
+      if (/\s/.test(ch)) {
+        let ns = right;
+        while (ns < line.length && /\s/.test(line[ns])) ns++;
+        let ne = ns;
+        while (ne < line.length && /\S/.test(line[ne])) ne++;
+        const raw = line.slice(ns, ne);
+        const term = raw.match(/[.!?;,:]+$/);
+        const clean = term ? raw.slice(0, -term[0].length) : raw;
+        if (isProse(clean)) break;
+        if (term) {
+          right = ne - term[0].length;
+          break;
+        }
+        right = ne;
+        continue;
+      }
+      right++;
+    }
+    while (right > opIdx && /\s/.test(line[right - 1])) right--;
+
+    if (right <= left) {
+      // Couldn't form a valid span; emit char literally and advance.
+      pieces.push(line.slice(i, opIdx + 1));
+      i = opIdx + 1;
+      continue;
+    }
+
+    pieces.push(line.slice(i, left));
+    pieces.push("$" + line.slice(left, right) + "$");
+    i = right;
+  }
+  return pieces.join("");
 }
 
 /**

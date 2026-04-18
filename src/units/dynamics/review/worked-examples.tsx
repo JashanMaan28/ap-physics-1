@@ -128,7 +128,7 @@ export function WorkedExamples() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="rounded-lg bg-slate-50 border p-4">
+          <div className="rounded-lg bg-slate-50 border p-4 dark:bg-slate-500/10">
             <p className="font-medium">{examples[currentEx].problem}</p>
           </div>
 
@@ -146,8 +146,8 @@ export function WorkedExamples() {
                     </div>
                   ))}
                   <Separator />
-                  <div className="rounded-lg bg-green-50 border-green-200 border p-3">
-                    <p className="font-bold text-green-900">{examples[currentEx].answer}</p>
+                  <div className="rounded-lg bg-green-50 border-green-200 border p-3 dark:bg-green-500/10 dark:border-green-500/30">
+                    <p className="font-bold text-green-900 dark:text-green-200">{examples[currentEx].answer}</p>
                   </div>
                 </div>
               </AccordionContent>

@@ -198,7 +198,7 @@ export function WhatIf() {
               </div>
 
               {energyGain > 0 && (
-                <Badge variant="outline" className="text-green-600 border-green-400">
+                <Badge variant="outline" className="text-green-600 border-green-400 dark:text-green-400">
                   +{energyGain.toFixed(0)} J created from nothing!
                 </Badge>
               )}

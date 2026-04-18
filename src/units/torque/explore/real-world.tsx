@@ -10,6 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PhysicsText } from "@/components/ui/physics-text";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface RealWorldExample {
   title: string;
@@ -111,12 +114,12 @@ export function RealWorld() {
             <span className="text-3xl">{ex.icon}</span>
             {ex.title}
           </CardTitle>
-          <CardDescription className="font-mono">{ex.physics}</CardDescription>
+          <CardDescription><Tex>{toLatex(ex.physics)}</Tex></CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm leading-relaxed">{ex.explanation}</p>
+          <PhysicsText display={false} className="text-sm leading-relaxed">{ex.explanation}</PhysicsText>
 
-          <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 p-3 border border-amber-200 dark:border-amber-800">
+          <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 p-3 border border-amber-200 dark:border-amber-800 dark:bg-amber-500/10 dark:border-amber-500/30">
             <p className="text-sm"><strong>Fun Fact:</strong> {ex.funFact}</p>
           </div>
 

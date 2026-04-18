@@ -19,6 +19,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -83,9 +86,9 @@ export function MomentOfInertia({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              I = &Sigma;m<sub>i</sub>r<sub>i</sub>&sup2;
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"I = \\Sigma m_i r_i^2"}</Tex>
+            </div>
             <p className="mt-2 text-sm text-muted-foreground">
               The moment of inertia depends on how mass is distributed relative to the
               axis of rotation. Mass farther from the axis contributes more to I.
@@ -171,12 +174,12 @@ export function MomentOfInertia({ onComplete, isComplete }: TopicProps) {
                 <Badge style={{ backgroundColor: SHAPES[selectedIdx].color }} className="text-white">
                   {SHAPES[selectedIdx].name}
                 </Badge>
-                <span className="font-mono font-bold">{SHAPES[selectedIdx].formula}</span>
+                <span className="font-bold"><Tex>{toLatex(SHAPES[selectedIdx].formula)}</Tex></span>
               </div>
               <p className="text-sm text-muted-foreground">{SHAPES[selectedIdx].description}</p>
-              <p className="mt-2 text-lg font-bold">
-                I = {inertias[selectedIdx].toFixed(4)} kg&middot;m&sup2;
-              </p>
+              <div className="mt-2 text-lg font-bold">
+                <Tex>{`I = ${inertias[selectedIdx].toFixed(4)} \\text{ kg·m}^2`}</Tex>
+              </div>
             </CardContent>
           </Card>
 

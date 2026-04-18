@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Problem {
   topic: string;
@@ -116,7 +117,7 @@ export function ProblemGenerator() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Badge>{problem.topic}</Badge>
-          <p className="text-lg font-medium">{problem.question}</p>
+          <PhysicsText display={false} className="text-lg font-medium">{problem.question}</PhysicsText>
 
           <Separator />
 
@@ -124,10 +125,10 @@ export function ProblemGenerator() {
             <AccordionItem value="solution">
               <AccordionTrigger>Show Solution</AccordionTrigger>
               <AccordionContent>
-                <p className="font-semibold text-green-700 mb-2">
+                <p className="font-semibold text-green-700 dark:text-green-400 mb-2 dark:text-green-300">
                   Answer: {problem.answer}
                 </p>
-                <p className="text-gray-700">{problem.solution}</p>
+                <PhysicsText display={false} className="text-gray-700 dark:text-muted-foreground dark:text-gray-300">{problem.solution}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

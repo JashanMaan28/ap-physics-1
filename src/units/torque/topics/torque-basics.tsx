@@ -19,6 +19,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -74,14 +76,14 @@ export function TorqueBasics({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              &tau; = r F sin(&theta;)
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"\\tau = r F \\sin(\\theta)"}</Tex>
+            </div>
             <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-              <li><strong>&tau;</strong> = torque (N&middot;m)</li>
-              <li><strong>r</strong> = distance from pivot to point of force application (m)</li>
-              <li><strong>F</strong> = magnitude of applied force (N)</li>
-              <li><strong>&theta;</strong> = angle between r and F vectors</li>
+              <li><Tex>{"\\tau"}</Tex> = torque (N·m)</li>
+              <li><Tex>r</Tex> = distance from pivot to point of force application (m)</li>
+              <li><Tex>F</Tex> = magnitude of applied force (N)</li>
+              <li><Tex>{"\\theta"}</Tex> = angle between <Tex>r</Tex> and <Tex>F</Tex> vectors</li>
             </ul>
           </div>
           <Separator />

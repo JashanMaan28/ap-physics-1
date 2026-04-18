@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -186,13 +189,13 @@ export function ProblemGenerator() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="font-medium text-lg">{problem.statement}</p>
+            <PhysicsText display={false} className="font-medium text-lg">{problem.statement}</PhysicsText>
 
             <div className="bg-muted p-3 rounded">
               <p className="text-sm font-semibold mb-1">Given:</p>
               <ul className="text-sm space-y-0.5">
                 {problem.givens.map((g, i) => (
-                  <li key={i}>{g}</li>
+                  <li key={i}><Tex>{toLatex(g)}</Tex></li>
                 ))}
               </ul>
             </div>
@@ -208,13 +211,13 @@ export function ProblemGenerator() {
                 <Separator />
                 <div className="space-y-2">
                   <p className="font-semibold">Solution:</p>
-                  <div className="bg-muted p-4 rounded font-mono text-sm space-y-1">
+                  <div className="bg-muted p-4 rounded text-sm space-y-1">
                     {problem.solution.map((step, i) => (
-                      <p key={i}>{step}</p>
+                      <div key={i}><Tex>{toLatex(step)}</Tex></div>
                     ))}
                   </div>
                   <div className="p-3 rounded bg-purple-500/10 border border-purple-500/30">
-                    <p className="font-bold text-purple-600">{problem.answer}</p>
+                    <div className="font-bold text-purple-600 dark:text-purple-400"><Tex>{toLatex(problem.answer)}</Tex></div>
                   </div>
                 </div>
               </>

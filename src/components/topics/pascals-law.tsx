@@ -12,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
 import {
   Accordion,
   AccordionContent,
@@ -63,12 +64,12 @@ export function PascalsLaw({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              F<sub>1</sub>/A<sub>1</sub> = F<sub>2</sub>/A<sub>2</sub>
-            </p>
-            <p className="mt-1 font-mono text-sm text-muted-foreground">
-              &Delta;P = F/A is transmitted equally throughout the fluid
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"F_1/A_1 = F_2/A_2"}</Tex>
+            </div>
+            <div className="mt-1 text-sm text-muted-foreground">
+              <Tex>{"\\Delta P = F/A"}</Tex> is transmitted equally throughout the fluid
+            </div>
           </div>
 
           <div className="grid gap-2 text-sm leading-relaxed text-muted-foreground sm:grid-cols-2">

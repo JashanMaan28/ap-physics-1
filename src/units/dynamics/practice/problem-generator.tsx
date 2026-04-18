@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 type Problem = {
   type: string;
@@ -97,14 +98,14 @@ export function ProblemGenerator() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Badge>{problem.type}</Badge>
-          <p className="text-lg font-medium">{problem.question}</p>
+          <PhysicsText display={false} className="text-lg font-medium">{problem.question}</PhysicsText>
 
           {showSolution ? (
             <>
               <Separator />
-              <div className="rounded-lg bg-green-50 border border-green-200 p-4 space-y-2">
-                <p className="font-semibold text-green-900">Answer: {problem.answer}</p>
-                <p className="text-sm text-green-800 whitespace-pre-line">{problem.solution}</p>
+              <div className="rounded-lg bg-green-50 border border-green-200 p-4 space-y-2 dark:bg-green-500/10 dark:border-green-500/30">
+                <p className="font-semibold text-green-900 dark:text-green-200">Answer: {problem.answer}</p>
+                <PhysicsText display={false} className="text-sm text-green-800 dark:text-green-300">{problem.solution}</PhysicsText>
               </div>
             </>
           ) : (

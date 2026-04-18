@@ -18,6 +18,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -66,15 +68,15 @@ export function AngularKinematics({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formulas
             </h3>
-            <div className="space-y-1 font-mono text-sm">
-              <p>&omega; = &omega;&#8320; + &alpha;t</p>
-              <p>&theta; = &omega;&#8320;t + &frac12;&alpha;t&sup2;</p>
-              <p>&omega;&sup2; = &omega;&#8320;&sup2; + 2&alpha;&theta;</p>
+            <div className="space-y-1">
+              <div><Tex display>{"\\omega = \\omega_0 + \\alpha t"}</Tex></div>
+              <div><Tex display>{"\\theta = \\omega_0 t + \\tfrac{1}{2}\\alpha t^2"}</Tex></div>
+              <div><Tex display>{"\\omega^2 = \\omega_0^2 + 2\\alpha\\theta"}</Tex></div>
             </div>
             <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
-              <li><strong>&theta;</strong> = angular displacement (rad)</li>
-              <li><strong>&omega;</strong> = angular velocity (rad/s)</li>
-              <li><strong>&alpha;</strong> = angular acceleration (rad/s&sup2;)</li>
+              <li><Tex>{"\\theta"}</Tex> = angular displacement (rad)</li>
+              <li><Tex>{"\\omega"}</Tex> = angular velocity (rad/s)</li>
+              <li><Tex>{"\\alpha"}</Tex> = angular acceleration (rad/s²)</li>
             </ul>
           </div>
           <Separator />

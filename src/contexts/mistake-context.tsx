@@ -51,7 +51,16 @@ export function MistakeProvider({ children }: { children: React.ReactNode }) {
   const addMistake = useCallback(
     (m: MistakeEntry) => {
       if (guest) {
-        setGuestMistakes((prev) => [...prev, m]);
+        // Dedupe on (unit, question): drop any existing entry for the same
+        // question and append the new one so the list shows only the latest
+        // attempt per question.
+        setGuestMistakes((prev) => [
+          ...prev.filter(
+            (existing) =>
+              !(existing.unit === m.unit && existing.question === m.question),
+          ),
+          m,
+        ]);
       } else {
         addMutation({
           unit: m.unit,

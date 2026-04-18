@@ -155,8 +155,8 @@ export function WorkedExamples() {
           </div>
 
           {revealedSteps.size === ex.steps.length && (
-            <div className="rounded-lg bg-green-50 dark:bg-green-950/30 p-3 border border-green-200 dark:border-green-800">
-              <p className="font-semibold text-green-700 dark:text-green-400">Final Answer</p>
+            <div className="rounded-lg bg-green-50 dark:bg-green-950/30 p-3 border border-green-200 dark:border-green-800 dark:bg-green-500/10 dark:border-green-500/30">
+              <p className="font-semibold text-green-700 dark:text-green-400 dark:text-green-300">Final Answer</p>
               <p className="text-sm mt-1">{ex.answer}</p>
             </div>
           )}

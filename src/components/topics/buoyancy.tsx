@@ -12,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
 import {
   Accordion,
   AccordionContent,
@@ -90,20 +91,13 @@ export function Buoyancy({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Archimedes&apos; Principle
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              F<sub>b</sub> = &#961;<sub>fluid</sub> &middot; V
-              <sub>displaced</sub> &middot; g
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"F_b = \\rho_{fluid} \\cdot V_{displaced} \\cdot g"}</Tex>
+            </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground sm:grid-cols-3">
-              <span>
-                <strong>F&#7522;</strong> = Buoyant force
-              </span>
-              <span>
-                <strong>&#961;</strong> = Fluid density
-              </span>
-              <span>
-                <strong>V</strong> = Volume displaced
-              </span>
+              <span><Tex>F_b</Tex> = Buoyant force</span>
+              <span><Tex>{"\\rho"}</Tex> = Fluid density</span>
+              <span><Tex>V</Tex> = Volume displaced</span>
             </div>
           </div>
 

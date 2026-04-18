@@ -588,7 +588,7 @@ export function ConceptMap() {
           </p>
         </div>
         <div
-          className="text-[9px] text-slate-600 tracking-widest uppercase border border-slate-700 rounded px-2 py-1"
+          className="text-[9px] text-slate-600 tracking-widest uppercase border border-slate-700 rounded px-2 py-1 dark:text-slate-400"
           style={{ background: "#0d1f3322" }}
         >
           {NODES.length} concepts · {EDGES.length} connections

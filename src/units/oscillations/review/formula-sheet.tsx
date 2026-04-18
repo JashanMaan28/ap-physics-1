@@ -73,12 +73,12 @@ export function FormulaSheet({
         <CardContent className="space-y-6">
           {formulas.map((section) => (
             <div key={section.category}>
-              <h3 className="font-bold text-lg mb-3 text-cyan-800">
+              <h3 className="font-bold text-lg mb-3 text-cyan-800 dark:text-cyan-300">
                 {section.category}
               </h3>
               <div className="space-y-2">
                 {section.items.map((item) => (
-                  <Card key={item.name} className="bg-slate-50 dark:bg-slate-900/40">
+                  <Card key={item.name} className="bg-slate-50 dark:bg-slate-900/40 dark:bg-slate-500/10">
                     <CardContent className="pt-3 pb-3">
                       <div className="flex justify-between items-start">
                         <div>

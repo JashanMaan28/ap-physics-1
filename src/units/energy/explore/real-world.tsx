@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface Application {
   id: number;
@@ -137,7 +138,7 @@ export function RealWorld() {
             <h4 className="font-semibold text-sm text-muted-foreground mb-1">
               Description
             </h4>
-            <p>{applications[selected].description}</p>
+            <PhysicsText display={false}>{applications[selected].description}</PhysicsText>
           </div>
 
           <Separator />
@@ -146,15 +147,13 @@ export function RealWorld() {
             <AccordionItem value="physics">
               <AccordionTrigger>Physics Explanation</AccordionTrigger>
               <AccordionContent>
-                <p>{applications[selected].physics}</p>
+                <PhysicsText display={false}>{applications[selected].physics}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="numbers">
               <AccordionTrigger>By the Numbers</AccordionTrigger>
               <AccordionContent>
-                <p className="font-mono text-sm bg-amber-50 p-3 rounded">
-                  {applications[selected].numbers}
-                </p>
+                <PhysicsText display={false} className="text-sm bg-amber-50 p-3 rounded dark:bg-amber-500/10">{applications[selected].numbers}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

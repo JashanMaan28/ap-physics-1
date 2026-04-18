@@ -16,6 +16,9 @@ import type {
   PracticeFrqProblem,
 } from "@/content/practice/types";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -394,14 +397,6 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
       </div>
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between gap-3">
-            <CardTitle className="text-base md:text-lg">
-              Question {currentIndex + 1} of {questions.length}
-            </CardTitle>
-            <Badge variant={timeLeft <= 30 ? "destructive" : timeLeft <= 60 ? "outline" : "secondary"} className="font-mono">
-              {formatTimer(timeLeft)}
-            </Badge>
-          </div>
           <Progress value={(currentIndex / questions.length) * 100} className="h-1.5" />
         </CardHeader>
         <CardContent className="space-y-4">
@@ -556,10 +551,10 @@ function FrqPartBlock({
   return (
     <div className="space-y-3 rounded-xl border bg-card p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-sm font-medium leading-relaxed">
+        <div className="text-sm font-medium leading-relaxed">
           <span className="mr-1 font-mono text-muted-foreground">({part.label})</span>
-          {part.question}
-        </p>
+          <PhysicsText display={false} className="inline">{part.question}</PhysicsText>
+        </div>
         <div className="flex items-center gap-2">
           {partState.submitted && (
             <Badge variant="secondary" className="font-mono">
@@ -650,7 +645,7 @@ function FrqPartBlock({
                       >
                         {checked ? "✓" : ""}
                       </span>
-                      <span className="leading-snug">{item}</span>
+                      <PhysicsText display={false} className="leading-snug">{item}</PhysicsText>
                     </button>
                   </li>
                 );
@@ -662,7 +657,7 @@ function FrqPartBlock({
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
               Sample response
             </p>
-            <p className="whitespace-pre-wrap text-muted-foreground">{part.sampleResponse}</p>
+            <PhysicsText display={false} className="text-muted-foreground">{part.sampleResponse}</PhysicsText>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -697,7 +692,7 @@ function FrqProblemCard({ problem }: { problem: PracticeFrqProblem }) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <CardTitle>{problem.title}</CardTitle>
-            <CardDescription>{problem.scenario}</CardDescription>
+            <CardDescription><PhysicsText display={false}>{problem.scenario}</PhysicsText></CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
             {problem.difficulty && (
@@ -721,8 +716,8 @@ function FrqProblemCard({ problem }: { problem: PracticeFrqProblem }) {
         {problem.given.length > 0 && (
           <div className="flex flex-wrap gap-2 pt-1">
             {problem.given.map((item) => (
-              <Badge key={item} variant="secondary" className="font-mono text-[10px]">
-                {item}
+              <Badge key={item} variant="secondary" className="text-[10px]">
+                <Tex>{toLatex(item)}</Tex>
               </Badge>
             ))}
           </div>

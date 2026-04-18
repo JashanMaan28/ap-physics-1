@@ -76,7 +76,7 @@ function GravityScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">PE at {height}m</p>
-            <p className="text-2xl font-bold text-amber-600">
+            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
               {pe.toFixed(0)} J
             </p>
             <p className="text-xs">(vs {(mass * 9.8 * height).toFixed(0)} J on Earth)</p>
@@ -87,7 +87,7 @@ function GravityScenario() {
             <p className="text-sm text-muted-foreground">
               Fall speed from {height}m
             </p>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
               {fallSpeed.toFixed(1)} m/s
             </p>
             <p className="text-xs">(vs {Math.sqrt(2 * 9.8 * height).toFixed(1)} m/s on Earth)</p>
@@ -98,7 +98,7 @@ function GravityScenario() {
             <p className="text-sm text-muted-foreground">
               Power to climb {height}m in 10s
             </p>
-            <p className="text-2xl font-bold text-purple-600">
+            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {climbPower.toFixed(0)} W
             </p>
             <p className="text-xs">(vs {((mass * 9.8 * height) / 10).toFixed(0)} W on Earth)</p>
@@ -106,7 +106,7 @@ function GravityScenario() {
         </Card>
       </div>
 
-      <p className="text-sm text-gray-600 italic">
+      <p className="text-sm text-gray-600 italic dark:text-gray-400">
         {gFactor < 0.5
           ? "With much lower gravity, you could jump incredibly high. Sports and architecture would be completely different."
           : gFactor > 2
@@ -152,7 +152,7 @@ function FrictionScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">Car KE at 20 m/s</p>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
               {(ke / 1000).toFixed(0)} kJ
             </p>
           </CardContent>
@@ -160,7 +160,7 @@ function FrictionScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">Braking distance</p>
-            <p className="text-2xl font-bold text-amber-600">
+            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
               {brakingDist === Infinity ? "\u221e" : brakingDist.toFixed(1)} m
             </p>
           </CardContent>
@@ -168,14 +168,14 @@ function FrictionScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">Braking force</p>
-            <p className="text-2xl font-bold text-purple-600">
+            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {brakingForce.toFixed(0)} N
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <p className="text-sm text-gray-600 italic">
+      <p className="text-sm text-gray-600 italic dark:text-gray-400">
         {frictionCoeff < 0.05
           ? "With nearly zero friction, the car would never stop! Objects in motion would stay in motion indefinitely."
           : frictionCoeff > 0.6
@@ -223,7 +223,7 @@ function RegenerativeScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">KE per stop</p>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
               {(ke / 1000).toFixed(0)} kJ
             </p>
           </CardContent>
@@ -231,7 +231,7 @@ function RegenerativeScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">Energy recovered/stop</p>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
               {(recovered / 1000).toFixed(0)} kJ
             </p>
           </CardContent>
@@ -239,7 +239,7 @@ function RegenerativeScenario() {
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-sm text-muted-foreground">Daily savings (~50 stops)</p>
-            <p className="text-2xl font-bold text-amber-600">
+            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
               {dailyRecovered.toFixed(1)} MJ
             </p>
             <p className="text-xs">({gasolineEquiv.toFixed(2)} L gasoline equiv.)</p>
@@ -247,7 +247,7 @@ function RegenerativeScenario() {
         </Card>
       </div>
 
-      <p className="text-sm text-gray-600 italic">
+      <p className="text-sm text-gray-600 italic dark:text-gray-400">
         {efficiency === 100
           ? "Perfect recovery! No energy wasted during braking. This is theoretically impossible due to thermodynamic losses."
           : efficiency === 0

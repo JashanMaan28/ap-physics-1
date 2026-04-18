@@ -66,7 +66,7 @@ function GravityScenario() {
           step={0.05}
         />
       </div>
-      <p className="text-lg font-mono font-bold text-cyan-700">
+      <p className="text-lg font-mono font-bold text-cyan-700 dark:text-cyan-300">
         T = {T === Infinity ? "Infinite" : T.toFixed(3) + " s"}
       </p>
       <div className="flex gap-2 flex-wrap">
@@ -96,18 +96,18 @@ function ZeroGScenario() {
         In zero gravity (ISS, free fall), pendulums do not work because there
         is no gravitational restoring force. The string just floats.
       </p>
-      <Card className="bg-amber-50 border-amber-200">
+      <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
         <CardContent className="pt-3 pb-3">
-          <p className="font-semibold text-amber-900">Pendulum in zero-g:</p>
-          <p className="text-sm text-amber-800">
+          <p className="font-semibold text-amber-900 dark:text-amber-200">Pendulum in zero-g:</p>
+          <p className="text-sm text-amber-800 dark:text-amber-300">
             T = 2pi*sqrt(L/g) = undefined (g = 0). No oscillation occurs.
           </p>
         </CardContent>
       </Card>
-      <Card className="bg-green-50 border-green-200">
+      <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/30">
         <CardContent className="pt-3 pb-3">
-          <p className="font-semibold text-green-900">Spring-mass in zero-g:</p>
-          <p className="text-sm text-green-800">
+          <p className="font-semibold text-green-900 dark:text-green-200">Spring-mass in zero-g:</p>
+          <p className="text-sm text-green-800 dark:text-green-300">
             T = 2pi*sqrt(m/k) = {springT.toFixed(3)} s. Works perfectly!
             The spring provides its own restoring force, no gravity needed.
           </p>
@@ -146,13 +146,13 @@ function GiantSpringScenario() {
         />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-slate-50 dark:bg-slate-900/40">
+        <Card className="bg-slate-50 dark:bg-slate-900/40 dark:bg-slate-500/10">
           <CardContent className="pt-3 pb-3 text-center">
             <p className="text-sm text-muted-foreground">Period</p>
             <p className="text-xl font-mono font-bold">{T.toFixed(4)} s</p>
           </CardContent>
         </Card>
-        <Card className="bg-slate-50 dark:bg-slate-900/40">
+        <Card className="bg-slate-50 dark:bg-slate-900/40 dark:bg-slate-500/10">
           <CardContent className="pt-3 pb-3 text-center">
             <p className="text-sm text-muted-foreground">Frequency</p>
             <p className="text-xl font-mono font-bold">{f.toFixed(2)} Hz</p>
@@ -205,7 +205,7 @@ export function WhatIf({
             ))}
           </div>
 
-          <Card className="bg-slate-50 dark:bg-slate-900/40">
+          <Card className="bg-slate-50 dark:bg-slate-900/40 dark:bg-slate-500/10">
             <CardContent className="pt-4">
               <h3 className="font-bold">{scenarios[active].title}</h3>
               <p className="text-sm text-muted-foreground mt-1">

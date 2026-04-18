@@ -19,6 +19,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -65,13 +67,13 @@ export function NewtonsSecondRotation({ onComplete, isComplete }: TopicProps) {
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
               Key Formula
             </h3>
-            <p className="font-mono text-xl font-bold tracking-tight">
-              &tau;<sub>net</sub> = I&alpha;
-            </p>
+            <div className="text-xl font-bold tracking-tight">
+              <Tex display>{"\\tau_{net} = I\\alpha"}</Tex>
+            </div>
             <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-              <li><strong>&tau;<sub>net</sub></strong> = net torque (N&middot;m)</li>
-              <li><strong>I</strong> = moment of inertia (kg&middot;m&sup2;)</li>
-              <li><strong>&alpha;</strong> = angular acceleration (rad/s&sup2;)</li>
+              <li><Tex>{"\\tau_{net}"}</Tex> = net torque (N·m)</li>
+              <li><Tex>I</Tex> = moment of inertia (kg·m²)</li>
+              <li><Tex>{"\\alpha"}</Tex> = angular acceleration (rad/s²)</li>
             </ul>
           </div>
           <Separator />

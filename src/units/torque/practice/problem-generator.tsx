@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 type ProblemType = "torque" | "equilibrium" | "newtonRot" | "kinematics";
 
@@ -128,11 +129,11 @@ export function ProblemGenerator() {
           <CardDescription>Random torque and rotation problems with instant feedback</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="font-medium">{problem.question}</p>
+          <PhysicsText display={false} className="font-medium">{problem.question}</PhysicsText>
 
           {showHint && (
-            <div className="rounded-lg bg-yellow-50 dark:bg-yellow-950/30 p-3 text-sm border border-yellow-200 dark:border-yellow-800">
-              <strong>Hint:</strong> {problem.hint}
+            <div className="rounded-lg bg-yellow-50 dark:bg-yellow-950/30 p-3 text-sm border border-yellow-200 dark:border-yellow-800 dark:bg-yellow-500/10 dark:border-yellow-500/30">
+              <strong>Hint:</strong> <PhysicsText display={false} className="inline">{problem.hint}</PhysicsText>
             </div>
           )}
 
@@ -162,7 +163,7 @@ export function ProblemGenerator() {
               <Separator />
               <div className={`rounded-lg p-3 text-sm ${result === "correct" ? "bg-green-50 dark:bg-green-950/30" : "bg-red-50 dark:bg-red-950/30"}`}>
                 <strong>{result === "correct" ? "Correct!" : "Not quite."}</strong>{" "}
-                {problem.solution}
+                <PhysicsText display={false} className="inline">{problem.solution}</PhysicsText>
               </div>
             </>
           )}
