@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface Node { id: string; label: string; x: number; y: number; color: string; formula: string; explanation: string; }
 interface Edge { from: string; to: string; label: string; }
@@ -69,7 +71,7 @@ export function ConceptMap() {
             <CardTitle className="text-base" style={{ color: node.color }}>{node.label}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <p className="font-mono text-sm font-bold">{node.formula}</p>
+            <div className="text-sm font-bold"><Tex>{toLatex(node.formula)}</Tex></div>
             <p className="text-sm text-muted-foreground">{node.explanation}</p>
           </CardContent>
         </Card>

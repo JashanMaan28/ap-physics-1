@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface TopicProps { onComplete: () => void; isComplete: boolean; }
 

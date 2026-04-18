@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -633,8 +635,8 @@ function FRQPracticeInner() {
             </p>
             <ul className="flex flex-wrap gap-x-6 gap-y-1">
               {activeProblem.given.map((g, i) => (
-                <li key={i} className="font-mono text-xs text-foreground/90">
-                  {g}
+                <li key={i} className="text-xs text-foreground/90">
+                  <Tex>{toLatex(g)}</Tex>
                 </li>
               ))}
             </ul>

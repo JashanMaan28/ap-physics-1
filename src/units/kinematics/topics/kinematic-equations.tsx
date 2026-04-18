@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface TopicProps { onComplete: () => void; isComplete: boolean; }
 
@@ -50,12 +52,12 @@ export function KinematicEquations({ onComplete, isComplete }: TopicProps) {
           <div className="grid gap-2 sm:grid-cols-2">
             {equations.map(eq => (
               <div key={eq.id} className="rounded-lg border bg-muted/30 p-3">
-                <p className="font-mono text-base font-bold">{eq.label}</p>
-                <p className="text-xs text-muted-foreground mt-1">Missing variable: {eq.id === "eq1" ? "x" : eq.id === "eq2" ? "v" : eq.id === "eq3" ? "t" : "a"}</p>
+                <div className="text-base font-bold"><Tex>{toLatex(eq.label)}</Tex></div>
+                <p className="text-xs text-muted-foreground mt-1">Missing variable: <Tex>{toLatex(eq.id === "eq1" ? "x" : eq.id === "eq2" ? "v" : eq.id === "eq3" ? "t" : "a")}</Tex></p>
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground">All four equations assume <strong>constant acceleration</strong>. Each equation relates 4 of the 5 kinematic variables (x, v₀, v, a, t) — use whichever omits the unknown you don&apos;t need.</p>
+          <p className="text-sm text-muted-foreground">All four equations assume <strong>constant acceleration</strong>. Each equation relates 4 of the 5 kinematic variables (<Tex>{toLatex("x, v₀, v, a, t")}</Tex>) — use whichever omits the unknown you don&apos;t need.</p>
         </CardContent>
       </Card>
 
@@ -65,16 +67,16 @@ export function KinematicEquations({ onComplete, isComplete }: TopicProps) {
           <Tabs value={selectedEq} onValueChange={(v) => { setSelectedEq(v); setInputs({}); }}>
             <TabsList className="flex flex-wrap h-auto gap-1">
               {equations.map(eq => (
-                <TabsTrigger key={eq.id} value={eq.id} className="text-xs">{eq.label.split("=")[0].trim()}</TabsTrigger>
+                <TabsTrigger key={eq.id} value={eq.id} className="text-xs"><Tex>{toLatex(eq.label.split("=")[0].trim())}</Tex></TabsTrigger>
               ))}
             </TabsList>
             {equations.map(equation => (
               <TabsContent key={equation.id} value={equation.id}>
-                <p className="font-mono text-lg font-bold mb-4">{equation.label}</p>
+                <div className="text-lg font-bold mb-4"><Tex display>{toLatex(equation.label)}</Tex></div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {equation.vars.map(v => (
                     <div key={v} className="space-y-1">
-                      <label className="text-xs text-muted-foreground uppercase">{v}</label>
+                      <label className="text-xs text-muted-foreground uppercase"><Tex>{toLatex(v)}</Tex></label>
                       <input
                         type="number"
                         value={inputs[v] ?? ""}
@@ -90,7 +92,7 @@ export function KinematicEquations({ onComplete, isComplete }: TopicProps) {
                   {result !== null && !isNaN(result) ? (
                     <>
                       <p className="text-xs text-muted-foreground">Result</p>
-                      <p className="font-mono text-2xl font-bold">{equation.result} = {result.toFixed(4)}</p>
+                      <div className="text-2xl font-bold"><Tex>{toLatex(`${equation.result} = ${result.toFixed(4)}`)}</Tex></div>
                     </>
                   ) : (
                     <p className="text-sm text-muted-foreground italic">Enter all values above to calculate.</p>
@@ -105,7 +107,7 @@ export function KinematicEquations({ onComplete, isComplete }: TopicProps) {
       <Card>
         <CardHeader><CardTitle>How to Choose the Right Equation</CardTitle></CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
-          <p>1. <strong>Identify knowns and unknowns</strong> — list which of the 5 variables (x, x₀, v, v₀, a, t) you know.</p>
+          <p>1. <strong>Identify knowns and unknowns</strong> — list which of the 5 variables (<Tex>{toLatex("x, x₀, v, v₀, a, t")}</Tex>) you know.</p>
           <p>2. <strong>Pick the equation that doesn&apos;t contain your unknown you don&apos;t need.</strong></p>
           <p>3. Plug in and solve algebraically before substituting numbers.</p>
         </CardContent>
@@ -118,10 +120,10 @@ export function KinematicEquations({ onComplete, isComplete }: TopicProps) {
         </AccordionItem>
         <AccordionItem value="faq-2">
           <AccordionTrigger>Do these work in 2D?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">Yes, but you must apply them separately to each direction (x and y). In projectile motion, aₓ = 0 and aᵧ = -g.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">Yes, but you must apply them separately to each direction (<Tex>x</Tex> and <Tex>y</Tex>). In projectile motion, <Tex>{toLatex("aₓ = 0")}</Tex> and <Tex>{toLatex("aᵧ = -g")}</Tex>.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="faq-3">
-          <AccordionTrigger>What about the &quot;fifth equation&quot; x = ½(v₀+v)t?</AccordionTrigger>
+          <AccordionTrigger>What about the &quot;fifth equation&quot; <Tex>{toLatex("x = ½(v₀+v)t")}</Tex>?</AccordionTrigger>
           <AccordionContent className="text-sm text-muted-foreground">This is derived from the average velocity under constant acceleration. It&apos;s useful when you don&apos;t know acceleration directly.</AccordionContent>
         </AccordionItem>
       </Accordion>

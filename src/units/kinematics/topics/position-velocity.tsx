@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface TopicProps { onComplete: () => void; isComplete: boolean; }
 
@@ -43,14 +45,14 @@ export function PositionVelocity({ onComplete, isComplete }: TopicProps) {
           <div>
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">Key Formulas</h3>
             <div className="space-y-1">
-              <p className="font-mono text-xl font-bold">x = x₀ + vt</p>
-              <p className="font-mono text-lg">v<sub>avg</sub> = Δx / Δt</p>
+              <div className="text-xl font-bold"><Tex display>{toLatex("x = x₀ + vt")}</Tex></div>
+              <div className="text-lg"><Tex display>{"v_{avg} = \\Delta x / \\Delta t"}</Tex></div>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground sm:grid-cols-4">
-              <span><strong>x</strong> = Position</span>
-              <span><strong>x₀</strong> = Initial position</span>
-              <span><strong>v</strong> = Velocity</span>
-              <span><strong>Δx</strong> = Displacement</span>
+              <span><Tex>x</Tex> = Position</span>
+              <span><Tex>{toLatex("x₀")}</Tex> = Initial position</span>
+              <span><Tex>v</Tex> = Velocity</span>
+              <span><Tex>{toLatex("Δx")}</Tex> = Displacement</span>
             </div>
           </div>
         </CardContent>
@@ -119,7 +121,7 @@ export function PositionVelocity({ onComplete, isComplete }: TopicProps) {
         <CardContent>
           <div className="grid gap-2 text-sm leading-relaxed text-muted-foreground sm:grid-cols-2">
             <p><strong>Position</strong> is the location of an object relative to an origin. It can be positive or negative depending on direction.</p>
-            <p><strong>Displacement</strong> (Δx = x - x₀) is the change in position — a vector quantity with both magnitude and direction.</p>
+            <p><strong>Displacement</strong> (<Tex>{toLatex("Δx = x - x₀")}</Tex>) is the change in position — a vector quantity with both magnitude and direction.</p>
             <p><strong>Distance</strong> is the total path length traveled — always positive (scalar).</p>
             <p><strong>Average velocity</strong> is displacement over time. Unlike speed, it can be negative, indicating direction.</p>
           </div>
@@ -129,7 +131,7 @@ export function PositionVelocity({ onComplete, isComplete }: TopicProps) {
       <Accordion>
         <AccordionItem value="faq-1">
           <AccordionTrigger>Is displacement the same as distance?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">No. Displacement is the straight-line change in position (vector), while distance is the total path length (scalar). If you walk 3 m east then 3 m west, displacement = 0 but distance = 6 m.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">No. Displacement is the straight-line change in position (vector), while distance is the total path length (scalar). If you walk 3 m east then 3 m west, <Tex>{"\\text{displacement} = 0"}</Tex> but <Tex>{"\\text{distance} = 6 \\text{ m}"}</Tex>.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="faq-2">
           <AccordionTrigger>Can velocity be negative?</AccordionTrigger>
@@ -137,11 +139,11 @@ export function PositionVelocity({ onComplete, isComplete }: TopicProps) {
         </AccordionItem>
         <AccordionItem value="faq-3">
           <AccordionTrigger>What&apos;s the difference between average and instantaneous velocity?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">Average velocity = Δx/Δt over an interval. Instantaneous velocity is the velocity at a single moment — the slope of the x-t graph at that point (the derivative dx/dt).</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">Average velocity <Tex>{"= \\Delta x / \\Delta t"}</Tex> over an interval. Instantaneous velocity is the velocity at a single moment — the slope of the <Tex>x</Tex>-<Tex>t</Tex> graph at that point (the derivative <Tex>{"dx/dt"}</Tex>).</AccordionContent>
         </AccordionItem>
         <AccordionItem value="faq-4">
           <AccordionTrigger>Can an object have zero velocity but nonzero position?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">Absolutely. An object sitting still at x = 10 m has position = 10 m and velocity = 0. Position tells you where something is; velocity tells you how fast it&apos;s changing position.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">Absolutely. An object sitting still at <Tex>{"x = 10 \\text{ m}"}</Tex> has position = 10 m and velocity = 0. Position tells you where something is; velocity tells you how fast it&apos;s changing position.</AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>

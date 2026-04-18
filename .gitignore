@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# local planning docs
+REFACTOR_PLAN.md
+
 # AI tool configs
 .agents/
 .augment/

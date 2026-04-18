@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tex } from "@/components/ui/math";
 
 export function WhatIfScenarios() {
   const [gValue, setGValue] = useState(9.8);
@@ -66,14 +67,14 @@ export function WhatIfScenarios() {
         <CardHeader><CardTitle className="text-base">What if there were no air resistance?</CardTitle></CardHeader>
         <CardContent className="space-y-2">
           <p className="text-sm text-muted-foreground">In a vacuum, a feather and a bowling ball fall at exactly the same rate. Apollo 15 astronaut David Scott demonstrated this on the Moon in 1971.</p>
-          <p className="text-sm text-muted-foreground">Without air resistance, a baseball thrown at 40 m/s at 45° would travel <span className="font-mono font-bold">163 m</span>. In real life, air drag reduces this to about 120 m. Air resistance is why we can ignore it for AP Physics 1 — the idealized model is much simpler!</p>
+          <p className="text-sm text-muted-foreground">Without air resistance, a baseball thrown at 40 m/s at 45° would travel <Tex>{"163 \\text{ m}"}</Tex>. In real life, air drag reduces this to about 120 m. Air resistance is why we can ignore it for AP Physics 1 — the idealized model is much simpler!</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader><CardTitle className="text-base">What if you could throw at 1000 m/s?</CardTitle></CardHeader>
         <CardContent className="space-y-2">
-          <p className="text-sm text-muted-foreground">At 45°, the range would be R = (1000)²sin(90°)/9.8 = <span className="font-mono font-bold">102 km</span>! The max height would be 25.5 km — well into the stratosphere.</p>
+          <p className="text-sm text-muted-foreground">At 45°, the range would be <Tex>{"R = (1000)^{2} \\sin(90^{\\circ}) / 9.8 = 102 \\text{ km}"}</Tex>! The max height would be 25.5 km — well into the stratosphere.</p>
           <p className="text-sm text-muted-foreground">At this point, our flat-Earth approximation breaks down. You&apos;d need to account for the curvature of the Earth, decreasing gravity with altitude, and significant air resistance at high speeds.</p>
           <p className="text-sm text-muted-foreground">At about 7,900 m/s horizontal, an object would orbit the Earth instead of falling back — that&apos;s orbital velocity!</p>
         </CardContent>

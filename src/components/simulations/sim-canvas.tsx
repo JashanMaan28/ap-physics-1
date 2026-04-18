@@ -110,8 +110,8 @@ export function SimCanvas({
           {/* Controls row */}
           {controls}
 
-          {/* Canvas */}
-          <div className="relative w-full overflow-hidden rounded-lg border border-white/[0.06]">
+          {/* Canvas — capped so it stays readable on wide screens */}
+          <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-lg border border-white/[0.06]">
             <canvas
               ref={canvasRef}
               width={width}

@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface TopicProps { onComplete: () => void; isComplete: boolean; }
 
@@ -60,16 +62,16 @@ export function ProjectileMotion({ onComplete, isComplete }: TopicProps) {
         <CardContent className="space-y-4">
           <div>
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">Key Formulas</h3>
-            <div className="grid gap-1 font-mono">
-              <p className="text-lg font-bold">R = v₀² sin(2θ) / g</p>
-              <p className="text-lg font-bold">H = v₀² sin²(θ) / (2g)</p>
-              <p className="text-base">T = 2v₀ sin(θ) / g</p>
+            <div className="grid gap-1">
+              <div className="text-lg font-bold"><Tex display>{"R = v_{0}^{2} \\sin(2\\theta) / g"}</Tex></div>
+              <div className="text-lg font-bold"><Tex display>{"H = v_{0}^{2} \\sin^{2}(\\theta) / (2g)"}</Tex></div>
+              <div className="text-base"><Tex display>{"T = 2 v_{0} \\sin(\\theta) / g"}</Tex></div>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-              <span><strong>R</strong> = Range (horizontal)</span>
-              <span><strong>H</strong> = Max height</span>
-              <span><strong>T</strong> = Total flight time</span>
-              <span><strong>θ</strong> = Launch angle</span>
+              <span><Tex>R</Tex> = Range (horizontal)</span>
+              <span><Tex>H</Tex> = Max height</span>
+              <span><Tex>T</Tex> = Total flight time</span>
+              <span><Tex>{"\\theta"}</Tex> = Launch angle</span>
             </div>
           </div>
         </CardContent>
@@ -135,7 +137,7 @@ export function ProjectileMotion({ onComplete, isComplete }: TopicProps) {
       <Accordion>
         <AccordionItem value="faq-1">
           <AccordionTrigger>What angle gives maximum range?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">45° gives maximum range on level ground (since sin(2×45°) = sin(90°) = 1). Complementary angles (e.g., 30° and 60°) give the same range but different max heights.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">45° gives maximum range on level ground (since <Tex>{"\\sin(2 \\times 45^{\\circ}) = \\sin(90^{\\circ}) = 1"}</Tex>). Complementary angles (e.g., 30° and 60°) give the same range but different max heights.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="faq-2">
           <AccordionTrigger>Does mass affect projectile motion?</AccordionTrigger>
@@ -143,7 +145,7 @@ export function ProjectileMotion({ onComplete, isComplete }: TopicProps) {
         </AccordionItem>
         <AccordionItem value="faq-3">
           <AccordionTrigger>What&apos;s the acceleration at the top of the trajectory?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">Still g = 9.8 m/s² downward! The velocity at the top is purely horizontal (vᵧ = 0), but gravity still acts. A common mistake is thinking a = 0 at the peak.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">Still <Tex>{toLatex("g = 9.8 m/s²")}</Tex> downward! The velocity at the top is purely horizontal (<Tex>{toLatex("vᵧ = 0")}</Tex>), but gravity still acts. A common mistake is thinking <Tex>{"a = 0"}</Tex> at the peak.</AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>

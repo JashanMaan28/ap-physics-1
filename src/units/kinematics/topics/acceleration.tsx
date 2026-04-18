@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { toLatex } from "@/lib/latex";
 
 interface TopicProps { onComplete: () => void; isComplete: boolean; }
 
@@ -39,13 +41,13 @@ export function Acceleration({ onComplete, isComplete }: TopicProps) {
         <CardContent className="space-y-4">
           <div>
             <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">Key Formulas</h3>
-            <p className="font-mono text-xl font-bold">a = Δv / Δt = (v - v₀) / t</p>
-            <p className="font-mono text-lg mt-1">v = v₀ + at</p>
+            <div className="text-xl font-bold"><Tex display>{toLatex("a = Δv / Δt = (v - v₀) / t")}</Tex></div>
+            <div className="text-lg mt-1"><Tex display>{toLatex("v = v₀ + at")}</Tex></div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground sm:grid-cols-4">
-              <span><strong>a</strong> = Acceleration (m/s²)</span>
-              <span><strong>v₀</strong> = Initial velocity</span>
-              <span><strong>v</strong> = Final velocity</span>
-              <span><strong>t</strong> = Time</span>
+              <span><Tex>a</Tex> = Acceleration (m/s²)</span>
+              <span><Tex>{toLatex("v₀")}</Tex> = Initial velocity</span>
+              <span><Tex>v</Tex> = Final velocity</span>
+              <span><Tex>t</Tex> = Time</span>
             </div>
           </div>
         </CardContent>
@@ -111,8 +113,8 @@ export function Acceleration({ onComplete, isComplete }: TopicProps) {
           <div className="grid gap-2 text-sm leading-relaxed text-muted-foreground sm:grid-cols-2">
             <p><strong>Acceleration</strong> is the rate of change of velocity. It&apos;s a vector — it has magnitude and direction.</p>
             <p><strong>Constant acceleration</strong> means velocity changes by the same amount each second. This is the basis of all kinematic equations.</p>
-            <p><strong>Deceleration</strong> is acceleration opposing the direction of motion. If v &gt; 0 and a &lt; 0, the object slows down.</p>
-            <p><strong>Free fall</strong> near Earth&apos;s surface has a constant acceleration of g ≈ 9.8 m/s² downward, regardless of mass.</p>
+            <p><strong>Deceleration</strong> is acceleration opposing the direction of motion. If <Tex>{"v > 0"}</Tex> and <Tex>{"a < 0"}</Tex>, the object slows down.</p>
+            <p><strong>Free fall</strong> near Earth&apos;s surface has a constant acceleration of <Tex>{toLatex("g ≈ 9.8 m/s²")}</Tex> downward, regardless of mass.</p>
           </div>
         </CardContent>
       </Card>
@@ -120,11 +122,11 @@ export function Acceleration({ onComplete, isComplete }: TopicProps) {
       <Accordion>
         <AccordionItem value="faq-1">
           <AccordionTrigger>Can an object have zero velocity but nonzero acceleration?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">Yes! A ball thrown upward has v = 0 at its highest point, but a = -9.8 m/s² (gravity still acts). Zero velocity is an instant; acceleration is continuous.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">Yes! A ball thrown upward has <Tex>{"v = 0"}</Tex> at its highest point, but <Tex>{toLatex("a = -9.8 m/s²")}</Tex> (gravity still acts). Zero velocity is an instant; acceleration is continuous.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="faq-2">
           <AccordionTrigger>Does negative acceleration always mean slowing down?</AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground">No. If velocity is negative (moving left) and acceleration is also negative, the object speeds up (in the negative direction). &quot;Slowing down&quot; means a and v have opposite signs.</AccordionContent>
+          <AccordionContent className="text-sm text-muted-foreground">No. If velocity is negative (moving left) and acceleration is also negative, the object speeds up (in the negative direction). &quot;Slowing down&quot; means <Tex>a</Tex> and <Tex>v</Tex> have opposite signs.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="faq-3">
           <AccordionTrigger>What are the units of acceleration?</AccordionTrigger>

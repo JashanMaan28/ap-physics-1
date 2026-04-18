@@ -63,7 +63,7 @@ export function UnitHeader({
         </svg>
       </Button>
 
-      <Separator orientation="vertical" className="hidden h-5 sm:block" />
+      <Separator orientation="vertical" className="hidden h-5 self-center data-vertical:self-center sm:block" />
 
       <div className="flex min-w-0 items-center gap-1.5 text-sm">
         <Link href="/" className="hidden text-xs text-muted-foreground hover:text-foreground transition-colors sm:inline">
