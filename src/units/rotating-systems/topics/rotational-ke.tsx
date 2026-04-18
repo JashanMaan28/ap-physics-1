@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -26,7 +27,7 @@ export function RotationalKE({ onComplete, isComplete }: TopicProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-teal-400">
             Rotational Kinetic Energy
@@ -35,7 +36,14 @@ export function RotationalKE({ onComplete, isComplete }: TopicProps) {
             Understand how spinning objects store kinetic energy
           </p>
         </div>
-        {isComplete && <Badge className="bg-teal-600">Completed</Badge>}
+        <Button
+          variant={isComplete ? "default" : "outline"}
+          size="sm"
+          onClick={onComplete}
+          className="cursor-pointer shrink-0"
+        >
+          {isComplete ? "Completed" : "Mark Complete"}
+        </Button>
       </div>
 
       {/* Key Formula */}
@@ -44,21 +52,13 @@ export function RotationalKE({ onComplete, isComplete }: TopicProps) {
           <CardTitle className="text-teal-300 text-lg">Key Formula</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-3xl font-mono text-white py-4">
-            KE<sub>rot</sub> = &frac12; I &omega;&sup2;
+          <div className="text-center text-3xl text-white py-4">
+            <Tex display>{"KE_{rot} = \\tfrac{1}{2} I \\omega^2"}</Tex>
           </div>
           <div className="text-gray-300 text-sm space-y-1 mt-2">
-            <p>
-              <strong>I</strong> = moment of inertia (kg&middot;m&sup2;) &mdash;
-              rotational analog of mass
-            </p>
-            <p>
-              <strong>&omega;</strong> = angular velocity (rad/s) &mdash;
-              rotational analog of velocity
-            </p>
-            <p>
-              This is the rotational analog of KE = &frac12;mv&sup2;
-            </p>
+            <p><Tex>I</Tex> = moment of inertia (kg·m²) — rotational analog of mass</p>
+            <p><Tex>{"\\omega"}</Tex> = angular velocity (rad/s) — rotational analog of velocity</p>
+            <p>This is the rotational analog of <Tex>{"KE = \\tfrac{1}{2}mv^2"}</Tex></p>
           </div>
         </CardContent>
       </Card>
@@ -219,16 +219,6 @@ export function RotationalKE({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      {/* Mark Complete */}
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          disabled={isComplete}
-          className="bg-teal-600 hover:bg-teal-700"
-        >
-          {isComplete ? "Completed" : "Mark Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

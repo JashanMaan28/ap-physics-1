@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -18,6 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function Work({
   onComplete,
@@ -49,28 +50,36 @@ export function Work({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Work</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Work</CardTitle>
+              <CardDescription className="mt-1">
+                Work is the energy transferred to or from an object by a force
+                acting over a displacement.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Work is the energy transferred to or from an object by a force
-            acting over a displacement.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardContent className="pt-4">
-              <p className="text-lg font-semibold text-amber-900">
+              <p className="text-lg font-semibold text-amber-900 dark:text-amber-200">
                 Key Formula
               </p>
-              <p className="text-2xl font-mono text-amber-800 mt-1">
-                W = F &middot; d &middot; cos&theta;
-              </p>
-              <p className="text-sm text-amber-700 mt-1">
-                W = work (J), F = force (N), d = displacement (m), &theta; =
-                angle between force and displacement
+              <div className="text-2xl text-amber-800 dark:text-amber-200 mt-1 dark:text-amber-300">
+                <Tex display>{"W = F \\cdot d \\cdot \\cos\\theta"}</Tex>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
+                <Tex>W</Tex> = work (J), <Tex>F</Tex> = force (N), <Tex>d</Tex> = displacement (m), <Tex>{"\\theta"}</Tex> = angle between force and displacement
               </p>
             </CardContent>
           </Card>
@@ -84,7 +93,7 @@ export function Work({
               width={svgWidth}
               height={svgHeight}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="border rounded bg-white"
+              className="border rounded bg-white dark:bg-slate-900"
             >
               {/* Ground */}
               <line
@@ -238,10 +247,7 @@ export function Work({
                 Can work be negative?
               </AccordionTrigger>
               <AccordionContent>
-                Yes. When the angle between force and displacement is greater
-                than 90&deg;, cos&theta; is negative, so the work done is
-                negative. This means the force opposes the motion (e.g.,
-                friction).
+                <PhysicsText display={false}>{"Yes. When the angle between force and displacement is greater than 90°, cos θ is negative, so the work done is negative. This means the force opposes the motion (e.g., friction)."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q2">
@@ -249,9 +255,7 @@ export function Work({
                 What if the force is perpendicular to displacement?
               </AccordionTrigger>
               <AccordionContent>
-                When &theta; = 90&deg;, cos 90&deg; = 0, so no work is done.
-                A common example is a centripetal force in circular motion&mdash;it
-                changes direction but does no work.
+                <PhysicsText display={false}>{"When θ = 90°, cos 90° = 0, so no work is done. A common example is a centripetal force in circular motion — it changes direction but does no work."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q3">
@@ -259,17 +263,10 @@ export function Work({
                 What are the units of work?
               </AccordionTrigger>
               <AccordionContent>
-                Work is measured in joules (J). 1 J = 1 N&middot;m = 1
-                kg&middot;m&sup2;/s&sup2;.
+                Work is measured in joules (J). <Tex>{"1 \\text{ J} = 1 \\text{ N·m} = 1 \\text{ kg·m}^2/\\text{s}^2"}</Tex>.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full">
-            {isComplete ? "Completed" : "Mark Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

@@ -10,6 +10,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -34,9 +36,14 @@ export function MomentumImpulse({ onComplete, isComplete }: TopicProps) {
               <CardTitle className="text-2xl">Momentum & Impulse</CardTitle>
               <CardDescription>Understanding linear momentum: p = mv</CardDescription>
             </div>
-            <Badge variant={isComplete ? "default" : "secondary"}>
-              {isComplete ? "Completed" : "In Progress"}
-            </Badge>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
         </CardHeader>
       </Card>
@@ -65,17 +72,17 @@ export function MomentumImpulse({ onComplete, isComplete }: TopicProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>Key Formula</span>
-            <Badge variant="outline" className="text-purple-600 border-purple-400">Must Know</Badge>
+            <Badge variant="outline" className="text-purple-600 border-purple-400 dark:text-purple-400">Must Know</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-3xl font-mono font-bold py-4">
-            p = mv
+          <div className="text-center text-3xl font-bold py-4">
+            <Tex display>{"\\vec{p} = m\\vec{v}"}</Tex>
           </div>
           <div className="text-center text-sm text-muted-foreground space-y-1">
-            <p><strong>p</strong> = momentum (kg&middot;m/s)</p>
-            <p><strong>m</strong> = mass (kg)</p>
-            <p><strong>v</strong> = velocity (m/s)</p>
+            <p><Tex>p</Tex> = momentum (kg·m/s)</p>
+            <p><Tex>m</Tex> = mass (kg)</p>
+            <p><Tex>v</Tex> = velocity (m/s)</p>
           </div>
         </CardContent>
       </Card>
@@ -275,17 +282,6 @@ export function MomentumImpulse({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      {/* Mark Complete */}
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          variant={isComplete ? "outline" : "default"}
-          size="lg"
-          className={isComplete ? "" : "bg-purple-600 hover:bg-purple-700"}
-        >
-          {isComplete ? "Completed ✓" : "Mark as Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

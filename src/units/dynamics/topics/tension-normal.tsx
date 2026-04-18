@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -12,6 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function TensionNormal({
   onComplete,
@@ -30,14 +31,23 @@ export function TensionNormal({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Tension &amp; Normal Force</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Tension &amp; Normal Force</CardTitle>
+              <CardDescription className="mt-1">
+                Tension is the pulling force transmitted through a string, rope, or cable. The normal
+                force is the contact force perpendicular to a surface.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Tension is the pulling force transmitted through a string, rope, or cable. The normal
-            force is the contact force perpendicular to a surface.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Tension Section */}
@@ -45,7 +55,7 @@ export function TensionNormal({
             <h3 className="text-lg font-semibold">Tension in a Hanging Mass</h3>
             <p className="text-muted-foreground">
               When a mass hangs from a rope at rest, the tension in the rope equals the weight of
-              the mass: T = mg. The rope transmits force without changing its magnitude (for a
+              the mass: <Tex>T = mg</Tex>. The rope transmits force without changing its magnitude (for a
               massless rope).
             </p>
 
@@ -55,7 +65,7 @@ export function TensionNormal({
             </div>
 
             {/* SVG: Hanging mass */}
-            <div className="rounded-lg border bg-white p-2">
+            <div className="rounded-lg border bg-white dark:bg-slate-900 p-2">
               <svg viewBox="0 0 300 220" className="w-full max-w-sm mx-auto">
                 {/* Ceiling */}
                 <rect x="0" y="0" width="300" height="15" fill="#94a3b8" />
@@ -95,9 +105,9 @@ export function TensionNormal({
               </svg>
             </div>
 
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/30">
               <CardContent className="pt-3 text-center">
-                <p className="font-semibold text-green-900">At rest: T = mg = {tension.toFixed(1)} N</p>
+                <div className="font-semibold text-green-900 dark:text-green-200">At rest: <Tex>{`T = mg = ${tension.toFixed(1)}`}</Tex> N</div>
               </CardContent>
             </Card>
           </div>
@@ -109,10 +119,10 @@ export function TensionNormal({
             <h3 className="text-lg font-semibold">Normal Force</h3>
             <p className="text-muted-foreground">
               The normal force is the support force exerted by a surface perpendicular to the
-              surface. On a flat, horizontal surface with no other vertical forces, N = mg.
+              surface. On a flat, horizontal surface with no other vertical forces, <Tex>N = mg</Tex>.
             </p>
 
-            <div className="rounded-lg border bg-white p-2">
+            <div className="rounded-lg border bg-white dark:bg-slate-900 p-2">
               <svg viewBox="0 0 300 160" className="w-full max-w-sm mx-auto">
                 {/* Surface */}
                 <rect x="0" y="110" width="300" height="15" fill="#94a3b8" />
@@ -149,11 +159,11 @@ export function TensionNormal({
               </svg>
             </div>
 
-            <Card className="bg-purple-50 border-purple-200">
+            <Card className="bg-purple-50 border-purple-200 dark:bg-purple-500/10 dark:border-purple-500/30">
               <CardContent className="pt-3 text-center">
-                <p className="font-semibold text-purple-900">
-                  Flat surface, no extra vertical forces: N = mg = {normalForce.toFixed(1)} N
-                </p>
+                <div className="font-semibold text-purple-900 dark:text-purple-200">
+                  Flat surface, no extra vertical forces: <Tex>{`N = mg = ${normalForce.toFixed(1)}`}</Tex> N
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -161,14 +171,14 @@ export function TensionNormal({
           <Separator />
 
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardHeader>
-              <CardTitle className="text-lg text-amber-900">Key Formulas</CardTitle>
+              <CardTitle className="text-lg text-amber-900 dark:text-amber-200">Key Formulas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
-              <p className="text-center text-xl font-bold text-amber-900">T = mg (hanging at rest)</p>
-              <p className="text-center text-xl font-bold text-amber-900">N = mg (flat surface)</p>
-              <p className="text-center text-sm text-amber-700 mt-1">
+              <div className="text-center text-xl font-bold text-amber-900 dark:text-amber-200"><Tex display>T = mg</Tex> (hanging at rest)</div>
+              <div className="text-center text-xl font-bold text-amber-900 dark:text-amber-200"><Tex display>N = mg</Tex> (flat surface)</div>
+              <p className="text-center text-sm text-amber-700 dark:text-amber-300/80 mt-1">
                 These change when the system accelerates or the surface is inclined.
               </p>
             </CardContent>
@@ -181,9 +191,7 @@ export function TensionNormal({
             <AccordionItem value="q1">
               <AccordionTrigger>Is the normal force always equal to weight?</AccordionTrigger>
               <AccordionContent>
-                No. The normal force equals mg only on a flat surface with no other vertical forces.
-                On an incline, N = mg cos(theta). If you push down on the object, N increases. In an
-                accelerating elevator, N differs from mg.
+                <PhysicsText display={false}>{"No. The normal force equals mg only on a flat surface with no other vertical forces. On an incline, N = mg cos(θ). If you push down on the object, N increases. In an accelerating elevator, N differs from mg."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q2">
@@ -203,12 +211,6 @@ export function TensionNormal({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full" size="lg">
-            {isComplete ? "Topic Completed" : "Mark as Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

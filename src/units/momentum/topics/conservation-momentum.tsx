@@ -10,6 +10,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -73,9 +75,14 @@ export function ConservationMomentum({ onComplete, isComplete }: TopicProps) {
               <CardTitle className="text-2xl">Conservation of Momentum</CardTitle>
               <CardDescription>In an isolated system, total momentum is conserved</CardDescription>
             </div>
-            <Badge variant={isComplete ? "default" : "secondary"}>
-              {isComplete ? "Completed" : "In Progress"}
-            </Badge>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
         </CardHeader>
       </Card>
@@ -103,12 +110,12 @@ export function ConservationMomentum({ onComplete, isComplete }: TopicProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>Key Formula</span>
-            <Badge variant="outline" className="text-purple-600 border-purple-400">Must Know</Badge>
+            <Badge variant="outline" className="text-purple-600 border-purple-400 dark:text-purple-400">Must Know</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-3xl font-mono font-bold py-4">
-            m<sub>1</sub>v<sub>1i</sub> + m<sub>2</sub>v<sub>2i</sub> = m<sub>1</sub>v<sub>1f</sub> + m<sub>2</sub>v<sub>2f</sub>
+          <div className="text-center text-3xl font-bold py-4">
+            <Tex display>{"m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f}"}</Tex>
           </div>
           <div className="text-center text-sm text-muted-foreground">
             <p>Total momentum before = Total momentum after</p>
@@ -280,16 +287,6 @@ export function ConservationMomentum({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          variant={isComplete ? "outline" : "default"}
-          size="lg"
-          className={isComplete ? "" : "bg-purple-600 hover:bg-purple-700"}
-        >
-          {isComplete ? "Completed ✓" : "Mark as Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

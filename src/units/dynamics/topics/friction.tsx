@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
@@ -12,6 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 export function Friction({
   onComplete,
@@ -41,22 +42,31 @@ export function Friction({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">Friction</CardTitle>
-            {isComplete && <Badge variant="secondary">Completed</Badge>}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">Friction</CardTitle>
+              <CardDescription className="mt-1">
+                Friction is a contact force that opposes the relative motion (or tendency of motion)
+                between two surfaces.
+              </CardDescription>
+            </div>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
-          <CardDescription>
-            Friction is a contact force that opposes the relative motion (or tendency of motion)
-            between two surfaces.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Theory */}
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">Static vs Kinetic Friction</h3>
             <p className="text-muted-foreground">
-              <strong>Static friction</strong> (f_s) prevents motion and can vary from 0 up to
-              a maximum of mu_s * N. <strong>Kinetic friction</strong> (f_k = mu_k * N) acts on
+              <strong>Static friction</strong> (<Tex>{"f_s"}</Tex>) prevents motion and can vary from 0 up to
+              a maximum of <Tex>{"\\mu_s N"}</Tex>. <strong>Kinetic friction</strong> (<Tex>{"f_k = \\mu_k N"}</Tex>) acts on
               sliding objects and is typically less than the maximum static friction.
             </p>
           </div>
@@ -77,17 +87,17 @@ export function Friction({
                 <Slider value={[appliedForce]} onValueChange={(v) => setAppliedForce(v[0])} min={0} max={200} step={1} />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">mu_s (static): {muS.toFixed(2)}</label>
+                <label className="text-sm font-medium"><Tex>{"\\mu_s"}</Tex> (static): {muS.toFixed(2)}</label>
                 <Slider value={[muS]} onValueChange={(v) => setMuS(v[0])} min={0.1} max={1.0} step={0.01} />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">mu_k (kinetic): {muK.toFixed(2)}</label>
+                <label className="text-sm font-medium"><Tex>{"\\mu_k"}</Tex> (kinetic): {muK.toFixed(2)}</label>
                 <Slider value={[muK]} onValueChange={(v) => setMuK(v[0])} min={0.05} max={0.9} step={0.01} />
               </div>
             </div>
 
             {/* SVG Diagram */}
-            <div className="rounded-lg border bg-white p-2">
+            <div className="rounded-lg border bg-white dark:bg-slate-900 p-2">
               <svg viewBox="0 0 400 130" className="w-full">
                 <line x1="0" y1="110" x2="400" y2="110" stroke="#888" strokeWidth="2" />
                 {Array.from({ length: 20 }).map((_, i) => (
@@ -160,19 +170,19 @@ export function Friction({
 
             {/* Results */}
             <div className="grid gap-3 sm:grid-cols-3">
-              <Card className="bg-slate-50">
+              <Card className="bg-slate-50 dark:bg-slate-500/10">
                 <CardContent className="pt-3 text-center">
                   <p className="text-xs text-muted-foreground">Max Static Friction</p>
                   <p className="text-lg font-bold">{maxStaticFriction.toFixed(1)} N</p>
                 </CardContent>
               </Card>
-              <Card className="bg-slate-50">
+              <Card className="bg-slate-50 dark:bg-slate-500/10">
                 <CardContent className="pt-3 text-center">
                   <p className="text-xs text-muted-foreground">Net Force</p>
                   <p className="text-lg font-bold">{netForce.toFixed(1)} N</p>
                 </CardContent>
               </Card>
-              <Card className="bg-slate-50">
+              <Card className="bg-slate-50 dark:bg-slate-500/10">
                 <CardContent className="pt-3 text-center">
                   <p className="text-xs text-muted-foreground">Acceleration</p>
                   <p className="text-lg font-bold">{acceleration.toFixed(2)} m/s²</p>
@@ -184,15 +194,15 @@ export function Friction({
           <Separator />
 
           {/* Key Formula */}
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30">
             <CardHeader>
-              <CardTitle className="text-lg text-amber-900">Key Formulas</CardTitle>
+              <CardTitle className="text-lg text-amber-900 dark:text-amber-200">Key Formulas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
-              <p className="text-center text-xl font-bold text-amber-900">f_s &le; &mu;_s N</p>
-              <p className="text-center text-xl font-bold text-amber-900">f_k = &mu;_k N</p>
-              <p className="text-center text-sm text-amber-700 mt-1">
-                where N is the normal force and &mu; is the coefficient of friction
+              <div className="text-center text-xl font-bold text-amber-900 dark:text-amber-200"><Tex display>{"f_s \\leq \\mu_s N"}</Tex></div>
+              <div className="text-center text-xl font-bold text-amber-900 dark:text-amber-200"><Tex display>{"f_k = \\mu_k N"}</Tex></div>
+              <p className="text-center text-sm text-amber-700 dark:text-amber-300/80 mt-1">
+                where <Tex>N</Tex> is the normal force and <Tex>{"\\mu"}</Tex> is the coefficient of friction
               </p>
             </CardContent>
           </Card>
@@ -212,9 +222,7 @@ export function Friction({
             <AccordionItem value="q2">
               <AccordionTrigger>Does friction depend on surface area?</AccordionTrigger>
               <AccordionContent>
-                For the AP Physics model, no. Friction depends only on the normal force and the
-                coefficient of friction. In reality, surface area can play a minor role in some
-                situations, but this is beyond the scope of AP Physics 1.
+                <PhysicsText display={false}>{"For the AP Physics model, no. Friction depends only on the normal force and the coefficient of friction. In reality, surface area can play a minor role in some situations, but this is beyond the scope of AP Physics 1."}</PhysicsText>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="q3">
@@ -226,12 +234,6 @@ export function Friction({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-          <Separator />
-
-          <Button onClick={onComplete} disabled={isComplete} className="w-full" size="lg">
-            {isComplete ? "Topic Completed" : "Mark as Complete"}
-          </Button>
         </CardContent>
       </Card>
     </div>

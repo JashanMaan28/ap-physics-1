@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -32,7 +33,7 @@ export function ConservationAngular({ onComplete, isComplete }: TopicProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-teal-400">
             Conservation of Angular Momentum
@@ -41,7 +42,14 @@ export function ConservationAngular({ onComplete, isComplete }: TopicProps) {
             When no external torque acts, L stays constant
           </p>
         </div>
-        {isComplete && <Badge className="bg-teal-600">Completed</Badge>}
+        <Button
+          variant={isComplete ? "default" : "outline"}
+          size="sm"
+          onClick={onComplete}
+          className="cursor-pointer shrink-0"
+        >
+          {isComplete ? "Completed" : "Mark Complete"}
+        </Button>
       </div>
 
       {/* Key Formula */}
@@ -50,8 +58,8 @@ export function ConservationAngular({ onComplete, isComplete }: TopicProps) {
           <CardTitle className="text-teal-300 text-lg">Key Formula</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-3xl font-mono text-white py-4">
-            I<sub>1</sub>&omega;<sub>1</sub> = I<sub>2</sub>&omega;<sub>2</sub>
+          <div className="text-center text-3xl text-white py-4">
+            <Tex display>{"I_1 \\omega_1 = I_2 \\omega_2"}</Tex>
           </div>
           <div className="text-gray-300 text-sm space-y-1 mt-2">
             <p>
@@ -233,16 +241,6 @@ export function ConservationAngular({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      {/* Mark Complete */}
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          disabled={isComplete}
-          className="bg-teal-600 hover:bg-teal-700"
-        >
-          {isComplete ? "Completed" : "Mark Complete"}
-        </Button>
-      </div>
     </div>
   );
 }

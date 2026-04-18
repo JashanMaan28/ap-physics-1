@@ -10,6 +10,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 
 interface TopicProps {
   onComplete: () => void;
@@ -34,11 +36,16 @@ export function ImpulseForce({ onComplete, isComplete }: TopicProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl">Impulse & Force</CardTitle>
-              <CardDescription>The Impulse-Momentum Theorem: J = F&Delta;t = &Delta;p</CardDescription>
+              <CardDescription>The Impulse-Momentum Theorem: <Tex>{"J = F\\Delta t = \\Delta p"}</Tex></CardDescription>
             </div>
-            <Badge variant={isComplete ? "default" : "secondary"}>
-              {isComplete ? "Completed" : "In Progress"}
-            </Badge>
+            <Button
+              variant={isComplete ? "default" : "outline"}
+              size="sm"
+              onClick={onComplete}
+              className="cursor-pointer shrink-0"
+            >
+              {isComplete ? "Completed" : "Mark Complete"}
+            </Button>
           </div>
         </CardHeader>
       </Card>
@@ -68,18 +75,18 @@ export function ImpulseForce({ onComplete, isComplete }: TopicProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>Key Formula</span>
-            <Badge variant="outline" className="text-purple-600 border-purple-400">Must Know</Badge>
+            <Badge variant="outline" className="text-purple-600 border-purple-400 dark:text-purple-400">Must Know</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-3xl font-mono font-bold py-4">
-            J = F&Delta;t = &Delta;p = mv<sub>f</sub> &minus; mv<sub>i</sub>
+          <div className="text-center text-3xl font-bold py-4">
+            <Tex display>{"J = F\\Delta t = \\Delta p = mv_f - mv_i"}</Tex>
           </div>
           <div className="text-center text-sm text-muted-foreground space-y-1">
-            <p><strong>J</strong> = impulse (N&middot;s = kg&middot;m/s)</p>
-            <p><strong>F</strong> = average net force (N)</p>
-            <p><strong>&Delta;t</strong> = time interval (s)</p>
-            <p><strong>&Delta;p</strong> = change in momentum (kg&middot;m/s)</p>
+            <p><Tex>J</Tex> = impulse (N·s = kg·m/s)</p>
+            <p><Tex>F</Tex> = average net force (N)</p>
+            <p><Tex>{"\\Delta t"}</Tex> = time interval (s)</p>
+            <p><Tex>{"\\Delta p"}</Tex> = change in momentum (kg·m/s)</p>
           </div>
         </CardContent>
       </Card>
@@ -252,17 +259,6 @@ export function ImpulseForce({ onComplete, isComplete }: TopicProps) {
         </CardContent>
       </Card>
 
-      {/* Mark Complete */}
-      <div className="flex justify-end">
-        <Button
-          onClick={onComplete}
-          variant={isComplete ? "outline" : "default"}
-          size="lg"
-          className={isComplete ? "" : "bg-purple-600 hover:bg-purple-700"}
-        >
-          {isComplete ? "Completed ✓" : "Mark as Complete"}
-        </Button>
-      </div>
     </div>
   );
 }
