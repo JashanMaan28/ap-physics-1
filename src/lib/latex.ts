@@ -123,6 +123,12 @@ export function toLatex(input: string): string {
   // Any remaining stray √ — fall back to the command form.
   s = s.replace(/√/g, "\\sqrt");
 
+  // 6a) Compound subscript: `_letter+digits` (e.g. `v_y0` = y-component
+  //     initial velocity) → `_{letter_{digits}}` nested subscript. Must run
+  //     before 6b so the digits aren't split off into a sibling `_{digits}`,
+  //     which would produce invalid `_{y}_{0}` double-subscript LaTeX.
+  s = s.replace(/_([A-Za-z])(\d+)(?=\D|$)/g, "_{$1_{$2}}");
+
   // 6b) Auto-subscript: a single letter followed immediately by digit(s)
   //     is treated as a subscript (`v0` → `v_{0}`, `H2O` → `H_{2}O`, `x10`
   //     → `x_{10}`). Runs before explicit-underscore handling so both paths

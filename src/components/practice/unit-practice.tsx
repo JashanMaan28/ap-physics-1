@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -228,6 +228,10 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Array<number | null>>([]);
   const [timeLeft, setTimeLeft] = useState(12 * 60);
+  // Guard so the mistake-recording effect fires exactly once per test
+  // submission, not on every subsequent `answers`/`addMistake` identity
+  // change or on React strict-mode double-invocation.
+  const recordedRef = useRef(false);
 
   useEffect(() => {
     if (!started || finished) {
@@ -247,12 +251,18 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
     return () => window.clearTimeout(timer);
   }, [finished, started, timeLeft]);
 
-  useEffect(() => {
-    if (!finished || !bank) {
-      return;
-    }
+  const totalQuestions = Math.min(10, bank?.quizQuestions.length ?? 0);
+  const questions = useMemo(
+    () => (bank ? bank.quizQuestions.slice(0, totalQuestions) : []),
+    [bank, totalQuestions]
+  );
 
-    bank.quizQuestions.forEach((question, index) => {
+  useEffect(() => {
+    if (!finished || questions.length === 0) return;
+    if (recordedRef.current) return;
+    recordedRef.current = true;
+
+    questions.forEach((question, index) => {
       const answer = answers[index];
       if (answer === null || answer === undefined || answer === question.answer) {
         return;
@@ -267,13 +277,7 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
         timestamp: Date.now(),
       });
     });
-  }, [addMistake, answers, bank, finished, unitSlug]);
-
-  const totalQuestions = Math.min(10, bank?.quizQuestions.length ?? 0);
-  const questions = useMemo(
-    () => (bank ? bank.quizQuestions.slice(0, totalQuestions) : []),
-    [bank, totalQuestions]
-  );
+  }, [addMistake, answers, finished, questions, unitSlug]);
   const score = questions.reduce(
     (sum, question, index) => sum + (answers[index] === question.answer ? 1 : 0),
     0
@@ -341,6 +345,7 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
         <CardContent>
           <Button
             onClick={() => {
+              recordedRef.current = false;
               setStarted(true);
               setFinished(false);
               setCurrentIndex(0);
