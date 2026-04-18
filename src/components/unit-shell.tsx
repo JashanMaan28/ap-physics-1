@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useCallback, useState, useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -84,14 +85,10 @@ function resolveInitialView(config: UnitConfig, initialView?: string) {
   return config.sections[0]?.items[0]?.id ?? "";
 }
 
-export function UnitShell({
-  config,
-  initialView,
-}: {
-  config: UnitConfig;
-  initialView?: string;
-}) {
-  const [activeView, setActiveView] = useState(() => resolveInitialView(config, initialView));
+export function UnitShell({ config }: { config: UnitConfig }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeView = resolveInitialView(config, searchParams.get("view") ?? undefined);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { getCompleted, toggleComplete, getProgress } = useProgress();
@@ -114,14 +111,14 @@ export function UnitShell({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => {
-    setActiveView(resolveInitialView(config, initialView));
-  }, [config, initialView]);
-
-  const navigate = (id: string) => {
-    setActiveView(id);
-    if (isMobile) setSidebarOpen(false);
-  };
+  const hrefFor = useCallback(
+    (id: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("view", id);
+      return `${pathname}?${params.toString()}`;
+    },
+    [pathname, searchParams],
+  );
 
   const currentItem = config.sections.flatMap((s) => s.items).find((i) => i.id === activeView);
   const currentSection = config.sections.find((s) => s.items.some((i) => i.id === activeView));
@@ -232,9 +229,15 @@ export function UnitShell({
                     const isActive = activeView === item.id;
                     const isCompleted = completedTopics.has(item.id);
                     return (
-                      <button
+                      <Link
                         key={item.id}
-                        onClick={() => navigate(item.id)}
+                        href={hrefFor(item.id)}
+                        scroll={false}
+                        replace
+                        prefetch={false}
+                        onClick={() => {
+                          if (isMobile) setSidebarOpen(false);
+                        }}
                         className={`group flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] transition-all ${
                           isActive
                             ? "bg-primary text-primary-foreground shadow-sm"
@@ -280,7 +283,7 @@ export function UnitShell({
                             {unitMistakes.length}
                           </Badge>
                         )}
-                      </button>
+                      </Link>
                     );
                   })}
                 </div>
