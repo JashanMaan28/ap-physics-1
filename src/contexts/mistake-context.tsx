@@ -1,17 +1,10 @@
 "use client";
 
-import { createContext, useContext, useCallback, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useCallback } from "react";
 import { useConvexAuth, useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { isGuestMode } from "@/lib/guest";
+import { useGuestMode, useGuestStorage } from "@/lib/synced-state";
 import type { MistakeEntry } from "@/types/unit";
-
-function subscribeGuest(cb: () => void) {
-  window.addEventListener("storage", cb);
-  return () => window.removeEventListener("storage", cb);
-}
-const getGuestSnapshot = () => isGuestMode();
-const getGuestServer = () => false;
 
 const GUEST_MISTAKES_KEY = "ap-physics-guest-mistakes";
 
@@ -31,27 +24,13 @@ const MistakeContext = createContext<MistakeContextType>({
 
 export const useMistakes = () => useContext(MistakeContext);
 
-function loadGuestMistakes(): MistakeEntry[] {
-  try {
-    const raw = localStorage.getItem(GUEST_MISTAKES_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveGuestMistakes(data: MistakeEntry[]) {
-  try {
-    localStorage.setItem(GUEST_MISTAKES_KEY, JSON.stringify(data));
-  } catch { /* storage full — silently ignore */ }
-}
-
 export function MistakeProvider({ children }: { children: React.ReactNode }) {
   const auth = useConvexAuth();
   const isAuthenticated = auth?.isAuthenticated ?? false;
-  const guest = useSyncExternalStore(subscribeGuest, getGuestSnapshot, getGuestServer);
-  const [guestMistakes, setGuestMistakes] = useState<MistakeEntry[]>(() =>
-    typeof window !== "undefined" && isGuestMode() ? loadGuestMistakes() : []
+  const guest = useGuestMode();
+  const [guestMistakes, setGuestMistakes] = useGuestStorage<MistakeEntry[]>(
+    GUEST_MISTAKES_KEY,
+    [],
   );
 
   const mistakesData = useQuery(api.mistakes.getAll, isAuthenticated ? {} : "skip");
@@ -72,11 +51,7 @@ export function MistakeProvider({ children }: { children: React.ReactNode }) {
   const addMistake = useCallback(
     (m: MistakeEntry) => {
       if (guest) {
-        setGuestMistakes((prev) => {
-          const next = [...prev, m];
-          saveGuestMistakes(next);
-          return next;
-        });
+        setGuestMistakes((prev) => [...prev, m]);
       } else {
         addMutation({
           unit: m.unit,
@@ -88,21 +63,20 @@ export function MistakeProvider({ children }: { children: React.ReactNode }) {
         });
       }
     },
-    [guest, addMutation]
+    [guest, setGuestMistakes, addMutation],
   );
 
   const clearMistakes = useCallback(() => {
     if (guest) {
       setGuestMistakes([]);
-      saveGuestMistakes([]);
     } else {
       clearMutation();
     }
-  }, [guest, clearMutation]);
+  }, [guest, setGuestMistakes, clearMutation]);
 
   const getMistakesForUnit = useCallback(
     (unit: string) => mistakes.filter((m) => m.unit === unit),
-    [mistakes]
+    [mistakes],
   );
 
   return (

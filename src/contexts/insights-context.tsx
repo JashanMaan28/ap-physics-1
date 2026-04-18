@@ -5,42 +5,15 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useState,
-  useSyncExternalStore,
 } from "react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
-import { isGuestMode } from "@/lib/guest";
+import { useGuestMode, useGuestStorage } from "@/lib/synced-state";
 import type { ExamRunRecord, PredictionRecord } from "@/types/insights";
 
 const GUEST_PREDICTIONS_KEY = "ap-physics-guest-predictions";
 const GUEST_EXAM_RUNS_KEY = "ap-physics-guest-exam-runs";
-
-function subscribeGuest(cb: () => void) {
-  window.addEventListener("storage", cb);
-  return () => window.removeEventListener("storage", cb);
-}
-
-const getGuestSnapshot = () => isGuestMode();
-const getGuestServerSnapshot = () => false;
-
-function loadGuestState<T>(key: string) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T[]) : [];
-  } catch {
-    return [] as T[];
-  }
-}
-
-function saveGuestState<T>(key: string, value: T[]) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // Ignore storage write failures for guest mode.
-  }
-}
 
 interface CreatePredictionInput {
   simId: string;
@@ -164,29 +137,23 @@ export function useInsights() {
 export function InsightsProvider({ children }: { children: React.ReactNode }) {
   const auth = useConvexAuth();
   const isAuthenticated = auth?.isAuthenticated ?? false;
-  const guest = useSyncExternalStore(
-    subscribeGuest,
-    getGuestSnapshot,
-    getGuestServerSnapshot
+  const guest = useGuestMode();
+  const [guestPredictions, setGuestPredictions] = useGuestStorage<PredictionRecord[]>(
+    GUEST_PREDICTIONS_KEY,
+    [],
   );
-  const [guestPredictions, setGuestPredictions] = useState<PredictionRecord[]>(() =>
-    typeof window !== "undefined" && isGuestMode()
-      ? loadGuestState<PredictionRecord>(GUEST_PREDICTIONS_KEY)
-      : []
-  );
-  const [guestExamRuns, setGuestExamRuns] = useState<ExamRunRecord[]>(() =>
-    typeof window !== "undefined" && isGuestMode()
-      ? loadGuestState<ExamRunRecord>(GUEST_EXAM_RUNS_KEY)
-      : []
+  const [guestExamRuns, setGuestExamRuns] = useGuestStorage<ExamRunRecord[]>(
+    GUEST_EXAM_RUNS_KEY,
+    [],
   );
 
   const predictionsData = useQuery(
     api.predictions.listRecent,
-    isAuthenticated ? { limit: 100 } : "skip"
+    isAuthenticated ? { limit: 100 } : "skip",
   );
   const examRunsData = useQuery(
     api.examRuns.listRecent,
-    isAuthenticated ? { limit: 30 } : "skip"
+    isAuthenticated ? { limit: 30 } : "skip",
   );
   const createPredictionMutation = useMutation(api.predictions.create);
   const resolvePredictionMutation = useMutation(api.predictions.resolve);
@@ -197,11 +164,11 @@ export function InsightsProvider({ children }: { children: React.ReactNode }) {
       guest
         ? guestPredictions
         : (predictionsData ?? []).map(normalizePredictionRecord),
-    [guest, guestPredictions, predictionsData]
+    [guest, guestPredictions, predictionsData],
   );
   const examRuns = useMemo(
     () => (guest ? guestExamRuns : (examRunsData ?? []).map(normalizeExamRun)),
-    [examRunsData, guest, guestExamRuns]
+    [examRunsData, guest, guestExamRuns],
   );
 
   const createPrediction = useCallback(
@@ -223,33 +190,23 @@ export function InsightsProvider({ children }: { children: React.ReactNode }) {
           createdAt: input.createdAt,
           resolvedAt: null,
         };
-
-        setGuestPredictions((prev) => {
-          const next = [nextRecord, ...prev].slice(0, 100);
-          saveGuestState(GUEST_PREDICTIONS_KEY, next);
-          return next;
-        });
-
+        setGuestPredictions((prev) => [nextRecord, ...prev].slice(0, 100));
         return nextRecord;
       }
 
       const created = await createPredictionMutation(input);
       return created ? normalizePredictionRecord(created) : null;
     },
-    [createPredictionMutation, guest]
+    [createPredictionMutation, guest, setGuestPredictions],
   );
 
   const resolvePrediction = useCallback(
     async (input: ResolvePredictionInput) => {
       if (guest) {
         let resolved: PredictionRecord | null = null;
-
-        setGuestPredictions((prev) => {
-          const next = prev.map((record) => {
-            if (record.id !== input.predictionId) {
-              return record;
-            }
-
+        setGuestPredictions((prev) =>
+          prev.map((record) => {
+            if (record.id !== input.predictionId) return record;
             resolved = {
               ...record,
               actualNumber: input.actualNumber,
@@ -258,14 +215,9 @@ export function InsightsProvider({ children }: { children: React.ReactNode }) {
               score: input.score,
               resolvedAt: input.resolvedAt,
             };
-
             return resolved;
-          });
-
-          saveGuestState(GUEST_PREDICTIONS_KEY, next);
-          return next;
-        });
-
+          }),
+        );
         return resolved;
       }
 
@@ -280,7 +232,7 @@ export function InsightsProvider({ children }: { children: React.ReactNode }) {
 
       return resolved ? normalizePredictionRecord(resolved) : null;
     },
-    [guest, resolvePredictionMutation]
+    [guest, resolvePredictionMutation, setGuestPredictions],
   );
 
   const recordExamRun = useCallback(
@@ -290,22 +242,18 @@ export function InsightsProvider({ children }: { children: React.ReactNode }) {
           id: createClientId("exam-run"),
           ...input,
         };
-
-        setGuestExamRuns((prev) => {
-          const next = [nextRecord, ...prev]
+        setGuestExamRuns((prev) =>
+          [nextRecord, ...prev]
             .sort((a, b) => b.completedAt - a.completedAt)
-            .slice(0, 30);
-          saveGuestState(GUEST_EXAM_RUNS_KEY, next);
-          return next;
-        });
-
+            .slice(0, 30),
+        );
         return nextRecord;
       }
 
       const created = await recordExamRunMutation(input);
       return created ? normalizeExamRun(created) : null;
     },
-    [guest, recordExamRunMutation]
+    [guest, recordExamRunMutation, setGuestExamRuns],
   );
 
   const value = useMemo(
@@ -316,7 +264,7 @@ export function InsightsProvider({ children }: { children: React.ReactNode }) {
       resolvePrediction,
       recordExamRun,
     }),
-    [createPrediction, examRuns, predictions, recordExamRun, resolvePrediction]
+    [createPrediction, examRuns, predictions, recordExamRun, resolvePrediction],
   );
 
   return (

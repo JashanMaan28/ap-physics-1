@@ -1,16 +1,9 @@
 "use client";
 
-import { createContext, useContext, useCallback, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useCallback } from "react";
 import { useConvexAuth, useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { isGuestMode } from "@/lib/guest";
-
-function subscribeGuest(cb: () => void) {
-  window.addEventListener("storage", cb);
-  return () => window.removeEventListener("storage", cb);
-}
-const getGuestSnapshot = () => isGuestMode();
-const getGuestServer = () => false;
+import { useGuestMode, useGuestStorage } from "@/lib/synced-state";
 
 const GUEST_PROGRESS_KEY = "ap-physics-guest-progress";
 
@@ -34,34 +27,18 @@ const ProgressContext = createContext<ProgressContextType>({
 
 export const useProgress = () => useContext(ProgressContext);
 
-function loadGuestProgress(): Record<string, string[]> {
-  try {
-    const raw = localStorage.getItem(GUEST_PROGRESS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveGuestProgress(data: Record<string, string[]>) {
-  try {
-    localStorage.setItem(GUEST_PROGRESS_KEY, JSON.stringify(data));
-  } catch { /* storage full — silently ignore */ }
-}
-
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const auth = useConvexAuth();
   const isAuthenticated = auth?.isAuthenticated ?? false;
-  const guest = useSyncExternalStore(subscribeGuest, getGuestSnapshot, getGuestServer);
-  const [guestData, setGuestData] = useState<Record<string, string[]>>(() =>
-    typeof window !== "undefined" && isGuestMode() ? loadGuestProgress() : {}
+  const guest = useGuestMode();
+  const [guestData, setGuestData] = useGuestStorage<Record<string, string[]>>(
+    GUEST_PROGRESS_KEY,
+    {},
   );
 
-  // Convex queries/mutations (skipped for guests)
   const progressData = useQuery(api.progress.getAll, isAuthenticated ? {} : "skip");
   const toggleMutation = useMutation(api.progress.toggleComplete);
 
-  // Build data map from either source
   const dataMap: Record<string, string[]> = {};
   if (guest) {
     Object.assign(dataMap, guestData);
@@ -74,7 +51,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const getCompleted = useCallback(
     (unitSlug: string) => new Set(dataMap[unitSlug] ?? []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [guest ? guestData : progressData]
+    [guest ? guestData : progressData],
   );
 
   const toggleComplete = useCallback(
@@ -85,15 +62,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
           const next = topics.includes(topicId)
             ? topics.filter((t) => t !== topicId)
             : [...topics, topicId];
-          const updated = { ...prev, [unitSlug]: next };
-          saveGuestProgress(updated);
-          return updated;
+          return { ...prev, [unitSlug]: next };
         });
       } else {
         toggleMutation({ unitSlug, topicId });
       }
     },
-    [guest, toggleMutation]
+    [guest, setGuestData, toggleMutation],
   );
 
   const getProgress = useCallback(
@@ -102,7 +77,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       return ((dataMap[unitSlug]?.length ?? 0) / totalTopics) * 100;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [guest ? guestData : progressData]
+    [guest ? guestData : progressData],
   );
 
   const getOverallProgress = useCallback(
@@ -116,7 +91,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       return total === 0 ? 0 : (completed / total) * 100;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [guest ? guestData : progressData]
+    [guest ? guestData : progressData],
   );
 
   return (
