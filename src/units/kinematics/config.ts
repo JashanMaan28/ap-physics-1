@@ -1,30 +1,32 @@
 import type { UnitConfig } from "@/types/unit";
 import { kinematicsMeta } from "@/units/meta";
-import { PositionVelocity } from "./topics/position-velocity";
-import { Acceleration } from "./topics/acceleration";
-import { KinematicEquations } from "./topics/kinematic-equations";
-import { ProjectileMotion } from "./topics/projectile-motion";
-import { MotionGraphs } from "./topics/motion-graphs";
-import { ProblemGenerator } from "./practice/problem-generator";
-import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import { lazyNamed } from "@/units/_lazy";
 import {
   createUnitFrqPractice,
   createUnitPracticeQuiz,
   createUnitTimedTest,
 } from "@/components/practice/unit-practice";
-import { Flashcards } from "./review/flashcards";
-import { WorkedExamples } from "./review/worked-examples";
-import { FormulaSheet } from "./review/formula-sheet";
-import { ConceptMap } from "./explore/concept-map";
-import { RealWorldExamples } from "./explore/real-world";
-import { WhatIfScenarios } from "./explore/what-if";
-import { EquationSolver } from "@/components/tools/equation-solver";
-import { UnitConverter } from "@/components/tools/unit-converter";
-import { FBDBuilder } from "@/components/tools/fbd-builder";
-import { MistakeTracker } from "@/components/review/mistake-tracker";
-import { ProjectileSim } from "./simulations/projectile-sim";
-import { MovingManSim } from "./simulations/moving-man-sim";
-import { ProjectileLauncher } from "./simulations/projectile-launcher";
+
+const PositionVelocity = lazyNamed(() => import("./topics/position-velocity"), "PositionVelocity");
+const Acceleration = lazyNamed(() => import("./topics/acceleration"), "Acceleration");
+const KinematicEquations = lazyNamed(() => import("./topics/kinematic-equations"), "KinematicEquations");
+const ProjectileMotion = lazyNamed(() => import("./topics/projectile-motion"), "ProjectileMotion");
+const MotionGraphs = lazyNamed(() => import("./topics/motion-graphs"), "MotionGraphs");
+const ConceptMap = lazyNamed(() => import("./explore/concept-map"), "ConceptMap");
+const RealWorldExamples = lazyNamed(() => import("./explore/real-world"), "RealWorldExamples");
+const WhatIfScenarios = lazyNamed(() => import("./explore/what-if"), "WhatIfScenarios");
+const ProblemGenerator = lazyNamed(() => import("./practice/problem-generator"), "ProblemGenerator");
+const FormulaSpeedRound = lazyNamed(() => import("@/components/practice/formula-speed-round"), "FormulaSpeedRound");
+const Flashcards = lazyNamed(() => import("./review/flashcards"), "Flashcards");
+const WorkedExamples = lazyNamed(() => import("./review/worked-examples"), "WorkedExamples");
+const FormulaSheet = lazyNamed(() => import("./review/formula-sheet"), "FormulaSheet");
+const EquationSolver = lazyNamed(() => import("@/components/tools/equation-solver"), "EquationSolver");
+const UnitConverter = lazyNamed(() => import("@/components/tools/unit-converter"), "UnitConverter");
+const FBDBuilder = lazyNamed(() => import("@/components/tools/fbd-builder"), "FBDBuilder");
+const MistakeTracker = lazyNamed(() => import("@/components/review/mistake-tracker"), "MistakeTracker");
+const ProjectileSim = lazyNamed(() => import("./simulations/projectile-sim"), "ProjectileSim");
+const MovingManSim = lazyNamed(() => import("./simulations/moving-man-sim"), "MovingManSim");
+const ProjectileLauncher = lazyNamed(() => import("./simulations/projectile-launcher"), "ProjectileLauncher");
 
 const PracticeQuiz = createUnitPracticeQuiz("kinematics");
 const FRQPractice = createUnitFrqPractice("kinematics");

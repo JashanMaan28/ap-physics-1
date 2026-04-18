@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -13,6 +13,16 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ProfileMenu } from "@/components/profile-menu";
 import { ErrorBoundary } from "@/components/error-boundary";
+
+function TopicSkeleton() {
+  return (
+    <div className="animate-pulse space-y-4">
+      <div className="h-8 w-1/3 rounded bg-muted/60" />
+      <div className="h-4 w-2/3 rounded bg-muted/40" />
+      <div className="h-64 w-full rounded-lg bg-muted/30" />
+    </div>
+  );
+}
 
 function SectionIcon({ type, size = 16 }: { type: string; size?: number }) {
   const props = {
@@ -388,7 +398,7 @@ export function UnitShell({
         <main className="flex-1 overflow-y-auto scroll-smooth">
           <div className="px-4 py-5 sm:px-6 sm:py-8 lg:px-10">
             <ErrorBoundary fallbackLabel="This section failed to load">
-              {renderContent()}
+              <Suspense fallback={<TopicSkeleton />}>{renderContent()}</Suspense>
             </ErrorBoundary>
           </div>
         </main>

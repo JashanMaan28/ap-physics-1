@@ -1,29 +1,31 @@
 import type { UnitConfig } from "@/types/unit";
 import { momentumMeta } from "@/units/meta";
-import { MomentumImpulse } from "./topics/momentum-impulse";
-import { ImpulseForce } from "./topics/impulse-force";
-import { ConservationMomentum } from "./topics/conservation-momentum";
-import { ElasticCollisions } from "./topics/elastic-collisions";
-import { InelasticCollisions } from "./topics/inelastic-collisions";
-import { ProblemGenerator } from "./practice/problem-generator";
-import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import { lazyNamed } from "@/units/_lazy";
 import {
   createUnitFrqPractice,
   createUnitPracticeQuiz,
   createUnitTimedTest,
 } from "@/components/practice/unit-practice";
-import { Flashcards } from "./review/flashcards";
-import { WorkedExamples } from "./review/worked-examples";
-import { FormulaSheet } from "./review/formula-sheet";
-import { ConceptMap } from "./explore/concept-map";
-import { RealWorld } from "./explore/real-world";
-import { WhatIf } from "./explore/what-if";
-import { EquationSolver } from "@/components/tools/equation-solver";
-import { UnitConverter } from "@/components/tools/unit-converter";
-import { FBDBuilder } from "@/components/tools/fbd-builder";
-import { MistakeTracker } from "@/components/review/mistake-tracker";
-import { CollisionLabSim } from "./simulations/collision-lab-sim";
-import { CollisionSim } from "./simulations/collision-sim";
+
+const MomentumImpulse = lazyNamed(() => import("./topics/momentum-impulse"), "MomentumImpulse");
+const ImpulseForce = lazyNamed(() => import("./topics/impulse-force"), "ImpulseForce");
+const ConservationMomentum = lazyNamed(() => import("./topics/conservation-momentum"), "ConservationMomentum");
+const ElasticCollisions = lazyNamed(() => import("./topics/elastic-collisions"), "ElasticCollisions");
+const InelasticCollisions = lazyNamed(() => import("./topics/inelastic-collisions"), "InelasticCollisions");
+const ConceptMap = lazyNamed(() => import("./explore/concept-map"), "ConceptMap");
+const RealWorld = lazyNamed(() => import("./explore/real-world"), "RealWorld");
+const WhatIf = lazyNamed(() => import("./explore/what-if"), "WhatIf");
+const ProblemGenerator = lazyNamed(() => import("./practice/problem-generator"), "ProblemGenerator");
+const FormulaSpeedRound = lazyNamed(() => import("@/components/practice/formula-speed-round"), "FormulaSpeedRound");
+const Flashcards = lazyNamed(() => import("./review/flashcards"), "Flashcards");
+const WorkedExamples = lazyNamed(() => import("./review/worked-examples"), "WorkedExamples");
+const FormulaSheet = lazyNamed(() => import("./review/formula-sheet"), "FormulaSheet");
+const EquationSolver = lazyNamed(() => import("@/components/tools/equation-solver"), "EquationSolver");
+const UnitConverter = lazyNamed(() => import("@/components/tools/unit-converter"), "UnitConverter");
+const FBDBuilder = lazyNamed(() => import("@/components/tools/fbd-builder"), "FBDBuilder");
+const MistakeTracker = lazyNamed(() => import("@/components/review/mistake-tracker"), "MistakeTracker");
+const CollisionLabSim = lazyNamed(() => import("./simulations/collision-lab-sim"), "CollisionLabSim");
+const CollisionSim = lazyNamed(() => import("./simulations/collision-sim"), "CollisionSim");
 
 const PracticeQuiz = createUnitPracticeQuiz("momentum");
 const FRQPractice = createUnitFrqPractice("momentum");

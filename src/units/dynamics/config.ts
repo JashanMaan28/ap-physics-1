@@ -1,29 +1,31 @@
 import type { UnitConfig } from "@/types/unit";
 import { dynamicsMeta } from "@/units/meta";
-import { NewtonsLaws } from "./topics/newtons-laws";
-import { Friction } from "./topics/friction";
-import { TensionNormal } from "./topics/tension-normal";
-import { InclinedPlanes } from "./topics/inclined-planes";
-import { AtwoodMachines } from "./topics/atwood-machines";
-import { ProblemGenerator } from "./practice/problem-generator";
-import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import { lazyNamed } from "@/units/_lazy";
 import {
   createUnitFrqPractice,
   createUnitPracticeQuiz,
   createUnitTimedTest,
 } from "@/components/practice/unit-practice";
-import { Flashcards } from "./review/flashcards";
-import { WorkedExamples } from "./review/worked-examples";
-import { FormulaSheet } from "./review/formula-sheet";
-import { ConceptMap } from "./explore/concept-map";
-import { RealWorldExamples } from "./explore/real-world";
-import { WhatIfScenarios } from "./explore/what-if";
-import { EquationSolver } from "@/components/tools/equation-solver";
-import { UnitConverter } from "@/components/tools/unit-converter";
-import { FBDBuilder } from "@/components/tools/fbd-builder";
-import { MistakeTracker } from "@/components/review/mistake-tracker";
-import { ForcesSim } from "./simulations/forces-sim";
-import { FrictionSim } from "./simulations/friction-sim";
+
+const NewtonsLaws = lazyNamed(() => import("./topics/newtons-laws"), "NewtonsLaws");
+const Friction = lazyNamed(() => import("./topics/friction"), "Friction");
+const TensionNormal = lazyNamed(() => import("./topics/tension-normal"), "TensionNormal");
+const InclinedPlanes = lazyNamed(() => import("./topics/inclined-planes"), "InclinedPlanes");
+const AtwoodMachines = lazyNamed(() => import("./topics/atwood-machines"), "AtwoodMachines");
+const ConceptMap = lazyNamed(() => import("./explore/concept-map"), "ConceptMap");
+const RealWorldExamples = lazyNamed(() => import("./explore/real-world"), "RealWorldExamples");
+const WhatIfScenarios = lazyNamed(() => import("./explore/what-if"), "WhatIfScenarios");
+const ProblemGenerator = lazyNamed(() => import("./practice/problem-generator"), "ProblemGenerator");
+const FormulaSpeedRound = lazyNamed(() => import("@/components/practice/formula-speed-round"), "FormulaSpeedRound");
+const Flashcards = lazyNamed(() => import("./review/flashcards"), "Flashcards");
+const WorkedExamples = lazyNamed(() => import("./review/worked-examples"), "WorkedExamples");
+const FormulaSheet = lazyNamed(() => import("./review/formula-sheet"), "FormulaSheet");
+const EquationSolver = lazyNamed(() => import("@/components/tools/equation-solver"), "EquationSolver");
+const UnitConverter = lazyNamed(() => import("@/components/tools/unit-converter"), "UnitConverter");
+const FBDBuilder = lazyNamed(() => import("@/components/tools/fbd-builder"), "FBDBuilder");
+const MistakeTracker = lazyNamed(() => import("@/components/review/mistake-tracker"), "MistakeTracker");
+const ForcesSim = lazyNamed(() => import("./simulations/forces-sim"), "ForcesSim");
+const FrictionSim = lazyNamed(() => import("./simulations/friction-sim"), "FrictionSim");
 
 const PracticeQuiz = createUnitPracticeQuiz("dynamics");
 const FRQPractice = createUnitFrqPractice("dynamics");

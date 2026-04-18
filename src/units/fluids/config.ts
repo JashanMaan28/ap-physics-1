@@ -1,30 +1,31 @@
 import type { UnitConfig } from "@/types/unit";
 import { fluidsMeta } from "@/units/meta";
-
-import { PressureDepth } from "@/components/topics/pressure-depth";
-import { PascalsLaw } from "@/components/topics/pascals-law";
-import { Buoyancy } from "@/components/topics/buoyancy";
-import { ContinuityEquation } from "@/components/topics/continuity";
-import { BernoullisEquation } from "@/components/topics/bernoullis";
-import { EquationSolver } from "@/components/tools/equation-solver";
-import { UnitConverter } from "@/components/tools/unit-converter";
-import { FBDBuilder } from "@/components/tools/fbd-builder";
-import { Flashcards } from "@/components/review/flashcards";
-import { WorkedExamples } from "@/components/review/worked-examples";
-import { FormulaSheet } from "@/components/review/formula-sheet";
-import { MistakeTracker } from "@/components/review/mistake-tracker";
-import { UnderPressureSim } from "./simulations/under-pressure-sim";
-import { FluidFlowSim } from "./simulations/fluid-flow-sim";
-import { ProblemGenerator } from "@/components/practice/problem-generator";
-import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
-import { ConceptMap } from "@/components/explore/concept-map";
-import { RealWorldExamples } from "@/components/explore/real-world";
-import { WhatIfScenarios } from "@/components/explore/what-if";
+import { lazyNamed } from "@/units/_lazy";
 import {
   createUnitFrqPractice,
   createUnitPracticeQuiz,
   createUnitTimedTest,
 } from "@/components/practice/unit-practice";
+
+const PressureDepth = lazyNamed(() => import("@/components/topics/pressure-depth"), "PressureDepth");
+const PascalsLaw = lazyNamed(() => import("@/components/topics/pascals-law"), "PascalsLaw");
+const Buoyancy = lazyNamed(() => import("@/components/topics/buoyancy"), "Buoyancy");
+const ContinuityEquation = lazyNamed(() => import("@/components/topics/continuity"), "ContinuityEquation");
+const BernoullisEquation = lazyNamed(() => import("@/components/topics/bernoullis"), "BernoullisEquation");
+const ConceptMap = lazyNamed(() => import("@/components/explore/concept-map"), "ConceptMap");
+const RealWorldExamples = lazyNamed(() => import("@/components/explore/real-world"), "RealWorldExamples");
+const WhatIfScenarios = lazyNamed(() => import("@/components/explore/what-if"), "WhatIfScenarios");
+const ProblemGenerator = lazyNamed(() => import("@/components/practice/problem-generator"), "ProblemGenerator");
+const FormulaSpeedRound = lazyNamed(() => import("@/components/practice/formula-speed-round"), "FormulaSpeedRound");
+const Flashcards = lazyNamed(() => import("@/components/review/flashcards"), "Flashcards");
+const WorkedExamples = lazyNamed(() => import("@/components/review/worked-examples"), "WorkedExamples");
+const FormulaSheet = lazyNamed(() => import("@/components/review/formula-sheet"), "FormulaSheet");
+const MistakeTracker = lazyNamed(() => import("@/components/review/mistake-tracker"), "MistakeTracker");
+const EquationSolver = lazyNamed(() => import("@/components/tools/equation-solver"), "EquationSolver");
+const UnitConverter = lazyNamed(() => import("@/components/tools/unit-converter"), "UnitConverter");
+const FBDBuilder = lazyNamed(() => import("@/components/tools/fbd-builder"), "FBDBuilder");
+const UnderPressureSim = lazyNamed(() => import("./simulations/under-pressure-sim"), "UnderPressureSim");
+const FluidFlowSim = lazyNamed(() => import("./simulations/fluid-flow-sim"), "FluidFlowSim");
 
 const PracticeQuiz = createUnitPracticeQuiz("fluids");
 const FRQPractice = createUnitFrqPractice("fluids");

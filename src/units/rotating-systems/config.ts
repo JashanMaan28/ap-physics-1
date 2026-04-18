@@ -1,28 +1,30 @@
 import type { UnitConfig } from "@/types/unit";
 import { rotatingSystemsMeta } from "@/units/meta";
-import { RotationalKE } from "./topics/rotational-ke";
-import { AngularMomentum } from "./topics/angular-momentum";
-import { ConservationAngular } from "./topics/conservation-angular";
-import { RollingMotion } from "./topics/rolling-motion";
-import { CombinedRotation } from "./topics/combined-rotation";
-import { ProblemGenerator } from "./practice/problem-generator";
-import { FormulaSpeedRound } from "@/components/practice/formula-speed-round";
+import { lazyNamed } from "@/units/_lazy";
 import {
   createUnitFrqPractice,
   createUnitPracticeQuiz,
   createUnitTimedTest,
 } from "@/components/practice/unit-practice";
-import { Flashcards } from "./review/flashcards";
-import { WorkedExamples } from "./review/worked-examples";
-import { FormulaSheet } from "./review/formula-sheet";
-import { ConceptMap } from "./explore/concept-map";
-import { RealWorld } from "./explore/real-world";
-import { WhatIf } from "./explore/what-if";
-import { EquationSolver } from "@/components/tools/equation-solver";
-import { UnitConverter } from "@/components/tools/unit-converter";
-import { FBDBuilder } from "@/components/tools/fbd-builder";
-import { MistakeTracker } from "@/components/review/mistake-tracker";
-import { TorquePhETSim } from "./simulations/torque-sim";
+
+const RotationalKE = lazyNamed(() => import("./topics/rotational-ke"), "RotationalKE");
+const AngularMomentum = lazyNamed(() => import("./topics/angular-momentum"), "AngularMomentum");
+const ConservationAngular = lazyNamed(() => import("./topics/conservation-angular"), "ConservationAngular");
+const RollingMotion = lazyNamed(() => import("./topics/rolling-motion"), "RollingMotion");
+const CombinedRotation = lazyNamed(() => import("./topics/combined-rotation"), "CombinedRotation");
+const ConceptMap = lazyNamed(() => import("./explore/concept-map"), "ConceptMap");
+const RealWorld = lazyNamed(() => import("./explore/real-world"), "RealWorld");
+const WhatIf = lazyNamed(() => import("./explore/what-if"), "WhatIf");
+const ProblemGenerator = lazyNamed(() => import("./practice/problem-generator"), "ProblemGenerator");
+const FormulaSpeedRound = lazyNamed(() => import("@/components/practice/formula-speed-round"), "FormulaSpeedRound");
+const Flashcards = lazyNamed(() => import("./review/flashcards"), "Flashcards");
+const WorkedExamples = lazyNamed(() => import("./review/worked-examples"), "WorkedExamples");
+const FormulaSheet = lazyNamed(() => import("./review/formula-sheet"), "FormulaSheet");
+const EquationSolver = lazyNamed(() => import("@/components/tools/equation-solver"), "EquationSolver");
+const UnitConverter = lazyNamed(() => import("@/components/tools/unit-converter"), "UnitConverter");
+const FBDBuilder = lazyNamed(() => import("@/components/tools/fbd-builder"), "FBDBuilder");
+const MistakeTracker = lazyNamed(() => import("@/components/review/mistake-tracker"), "MistakeTracker");
+const TorquePhETSim = lazyNamed(() => import("./simulations/torque-sim"), "TorquePhETSim");
 
 const PracticeQuiz = createUnitPracticeQuiz("rotating-systems");
 const FRQPractice = createUnitFrqPractice("rotating-systems");
