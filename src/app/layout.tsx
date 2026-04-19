@@ -10,6 +10,7 @@ import { ArcadeProvider } from "@/contexts/arcade-context";
 import { InsightsProvider } from "@/contexts/insights-context";
 import { ToastProvider } from "@/components/effects/toast";
 import { EasterEggProvider } from "@/components/effects/easter-egg-provider";
+import { ShortcutsHelp } from "@/components/shortcuts-help";
 import "./globals.css";
 
 const lexend = Lexend({
@@ -48,7 +49,10 @@ export default function RootLayout({
                   <ProgressProvider>
                     <MistakeProvider>
                       <InsightsProvider>
-                        <ArcadeProvider>{children}</ArcadeProvider>
+                        <ArcadeProvider>
+                          {children}
+                          <ShortcutsHelp />
+                        </ArcadeProvider>
                       </InsightsProvider>
                     </MistakeProvider>
                   </ProgressProvider>

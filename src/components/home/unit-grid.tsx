@@ -171,12 +171,18 @@ export function UnitGrid({ mounted, enterDone, overall }: { mounted: boolean; en
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-[10px] text-foreground/20">
+                    <div
+                      className="flex items-center gap-1.5 text-[10px] text-foreground/30"
+                      title="This unit is still being built. Check back — more units land regularly."
+                    >
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                         <path d="M7 11V7a5 5 0 0110 0v4" />
                       </svg>
-                      Coming soon
+                      <span>Coming soon</span>
+                      <span className="ml-auto font-mono text-[9px] uppercase tracking-widest text-foreground/25">
+                        In progress
+                      </span>
                     </div>
                   )}
                 </div>

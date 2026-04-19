@@ -375,6 +375,45 @@ export function autoWrapMath(line: string): string {
   return pieces.join("");
 }
 
+// Short tokens commonly written in physics prose that should NOT count as
+// "prose words" when deciding whether a short string is mostly math
+// ("kg", "rad", "deg", function names, etc.).
+const MATH_FRIENDLY_WORDS = new Set([
+  "kg", "mol", "rad", "deg", "rev", "rpm", "hz", "pa", "bar", "atm",
+  "min", "sec", "hour", "hr", "day", "cm", "mm", "km", "nm",
+  "sin", "cos", "tan", "sec", "csc", "cot", "log", "ln", "exp", "sqrt",
+]);
+
+const INLINE_MATH_CHAR_RE =
+  /[\^_·×÷≈≠≤≥±∓∞∝√°½⅓⅔¼¾⅕⅛αβγδεζηθικλμνξπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΠΡΣΤΥΦΧΨΩ₀₁₂₃₄₅₆₇₈₉⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]/;
+
+const INLINE_MATH_FUNC_RE =
+  /\b(?:sin|cos|tan|sec|csc|cot|log|ln|exp|sqrt)\s*\(/i;
+
+const INLINE_MATH_ASCII_RE = /\b[A-Za-z]\s*=\s*-?\d|\\[A-Za-z]+/;
+
+/**
+ * Heuristic for short strings (e.g. MC answer choices, FRQ givens): does
+ * this look like inline math that would benefit from KaTeX rendering?
+ *
+ * Conservative: if there are 2+ real prose words, we say no — leave it as
+ * plain text. If there's at least one math marker (superscript, underscore,
+ * Greek letter, symbol, function call, or a simple `x = value` form), we
+ * say yes.
+ */
+export function looksLikeInlineMath(text: string): boolean {
+  const trimmed = text.trim();
+  if (!trimmed) return false;
+  const hasMarker =
+    INLINE_MATH_CHAR_RE.test(trimmed) ||
+    INLINE_MATH_FUNC_RE.test(trimmed) ||
+    INLINE_MATH_ASCII_RE.test(trimmed);
+  if (!hasMarker) return false;
+  const words = trimmed.match(/\b[A-Za-z]{3,}\b/g) ?? [];
+  const proseWords = words.filter((w) => !MATH_FRIENDLY_WORDS.has(w.toLowerCase()));
+  return proseWords.length <= 1;
+}
+
 /**
  * Quick heuristic: does a line look like a physics equation?
  * Used by PhysicsText to decide whether to render a given line via KaTeX.

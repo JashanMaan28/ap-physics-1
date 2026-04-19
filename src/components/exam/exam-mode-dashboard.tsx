@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RadarPreviewCard } from "@/components/insights/radar-preview-card";
 import { WeakSpotRadar } from "@/components/insights/weak-spot-radar";
 import { useInsightsView } from "@/components/insights/use-insights-view";
@@ -13,11 +14,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ExamRunner } from "@/components/exam/exam-runner";
 import type { ExamModeKind } from "@/types/insights";
 
+const EXAM_MODE_KINDS: readonly ExamModeKind[] = [
+  "mixed-mc-sprint",
+  "weak-unit-focus",
+  "frq-focus-block",
+];
+
+function parseMode(value: string | null): ExamModeKind | null {
+  if (!value) return null;
+  return (EXAM_MODE_KINDS as readonly string[]).includes(value) ? (value as ExamModeKind) : null;
+}
+
 export function ExamModeDashboard() {
   const homeIconRef = useRef<HomeIconHandle>(null);
   const { readiness, examRuns } = useInsightsView();
-  const [activeMode, setActiveMode] = useState<ExamModeKind | null>(null);
   const recommendation = recommendNextExamBlock(readiness);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeMode = parseMode(searchParams.get("mode"));
+
+  const setActiveMode = useCallback(
+    (mode: ExamModeKind | null) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (mode) {
+        params.set("mode", mode);
+      } else {
+        params.delete("mode");
+      }
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
   if (activeMode) {
     return (

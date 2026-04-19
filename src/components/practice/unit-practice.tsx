@@ -4,6 +4,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +25,7 @@ import type {
   PracticeFrqProblem,
 } from "@/content/practice/types";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { Tex } from "@/components/ui/math";
+import { MathText, Tex } from "@/components/ui/math";
 import { toLatex } from "@/lib/latex";
 import { PhysicsText } from "@/components/ui/physics-text";
 
@@ -39,9 +48,11 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(0);
+  const [endedEarly, setEndedEarly] = useState(false);
+  const [confirmEndOpen, setConfirmEndOpen] = useState(false);
 
   const question = bank?.quizQuestions[currentIndex];
-  const done = !!bank && answered >= bank.quizQuestions.length;
+  const done = (!!bank && answered >= bank.quizQuestions.length) || endedEarly;
 
   useEffect(() => {
     if (!bank || done || !question) return;
@@ -93,16 +104,23 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
   }
 
   if (done) {
-    const percent = Math.round((score / bank.quizQuestions.length) * 100);
+    const denominator = endedEarly ? Math.max(answered, 1) : bank.quizQuestions.length;
+    const percent = Math.round((score / denominator) * 100);
     return (
       <Card className="mx-auto max-w-3xl">
         <CardHeader className="text-center">
-          <CardTitle>{unit?.shortName} Quiz Complete</CardTitle>
-          <CardDescription>Shared practice bank</CardDescription>
+          <CardTitle>
+            {unit?.shortName} Quiz {endedEarly ? "Ended Early" : "Complete"}
+          </CardTitle>
+          <CardDescription>
+            {endedEarly
+              ? `You answered ${answered} of ${bank.quizQuestions.length} questions.`
+              : "Shared practice bank"}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-center">
           <p className="text-4xl font-bold font-mono">
-            {score}/{bank.quizQuestions.length}
+            {score}/{denominator}
           </p>
           <Progress value={percent} className="mx-auto h-3 max-w-sm" />
           <Button
@@ -112,6 +130,7 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
               setShowAnswer(false);
               setScore(0);
               setAnswered(0);
+              setEndedEarly(false);
             }}
           >
             Retry Quiz
@@ -122,15 +141,26 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
   }
 
   return (
+    <>
     <Card className="mx-auto max-w-3xl">
       <CardHeader>
         <div className="flex items-center justify-between gap-3">
           <CardTitle>
             Question {currentIndex + 1} of {bank.quizQuestions.length}
           </CardTitle>
-          <Badge variant="secondary" className="font-mono">
-            {score}/{answered}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="font-mono">
+              {score}/{answered}
+            </Badge>
+            <Button
+              size="xs"
+              variant="ghost"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={() => setConfirmEndOpen(true)}
+            >
+              End quiz
+            </Button>
+          </div>
         </div>
         <Progress
           value={(currentIndex / bank.quizQuestions.length) * 100}
@@ -139,7 +169,9 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <Badge variant="outline">{question.topicKey}</Badge>
-        <p className="text-sm md:text-base font-medium">{question.prompt}</p>
+        <p className="text-sm md:text-base font-medium leading-snug">
+          <MathText>{question.prompt}</MathText>
+        </p>
         <p className="text-[11px] text-muted-foreground">
           Tip: 1-{question.choices.length} to select · Enter to advance
         </p>
@@ -182,34 +214,89 @@ function PracticeQuizView({ unitSlug }: { unitSlug: string }) {
                 className={`rounded-xl border px-4 py-3 text-left text-sm transition ${className}`}
               >
                 <span className="mr-2 font-mono text-xs text-muted-foreground">{choiceIndex + 1}.</span>
-                {choice}
+                <MathText>{choice}</MathText>
               </button>
             );
           })}
         </div>
         {showAnswer && (
-          <div className="rounded-xl border bg-muted/40 p-4 text-sm text-muted-foreground">
+          <PhysicsText
+            display={false}
+            className="rounded-xl border bg-muted/40 p-4 text-sm text-muted-foreground"
+          >
             {question.explanation}
-          </div>
+          </PhysicsText>
         )}
         {showAnswer && (
-          <Button
-            onClick={() => {
-              if (currentIndex === bank.quizQuestions.length - 1) {
-                setAnswered(bank.quizQuestions.length);
-                return;
-              }
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              autoFocus
+              onClick={() => {
+                if (currentIndex === bank.quizQuestions.length - 1) {
+                  setAnswered(bank.quizQuestions.length);
+                  return;
+                }
 
-              setCurrentIndex((value) => value + 1);
-              setSelected(null);
-              setShowAnswer(false);
-            }}
-          >
-            {currentIndex === bank.quizQuestions.length - 1 ? "See Results" : "Next Question"}
-          </Button>
+                setCurrentIndex((value) => value + 1);
+                setSelected(null);
+                setShowAnswer(false);
+              }}
+              className="animate-pulse-subtle shadow-md shadow-primary/25 transition-shadow"
+            >
+              {currentIndex === bank.quizQuestions.length - 1 ? "See Results" : "Next Question"}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-1"
+                aria-hidden
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Button>
+            <span className="text-[11px] text-muted-foreground">
+              Press <kbd className="rounded border bg-muted px-1 font-mono text-[10px]">Enter</kbd>
+            </span>
+          </div>
         )}
       </CardContent>
     </Card>
+    <Dialog open={confirmEndOpen} onOpenChange={setConfirmEndOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>End quiz early?</DialogTitle>
+          <DialogDescription>
+            You&apos;ve answered {answered} of {bank.quizQuestions.length}. Your current score will be
+            saved and any unanswered questions will be skipped.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose
+            render={
+              <Button variant="outline" size="sm">
+                Keep going
+              </Button>
+            }
+          />
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => {
+              setConfirmEndOpen(false);
+              setEndedEarly(true);
+            }}
+          >
+            End quiz
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
 
@@ -228,6 +315,7 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Array<number | null>>([]);
   const [timeLeft, setTimeLeft] = useState(12 * 60);
+  const [confirmEndOpen, setConfirmEndOpen] = useState(false);
   // Guard so the mistake-recording effect fires exactly once per test
   // submission, not on every subsequent `answers`/`addMistake` identity
   // change or on React strict-mode double-invocation.
@@ -396,9 +484,19 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
         <span className="text-xs text-muted-foreground">
           Question {currentIndex + 1} of {questions.length}
         </span>
-        <Badge variant="outline" className={`font-mono text-sm ${timerClass}`}>
-          {formatTimer(timeLeft)}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Button
+            size="xs"
+            variant="ghost"
+            className="text-muted-foreground hover:text-destructive"
+            onClick={() => setConfirmEndOpen(true)}
+          >
+            End test
+          </Button>
+          <Badge variant="outline" className={`font-mono text-sm ${timerClass}`}>
+            {formatTimer(timeLeft)}
+          </Badge>
+        </div>
       </div>
       <Card>
         <CardHeader>
@@ -406,7 +504,9 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
         </CardHeader>
         <CardContent className="space-y-4">
           <Badge variant="outline">{current.topicKey}</Badge>
-          <p className="text-sm md:text-base font-medium">{current.prompt}</p>
+          <p className="text-sm md:text-base font-medium leading-snug">
+            <MathText>{current.prompt}</MathText>
+          </p>
           <p className="text-[11px] text-muted-foreground">
             Tip: 1-{current.choices.length} to select · ← → to navigate · Enter to advance
           </p>
@@ -427,7 +527,7 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
                 }`}
               >
                 <span className="mr-2 font-mono text-xs text-muted-foreground">{choiceIndex + 1}.</span>
-                {choice}
+                <MathText>{choice}</MathText>
               </button>
             ))}
           </div>
@@ -445,6 +545,36 @@ function TimedTestView({ unitSlug }: { unitSlug: string }) {
           </div>
         </CardContent>
       </Card>
+      <Dialog open={confirmEndOpen} onOpenChange={setConfirmEndOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>End test early?</DialogTitle>
+            <DialogDescription>
+              The timer will stop and you&apos;ll see your score now. Unanswered questions count as
+              missed.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose
+              render={
+                <Button variant="outline" size="sm">
+                  Keep going
+                </Button>
+              }
+            />
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                setConfirmEndOpen(false);
+                setFinished(true);
+              }}
+            >
+              End test
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -594,7 +724,7 @@ function FrqPartBlock({
               }
             }}
             placeholder="Write your answer here. Show your work and reasoning. Ctrl/Cmd+Enter to submit."
-            className="min-h-28 w-full resize-y rounded-lg border bg-background px-3 py-2 text-sm leading-relaxed outline-none ring-ring/50 transition focus-visible:ring-3"
+            className="min-h-28 max-h-[60vh] w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-relaxed outline-none ring-ring/50 transition focus-visible:ring-3 sm:max-h-none sm:resize-y sm:overflow-auto"
           />
           <div className="flex flex-wrap items-center gap-2">
             <Button size="sm" onClick={handleSubmit} disabled={!draft.trim()}>

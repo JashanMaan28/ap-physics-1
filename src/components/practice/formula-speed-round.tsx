@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Tex } from "@/components/ui/math";
+import { MathText, Tex } from "@/components/ui/math";
 import { toLatex } from "@/lib/latex";
 
 const ROUND_DURATION = 45;
@@ -201,10 +201,13 @@ export function FormulaSpeedRound() {
           <Card key={question.id} className="border-white/[0.08] bg-white/[0.03]">
             <CardContent className="space-y-4 p-4">
               <div>
-                <p className="text-sm font-semibold">
-                  {index + 1}. {question.prompt}
+                <p className="text-sm font-semibold leading-snug">
+                  <span className="mr-1 font-mono text-muted-foreground">{index + 1}.</span>
+                  <MathText>{question.prompt}</MathText>
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">Hint: {question.hint}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Hint: <MathText>{question.hint}</MathText>
+                </p>
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
                 {question.choices.map((choice, choiceIndex) => {

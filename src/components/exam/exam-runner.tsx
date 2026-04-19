@@ -10,8 +10,11 @@ import type { ExamModeKind } from "@/types/insights";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { MathText, Tex } from "@/components/ui/math";
+import { PhysicsText } from "@/components/ui/physics-text";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { toLatex } from "@/lib/latex";
 
 const DURATION_BY_MODE: Record<ExamModeKind, number> = {
   "mixed-mc-sprint": 12 * 60,
@@ -182,18 +185,21 @@ export function ExamRunner({
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">{block.frq.scenario}</p>
+            <PhysicsText display={false} className="text-sm text-muted-foreground">
+              {block.frq.scenario}
+            </PhysicsText>
             <div className="flex flex-wrap gap-2">
               {block.frq.given.map((item) => (
                 <Badge key={item} variant="outline" className="font-mono text-[10px]">
-                  {item}
+                  <Tex>{toLatex(item)}</Tex>
                 </Badge>
               ))}
             </div>
             {block.frq.parts.map((part) => (
               <div key={part.label} className="space-y-2 rounded-2xl border border-border bg-background/40 p-4">
                 <p className="text-sm font-medium">
-                  ({part.label}) {part.question}
+                  <span className="mr-1 font-mono text-muted-foreground">({part.label})</span>
+                  <MathText>{part.question}</MathText>
                 </p>
                 <textarea
                   className="min-h-24 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
@@ -205,14 +211,21 @@ export function ExamRunner({
                       Rubric
                     </p>
                     {part.rubric.map((item) => (
-                      <p key={item} className="text-muted-foreground">
+                      <PhysicsText
+                        key={item}
+                        display={false}
+                        className="text-muted-foreground"
+                      >
                         {item}
-                      </p>
+                      </PhysicsText>
                     ))}
                     <Separator className="my-3" />
-                    <p className="whitespace-pre-line text-muted-foreground">
+                    <PhysicsText
+                      display={false}
+                      className="whitespace-pre-line text-muted-foreground"
+                    >
                       {part.sampleResponse}
-                    </p>
+                    </PhysicsText>
                   </div>
                 )}
               </div>
@@ -256,34 +269,193 @@ export function ExamRunner({
   }
 
   if (finished) {
+    const total = block.questions.length;
     const score = block.questions.reduce(
       (sum, question) => sum + (answers[question.id] === question.answer ? 1 : 0),
       0
     );
+    const unanswered = block.questions.reduce(
+      (count, question) => count + (answers[question.id] === undefined ? 1 : 0),
+      0,
+    );
+    const accuracy = total === 0 ? 0 : (score / total) * 100;
+    const durationSec = DURATION_BY_MODE[modeKind] - timeLeft;
+    const durationLabel = formatTime(Math.max(durationSec, 0));
+
+    const perUnit: Record<string, { correct: number; total: number }> = {};
+    for (const question of block.questions) {
+      const entry = perUnit[question.unitSlug] ?? { correct: 0, total: 0 };
+      entry.total += 1;
+      if (answers[question.id] === question.answer) entry.correct += 1;
+      perUnit[question.unitSlug] = entry;
+    }
+    const unitRows = Object.entries(perUnit).sort((a, b) => b[1].total - a[1].total);
 
     return (
-      <Card className="border-white/[0.08] bg-white/[0.03]">
-        <CardHeader className="text-center">
-          <CardTitle>Block Complete</CardTitle>
-          <CardDescription>
-            Score {score}/{block.questions.length}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 text-center">
-          <Progress
-            value={block.questions.length === 0 ? 0 : (score / block.questions.length) * 100}
-            className="mx-auto h-3 max-w-sm"
-          />
-          <div className="flex justify-center gap-2">
-            <Button onClick={() => void finishMcBlock()} disabled={recorded}>
-              {recorded ? "Recorded" : "Save Run"}
-            </Button>
-            <Button variant="outline" onClick={onExit}>
-              Back to dashboard
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-5">
+        <Card className="border-white/[0.08] bg-white/[0.03]">
+          <CardHeader className="text-center">
+            <CardTitle>Block Complete</CardTitle>
+            <CardDescription>
+              {modeKind === "mixed-mc-sprint" ? "Mixed MC Sprint" : "Weak-Unit Focus"} ·{" "}
+              {durationLabel} elapsed
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div className="grid gap-3 text-center sm:grid-cols-3">
+              <div className="rounded-xl border border-border bg-background/40 p-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Score
+                </p>
+                <p className="mt-1 text-2xl font-black font-mono">
+                  {score}/{total}
+                </p>
+              </div>
+              <div className="rounded-xl border border-border bg-background/40 p-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Accuracy
+                </p>
+                <p className="mt-1 text-2xl font-black font-mono">{Math.round(accuracy)}%</p>
+              </div>
+              <div className="rounded-xl border border-border bg-background/40 p-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Unanswered
+                </p>
+                <p className="mt-1 text-2xl font-black font-mono">{unanswered}</p>
+              </div>
+            </div>
+            <Progress
+              value={total === 0 ? 0 : (score / total) * 100}
+              className="mx-auto h-3 max-w-sm"
+            />
+            {unitRows.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Per-unit breakdown
+                </p>
+                <div className="space-y-2">
+                  {unitRows.map(([unitSlug, { correct, total: unitTotal }]) => {
+                    const pct = unitTotal === 0 ? 0 : (correct / unitTotal) * 100;
+                    return (
+                      <div key={unitSlug} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="capitalize text-foreground/80">
+                            {unitSlug.replace(/-/g, " ")}
+                          </span>
+                          <span className="font-mono text-muted-foreground">
+                            {correct}/{unitTotal} · {Math.round(pct)}%
+                          </span>
+                        </div>
+                        <Progress value={pct} className="h-1" />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button onClick={() => void finishMcBlock()} disabled={recorded}>
+                {recorded ? "Recorded" : "Save Run"}
+              </Button>
+              <Button variant="outline" onClick={onExit}>
+                Back to dashboard
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-white/[0.08] bg-white/[0.03]">
+          <CardHeader>
+            <CardTitle className="text-base">Question Review</CardTitle>
+            <CardDescription>Missed and skipped questions first.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {block.questions
+              .map((question, index) => {
+                const userAnswer = answers[question.id];
+                const isCorrect = userAnswer === question.answer;
+                const isSkipped = userAnswer === undefined;
+                return { question, userAnswer, isCorrect, isSkipped, index };
+              })
+              .sort((a, b) => {
+                const weight = (row: { isCorrect: boolean; isSkipped: boolean }) =>
+                  row.isSkipped ? 0 : row.isCorrect ? 2 : 1;
+                return weight(a) - weight(b);
+              })
+              .map(({ question, userAnswer, isCorrect, isSkipped, index }) => {
+                const status = isSkipped ? "skipped" : isCorrect ? "correct" : "wrong";
+                const statusClass =
+                  status === "correct"
+                    ? "border-green-500/40 bg-green-500/5"
+                    : status === "wrong"
+                      ? "border-red-500/40 bg-red-500/5"
+                      : "border-border bg-background/40";
+                return (
+                  <div
+                    key={question.id}
+                    className={`rounded-xl border p-3 text-sm ${statusClass}`}
+                  >
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <Badge variant="outline" className="font-mono text-[10px]">
+                        Q{index + 1}
+                      </Badge>
+                      <Badge variant="secondary" className="text-[10px]">
+                        {question.unitSlug}
+                      </Badge>
+                      <Badge variant="outline" className="text-[10px]">
+                        {question.topicKey}
+                      </Badge>
+                      <span
+                        className={`ml-auto font-mono text-[10px] uppercase tracking-widest ${
+                          status === "correct"
+                            ? "text-green-600 dark:text-green-400"
+                            : status === "wrong"
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-muted-foreground"
+                        }`}
+                      >
+                        {status}
+                      </span>
+                    </div>
+                    <p className="mb-2 font-medium leading-snug">
+                      <MathText>{question.prompt}</MathText>
+                    </p>
+                    <div className="space-y-1 text-xs">
+                      <p>
+                        <span className="text-muted-foreground">Your answer: </span>
+                        <span
+                          className={
+                            isSkipped
+                              ? "text-muted-foreground italic"
+                              : isCorrect
+                                ? "text-green-600 dark:text-green-400"
+                                : "text-red-600 dark:text-red-400"
+                          }
+                        >
+                          {isSkipped ? (
+                            "— not answered —"
+                          ) : (
+                            <MathText>
+                              {question.choices[userAnswer ?? 0] ?? "—"}
+                            </MathText>
+                          )}
+                        </span>
+                      </p>
+                      {!isCorrect && (
+                        <p>
+                          <span className="text-muted-foreground">Correct: </span>
+                          <span className="text-green-600 dark:text-green-400">
+                            <MathText>{question.choices[question.answer]}</MathText>
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -315,7 +487,9 @@ export function ExamRunner({
               <Badge variant="outline">{currentQuestion.unitSlug}</Badge>
               <Badge variant="secondary">{currentQuestion.topicKey}</Badge>
             </div>
-            <p className="text-base font-medium">{currentQuestion.prompt}</p>
+            <p className="text-base font-medium leading-snug">
+              <MathText>{currentQuestion.prompt}</MathText>
+            </p>
             <div className="grid gap-2">
               {currentQuestion.choices.map((choice, choiceIndex) => (
                 <button
@@ -333,7 +507,7 @@ export function ExamRunner({
                       : "hover:bg-muted"
                   }`}
                 >
-                  {choice}
+                  <MathText>{choice}</MathText>
                 </button>
               ))}
             </div>

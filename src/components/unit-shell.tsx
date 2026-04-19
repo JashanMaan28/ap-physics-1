@@ -35,8 +35,10 @@ export function UnitShell({ config }: { config: UnitConfig }) {
   const progressPercent = getProgress(config.slug, config.learnTopicIds.length);
 
   useEffect(() => {
+    // Tablets and up (≥ 820px, covers iPad portrait) keep the persistent
+    // sidebar; narrower phones use the off-canvas drawer.
     const check = () => {
-      const mobile = window.innerWidth < 1024;
+      const mobile = window.innerWidth < 820;
       setIsMobile(mobile);
       if (!mobile) setSidebarOpen(true);
       else setSidebarOpen(false);
